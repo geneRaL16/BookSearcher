@@ -110,6 +110,7 @@ public class BookSearcher {
      * Checks if text contains a bad word
      * @param phrase text to check
      * @return true if no bad words in text, false otherwise
+>>>>>>> origin/master
      */
     public static boolean checkBadWord(String phrase) {
         for (int i = 0; i < badWordList.length; i++) {
