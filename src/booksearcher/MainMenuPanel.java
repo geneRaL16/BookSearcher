@@ -1,10 +1,6 @@
 package booksearcher;
 
 import java.awt.Image;
-import static java.awt.Image.SCALE_SMOOTH;
-import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
