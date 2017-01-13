@@ -23,7 +23,7 @@ import org.jsoup.select.Elements;
 
 /**
  *
- * @author liam9
+ * @author liam9, Ryan, Spencer
  */
 public class BookSearcher {
 

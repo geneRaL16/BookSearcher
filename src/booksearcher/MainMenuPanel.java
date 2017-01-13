@@ -25,7 +25,6 @@ public class MainMenuPanel extends javax.swing.JPanel {
 
     public void setFocusField() {
         ISBNField.requestFocusInWindow();
-
     }
 
     /**
@@ -262,7 +261,7 @@ public class MainMenuPanel extends javax.swing.JPanel {
         }
         String[] reviews = BookSearcher.getReviews(ISBNField.getText());
         String temp = "";
-        for (int i = 0; i < reviews.length; i++) {
+        for (int i = 1; i < reviews.length; i++) {
             temp += reviews[i] + "\n";
         }
         reviewTextArea.setText(temp);
