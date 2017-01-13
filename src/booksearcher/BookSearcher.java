@@ -207,9 +207,10 @@ public class BookSearcher {
     }
 
     /**
-     * Returns the thumbnail Google image of the from of the book
+     * Gets the Google thumbnail image of the book
      *
      * @param ISBN String ISBN number of the book
+     * @return Google thumbnail image
      */
     public static BufferedImage getBookImage(String ISBN) {
         try {
