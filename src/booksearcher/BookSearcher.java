@@ -58,7 +58,7 @@ public class BookSearcher {
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        String isbn = "9780552152679";//"9780552152679"
+        String isbn = "9780552152679";
         addBook(isbn);
         addBook("9780375753770");
         addBook("0735619670");
@@ -77,7 +77,7 @@ public class BookSearcher {
     public static void initFileIO() {
         bookDB = new File("bookdb.txt");
         bookDB2 = new File("bookdb2.txt");
-        badWords = new File("badwords.txt");
+        badWords = new File("badword.txt");
     }
 
     /**
@@ -88,24 +88,29 @@ public class BookSearcher {
         badWordTempList = new ArrayList<>();
         try {
             badWordScanner = new Scanner(badWords);
-            for (int i = 0; i < 1000; i++) {
+            while (badWordScanner.hasNextLine()) {
                 badWordTempList.add(badWordScanner.nextLine());
-                System.out.println(i);
             }
             badWordList = badWordTempList.toArray(new String[badWordTempList.size()]);
             for (int i = 0; i < badWordTempList.size(); i++) {
                 System.out.println(badWordTempList.get(i));
-            
             }
         } catch (FileNotFoundException ex) {
             System.out.println("Warning: Bad Word file not found. Profanity may be added to any reviews!");
         }
     }
+    /**
+     * Checks all of the words in a given String against a file to see if there are any
+     * bad words in the String
+     * @param phrase String phrase to be compared against bad word file
+     * @return Boolean if swear words are in the String
+=======
 
     /**
      * Checks if text contains a bad word
      * @param phrase text to check
      * @return true if no bad words in text, false otherwise
+>>>>>>> origin/master
      */
     public static boolean checkBadWord(String phrase) {
         for (int i = 0; i < badWordList.length; i++) {
@@ -114,8 +119,8 @@ public class BookSearcher {
         String[] temp = phrase.split(" ");
         for (int i = 0; i < temp.length; i++) {
             for (int x = 0; x < badWordList.length; x++) {
+                System.out.println(temp[i] + " " + badWordList[x]);
                 if (temp[i].equals(badWordList[x])) {
-                    System.out.println("Bad word found!");
                     return false;
                 }
             }
@@ -207,9 +212,10 @@ public class BookSearcher {
     }
 
     /**
-     * Returns the thumbnail Google image of the from of the book
+     * Gets the Google thumbnail image of the book
      *
      * @param ISBN String ISBN number of the book
+     * @return Google thumbnail image
      */
     public static BufferedImage getBookImage(String ISBN) {
         try {
