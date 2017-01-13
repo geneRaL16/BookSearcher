@@ -14,16 +14,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import java.io.RandomAccessFile;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
-import org.jsoup.select.Elements;
 
 /**
  *
- * @author liam9
+ * @author liam9, Ryan, Spencer
  */
 public class BookSearcher {
 
@@ -62,7 +58,7 @@ public class BookSearcher {
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        String isbn = "9780552152679";//"9780552152679"
+        String isbn = "9780552152679";
         addBook(isbn);
         addBook("9780375753770");
         addBook("0735619670");
@@ -108,6 +104,13 @@ public class BookSearcher {
      * bad words in the String
      * @param phrase String phrase to be compared against bad word file
      * @return Boolean if swear words are in the String
+=======
+
+    /**
+     * Checks if text contains a bad word
+     * @param phrase text to check
+     * @return true if no bad words in text, false otherwise
+>>>>>>> origin/master
      */
     public static boolean checkBadWord(String phrase) {
         for (int i = 0; i < badWordList.length; i++) {
@@ -124,6 +127,7 @@ public class BookSearcher {
         }
         return true;
     }
+    
     /**
      * Searches through the book data for the given ISBN, if not found adds book
      * to text file
@@ -208,9 +212,10 @@ public class BookSearcher {
     }
 
     /**
-     * Returns the thumbnail Google image of the from of the book
+     * Gets the Google thumbnail image of the book
      *
      * @param ISBN String ISBN number of the book
+     * @return Google thumbnail image
      */
     public static BufferedImage getBookImage(String ISBN) {
         try {
