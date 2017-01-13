@@ -103,7 +103,12 @@ public class BookSearcher {
             System.out.println("Warning: Bad Word file not found. Profanity may be added to any reviews!");
         }
     }
-
+    /**
+     * Checks all of the words in a given String against a file to see if there are any
+     * bad words in the String
+     * @param phrase String phrase to be compared against bad word file
+     * @return Boolean if swear words are in the String
+     */
     public static boolean checkBadWord(String phrase) {
         for (int i = 0; i < badWordList.length; i++) {
             System.out.println(badWordList[i]);
@@ -113,7 +118,6 @@ public class BookSearcher {
             for (int x = 0; x < badWordList.length; x++) {
                 System.out.println(temp[i] + " " + badWordList[x]);
                 if (temp[i].equals(badWordList[x])) {
-                    System.out.println("Bad word found!");
                     return false;
                 }
             }
@@ -132,9 +136,7 @@ public class BookSearcher {
             s = new Scanner(bookDB);
             int linecount = 0;
             while (s.hasNextLine()) {
-                //System.out.println(s.nextLine().split(Character.toString((char) 31))[0].equals(ISBN));
                 if (s.nextLine().split(Character.toString((char) 31))[0].equals(ISBN)) {
-                    System.out.println("ISBN Found");
                     s.close();
                     return linecount;
                 }

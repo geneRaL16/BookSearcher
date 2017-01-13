@@ -271,9 +271,7 @@ public class MainMenuPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_SearchButtonActionPerformed
 
     private void newReviewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newReviewButtonActionPerformed
-        System.out.println(BookSearcher.searchISBN(ISBNLabel.getText()));
         if (newReviewTextArea.getText().length() >= 0 && BookSearcher.searchISBN(ISBNField.getText()) >= 0) {
-            System.out.println("Running");
             if (BookSearcher.checkBadWord(newReviewTextArea.getText())) {
             BookSearcher.addReview(ISBNField.getText(), reviewRatingSlider.getValue(), newReviewTextArea.getText());
             }
