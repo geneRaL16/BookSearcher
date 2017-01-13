@@ -16,6 +16,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import java.io.RandomAccessFile;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import org.jsoup.select.Elements;
@@ -31,6 +32,7 @@ public class BookSearcher {
      */
     static File bookDB;
     static File bookDB2;
+    static File badWords;
     static FileWriter fw;
     static FileWriter fwF;
     static FileWriter fw2;
@@ -38,8 +40,10 @@ public class BookSearcher {
     static PrintWriter pw2;
     static Scanner s;
     static Scanner s2;
+    static Scanner badWordScanner; //Scanner used for bad words file
     static Document book;
-
+    static ArrayList<String> badWordTempList;
+    static String[] badWordList; //List of bad words to be checked against
     static Scanner kb;
 
     /**
@@ -69,6 +73,7 @@ public class BookSearcher {
         addReview("0735619670", 4, "Could have been better");
     }
 
+
     /**
      * Initializes the File Input/Output streams for reading and writing to the
      * local book database files
@@ -76,8 +81,46 @@ public class BookSearcher {
     public static void initFileIO() {
         bookDB = new File("bookdb.txt");
         bookDB2 = new File("bookdb2.txt");
+        badWords = new File("badwords.txt");
     }
 
+    /**
+     * Loads the entire list of bad words into an Array to be checked against
+     * when users enter reviews for books.
+     */
+    public static void loadBadWords() {
+        badWordTempList = new ArrayList<>();
+        try {
+            badWordScanner = new Scanner(badWords);
+            for (int i = 0; i < 1000; i++) {
+                badWordTempList.add(badWordScanner.nextLine());
+                System.out.println(i);
+            }
+            badWordList = badWordTempList.toArray(new String[badWordTempList.size()]);
+            for (int i = 0; i < badWordTempList.size(); i++) {
+                System.out.println(badWordTempList.get(i));
+            
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println("Warning: Bad Word file not found. Profanity may be added to any reviews!");
+        }
+    }
+
+    public static boolean checkBadWord(String phrase) {
+        for (int i = 0; i < badWordList.length; i++) {
+            System.out.println(badWordList[i]);
+        }
+        String[] temp = phrase.split(" ");
+        for (int i = 0; i < temp.length; i++) {
+            for (int x = 0; x < badWordList.length; x++) {
+                if (temp[i].equals(badWordList[x])) {
+                    System.out.println("Bad word found!");
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
     /**
      * Searches through the book data for the given ISBN, if not found adds book
      * to text file
