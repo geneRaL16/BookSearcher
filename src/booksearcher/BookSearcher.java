@@ -14,16 +14,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import java.io.RandomAccessFile;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
-import org.jsoup.select.Elements;
 
 /**
  *
- * @author liam9
+ * @author liam9, Ryan, Spencer
  */
 public class BookSearcher {
 
@@ -106,6 +102,11 @@ public class BookSearcher {
         }
     }
 
+    /**
+     * Checks if text contains a bad word
+     * @param phrase text to check
+     * @return true if no bad words in text, false otherwise
+     */
     public static boolean checkBadWord(String phrase) {
         for (int i = 0; i < badWordList.length; i++) {
             System.out.println(badWordList[i]);
@@ -121,6 +122,7 @@ public class BookSearcher {
         }
         return true;
     }
+    
     /**
      * Searches through the book data for the given ISBN, if not found adds book
      * to text file

@@ -2,10 +2,6 @@ package booksearcher;
 
 import java.awt.Dimension;
 import java.awt.Image;
-import static java.awt.Image.SCALE_SMOOTH;
-import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
@@ -26,7 +22,6 @@ public class MainMenuPanel extends javax.swing.JPanel {
 
     public void setFocusField() {
         ISBNField.requestFocusInWindow();
-
     }
 
     /**
@@ -246,7 +241,7 @@ public class MainMenuPanel extends javax.swing.JPanel {
         }
         String[] reviews = BookSearcher.getReviews(ISBNField.getText());
         String temp = "";
-        for (int i = 0; i < reviews.length; i++) {
+        for (int i = 1; i < reviews.length; i++) {
             temp += reviews[i] + "\n";
         }
         reviewTextArea.setText(temp);
