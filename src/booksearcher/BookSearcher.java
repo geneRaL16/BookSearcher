@@ -58,7 +58,7 @@ public class BookSearcher {
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        String isbn = "9780552152679";//"9780552152679"
+        String isbn = "9780552152679";
         addBook(isbn);
         addBook("9780375753770");
         addBook("0735619670");
