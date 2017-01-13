@@ -81,7 +81,7 @@ public class BookSearcher {
     public static void initFileIO() {
         bookDB = new File("bookdb.txt");
         bookDB2 = new File("bookdb2.txt");
-        badWords = new File("badwords.txt");
+        badWords = new File("badword.txt");
     }
 
     /**
@@ -92,14 +92,12 @@ public class BookSearcher {
         badWordTempList = new ArrayList<>();
         try {
             badWordScanner = new Scanner(badWords);
-            for (int i = 0; i < 1000; i++) {
+            while (badWordScanner.hasNextLine()) {
                 badWordTempList.add(badWordScanner.nextLine());
-                System.out.println(i);
             }
             badWordList = badWordTempList.toArray(new String[badWordTempList.size()]);
             for (int i = 0; i < badWordTempList.size(); i++) {
                 System.out.println(badWordTempList.get(i));
-            
             }
         } catch (FileNotFoundException ex) {
             System.out.println("Warning: Bad Word file not found. Profanity may be added to any reviews!");

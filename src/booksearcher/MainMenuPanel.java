@@ -20,6 +20,7 @@ public class MainMenuPanel extends javax.swing.JPanel {
     public MainMenuPanel() {
         initComponents();
         BookSearcher.initFileIO();
+        BookSearcher.loadBadWords();
 
     }
 
@@ -271,7 +272,12 @@ public class MainMenuPanel extends javax.swing.JPanel {
 
     private void newReviewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newReviewButtonActionPerformed
         if (newReviewTextArea.getText().length() <= 0 && BookSearcher.searchISBN(ISBNLabel.getText()) >= 0) {
+            if (BookSearcher.checkBadWord(newReviewTextArea.getText())) {
             BookSearcher.addReview(ISBNField.getText(), reviewRatingSlider.getValue(), newReviewTextArea.getText());
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "Reviews cannot contain profanity!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
+            }
         } else if (BookSearcher.searchISBN(ISBNLabel.getText()) >= 0) {
             JOptionPane.showMessageDialog(null, "Please enter a valid ISBN!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
         } else if (newReviewTextArea.getText().length() <= 0) {
