@@ -62,10 +62,6 @@ public class BookSearcher {
         addBook(isbn);
         addBook("9780375753770");
         addBook("0735619670");
-        String[] testDat = getBookInfo(isbn);
-        for (int i = 0; i < testDat.length; i++) {
-            System.out.println(testDat[i]);
-        }
         addReview("0735619670", 4, "Could have been better");
     }
 
@@ -92,9 +88,6 @@ public class BookSearcher {
                 badWordTempList.add(badWordScanner.nextLine());
             }
             badWordList = badWordTempList.toArray(new String[badWordTempList.size()]);
-            for (int i = 0; i < badWordTempList.size(); i++) {
-                System.out.println(badWordTempList.get(i));
-            }
         } catch (FileNotFoundException ex) {
             System.out.println("Warning: Bad Word file not found. Profanity may be added to any reviews!");
         }
@@ -113,13 +106,9 @@ public class BookSearcher {
 >>>>>>> origin/master
      */
     public static boolean checkBadWord(String phrase) {
-        for (int i = 0; i < badWordList.length; i++) {
-            System.out.println(badWordList[i]);
-        }
         String[] temp = phrase.split(" ");
         for (int i = 0; i < temp.length; i++) {
             for (int x = 0; x < badWordList.length; x++) {
-                System.out.println(temp[i] + " " + badWordList[x]);
                 if (temp[i].equals(badWordList[x])) {
                     return false;
                 }
@@ -252,7 +241,6 @@ public class BookSearcher {
         if (searchISBN(ISBN) == -1) {
             try {
                 pw = new PrintWriter(new FileOutputStream(bookDB, true));
-                String title = Jsoup.connect("https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN).ignoreContentType(true).get().toString().split("\"title\": \"")[1].split("\"")[0]; // Title information gathering, check to see if book is legit
                 pw.println(ISBN + Character.toString((char) 31)); //Delimited by invisible character
                 pw.flush();
                 pw.close();
