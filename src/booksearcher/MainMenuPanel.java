@@ -2,7 +2,13 @@ package booksearcher;
 
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
@@ -13,12 +19,22 @@ import javax.swing.JOptionPane;
 public class MainMenuPanel extends javax.swing.JPanel {
 
     static String sortBy = "LowToHigh";
+    static BufferedImage starEmpty;
+    static Image starFill;
 
     /**
      * Creates new form MainMenuPanel
      */
     public MainMenuPanel() {
         initComponents();
+
+        try {
+            starEmpty = ImageIO.read(new File("starEmpty.png"));
+            starFill = ImageIO.read(new File("starFill.png"));
+        } catch (IOException ex) {
+            System.out.println("Error! Star images not found!");
+        }
+
         BookSearcher.initFileIO();
         BookSearcher.loadBadWords();
 
