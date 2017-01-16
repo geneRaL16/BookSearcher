@@ -19,8 +19,9 @@ import javax.swing.JOptionPane;
 public class MainMenuPanel extends javax.swing.JPanel {
 
     static String sortBy = "LowToHigh";
-    static BufferedImage starEmpty;
+    static Image starEmpty;
     static Image starFill;
+    static int bookRating = 0;
 
     /**
      * Creates new form MainMenuPanel
@@ -71,6 +72,17 @@ public class MainMenuPanel extends javax.swing.JPanel {
         newReviewTextArea.setText("");
     }
 
+    public void updateReviewStars(int rating) {
+        starSelCanvas.getGraphics().clearRect(0, 0, starSelCanvas.getWidth(), starSelCanvas.getHeight());
+        currentSliderPosition.setText(rating + "/5");
+        for (int i = 0; i < rating; i++) {
+            starSelCanvas.getGraphics().drawImage(starFill, starSelCanvas.getWidth() / 5 * i, 0, starSelCanvas.getWidth() / 5, starSelCanvas.getHeight(), null);
+        }
+        for (int x = rating; x < 5; x++) {
+            starSelCanvas.getGraphics().drawImage(starEmpty, starSelCanvas.getWidth() / 5 * x, 0, starSelCanvas.getWidth() / 5, starSelCanvas.getHeight(), null);
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -102,6 +114,7 @@ public class MainMenuPanel extends javax.swing.JPanel {
         maxImageSize = new javax.swing.JLayeredPane();
         bookImageLabel = new javax.swing.JLabel();
         reviewSortSel = new javax.swing.JComboBox<>();
+        starSelCanvas = new java.awt.Canvas();
 
         bookTitleLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         bookTitleLabel.setText("Title:");
@@ -197,6 +210,21 @@ public class MainMenuPanel extends javax.swing.JPanel {
             }
         });
 
+        starSelCanvas.setBackground(new java.awt.Color(204, 204, 204));
+        starSelCanvas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                starSelCanvasMouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                starSelCanvasMouseExited(evt);
+            }
+        });
+        starSelCanvas.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                starSelCanvasMouseMoved(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -229,14 +257,14 @@ public class MainMenuPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(createReviewLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(231, 231, 231)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(starSelCanvas, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(currentSliderPosition, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(25, 25, 25))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(newReviewButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(newReviewButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -282,11 +310,10 @@ public class MainMenuPanel extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(currentSliderPosition, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(reviewRatingSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(createReviewLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(currentSliderPosition, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(createReviewLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(starSelCanvas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -328,7 +355,7 @@ public class MainMenuPanel extends javax.swing.JPanel {
         int isbnLoc = BookSearcher.searchISBN(ISBNField.getText());
         if (newReviewTextArea.getText().length() >= 0 && isbnLoc >= 0) {
             if (BookSearcher.checkBadWord(newReviewTextArea.getText())) {
-                BookSearcher.addReview(ISBNField.getText(), reviewRatingSlider.getValue(), newReviewTextArea.getText());
+                BookSearcher.addReview(ISBNField.getText(), bookRating, newReviewTextArea.getText());
             } else {
                 JOptionPane.showMessageDialog(null, "Reviews cannot contain profanity!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -343,6 +370,19 @@ public class MainMenuPanel extends javax.swing.JPanel {
     private void reviewSortSelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reviewSortSelActionPerformed
         updateReviews();
     }//GEN-LAST:event_reviewSortSelActionPerformed
+
+    private void starSelCanvasMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_starSelCanvasMouseMoved
+        int starsSelected = (starSelCanvas.getMousePosition().x / (starSelCanvas.getSize().width / 5) + 1);
+        updateReviewStars(starsSelected);
+    }//GEN-LAST:event_starSelCanvasMouseMoved
+
+    private void starSelCanvasMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_starSelCanvasMouseExited
+        updateReviewStars(bookRating);
+    }//GEN-LAST:event_starSelCanvasMouseExited
+
+    private void starSelCanvasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_starSelCanvasMouseClicked
+        bookRating = (starSelCanvas.getMousePosition().x / (starSelCanvas.getSize().width / 5) + 1);
+    }//GEN-LAST:event_starSelCanvasMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -368,5 +408,6 @@ public class MainMenuPanel extends javax.swing.JPanel {
     private javax.swing.JLabel reviewLabel;
     private javax.swing.JComboBox<String> reviewSortSel;
     private javax.swing.JTextArea reviewTextArea;
+    private java.awt.Canvas starSelCanvas;
     // End of variables declaration//GEN-END:variables
 }
