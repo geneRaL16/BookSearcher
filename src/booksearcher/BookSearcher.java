@@ -106,7 +106,7 @@ public class BookSearcher {
 >>>>>>> origin/master
      */
     public static boolean checkBadWord(String phrase) {
-        String[] temp = phrase.split(" ");
+        String[] temp = phrase.toLowerCase().split(" ");
         for (int i = 0; i < temp.length; i++) {
             for (int x = 0; x < badWordList.length; x++) {
                 if (temp[i].equals(badWordList[x])) {
