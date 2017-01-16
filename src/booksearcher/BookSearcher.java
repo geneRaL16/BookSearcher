@@ -192,6 +192,8 @@ public class BookSearcher {
         }
         return temp;
     }
+    
+
 
     /**
      * Gets the Google thumbnail image of the book
