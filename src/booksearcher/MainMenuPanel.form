@@ -63,9 +63,7 @@
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="createReviewLabel" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                      <Component id="reviewRatingSlider" max="32767" attributes="0"/>
-                      <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="231" max="-2" attributes="0"/>
                       <Component id="currentSliderPosition" max="32767" attributes="0"/>
                       <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                   </Group>
@@ -120,10 +118,7 @@
               <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="currentSliderPosition" min="-2" pref="54" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="reviewRatingSlider" max="32767" attributes="0"/>
-                      <Component id="createReviewLabel" pref="54" max="32767" attributes="0"/>
-                  </Group>
+                  <Component id="createReviewLabel" min="-2" pref="54" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
               <Component id="jScrollPane2" min="-2" pref="195" max="-2" attributes="0"/>
@@ -269,17 +264,6 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JSlider" name="reviewRatingSlider">
-      <Properties>
-        <Property name="majorTickSpacing" type="int" value="1"/>
-        <Property name="maximum" type="int" value="5"/>
-        <Property name="minimum" type="int" value="1"/>
-        <Property name="minorTickSpacing" type="int" value="1"/>
-      </Properties>
-      <Events>
-        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="reviewRatingSliderStateChanged"/>
-      </Events>
-    </Component>
     <Component class="javax.swing.JLabel" name="reviewLabel">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">

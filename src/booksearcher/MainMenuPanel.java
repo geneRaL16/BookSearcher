@@ -27,11 +27,12 @@ public class MainMenuPanel extends javax.swing.JPanel {
     public void setFocusField() {
         ISBNField.requestFocusInWindow();
     }
+
     /**
-     * Updates the reviews shown in the review dispaly
+     * Updates the reviews shown in the review display
      */
     public void updateReviews() {
-                String[] reviews = BookSearcher.getReviews(ISBNField.getText());
+        String[] reviews = BookSearcher.getReviews(ISBNField.getText());
         Arrays.sort(reviews);
         String temp = "";
         System.out.println(String.valueOf(reviewSortSel.getSelectedItem()));
@@ -41,17 +42,19 @@ public class MainMenuPanel extends javax.swing.JPanel {
                 System.out.println("LowToHigh");
                 for (int i = 1; i < reviews.length; i++) {
                     temp += reviews[i] + "\n";
-                } break;
+                }
+                break;
             case "HighToLow":
                 System.out.println("HighToLow");
                 for (int i = reviews.length - 1; i > 0; i--) {
                     temp += reviews[i] + "\n";
-                } break;
+                }
+                break;
         }
         reviewTextArea.setText(temp);
         newReviewTextArea.setText("");
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -77,7 +80,6 @@ public class MainMenuPanel extends javax.swing.JPanel {
         newReviewTextArea = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
         reviewTextArea = new javax.swing.JTextArea();
-        reviewRatingSlider = new javax.swing.JSlider();
         reviewLabel = new javax.swing.JLabel();
         createReviewLabel = new javax.swing.JLabel();
         currentSliderPosition = new javax.swing.JLabel();
@@ -139,16 +141,6 @@ public class MainMenuPanel extends javax.swing.JPanel {
         reviewTextArea.setLineWrap(true);
         reviewTextArea.setRows(5);
         jScrollPane3.setViewportView(reviewTextArea);
-
-        reviewRatingSlider.setMajorTickSpacing(1);
-        reviewRatingSlider.setMaximum(5);
-        reviewRatingSlider.setMinimum(1);
-        reviewRatingSlider.setMinorTickSpacing(1);
-        reviewRatingSlider.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                reviewRatingSliderStateChanged(evt);
-            }
-        });
 
         reviewLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         reviewLabel.setText("Reviews:");
@@ -230,9 +222,7 @@ public class MainMenuPanel extends javax.swing.JPanel {
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(createReviewLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(10, 10, 10)
-                        .addComponent(reviewRatingSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
+                        .addGap(231, 231, 231)
                         .addComponent(currentSliderPosition, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(25, 25, 25))))
         );
@@ -275,9 +265,7 @@ public class MainMenuPanel extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(currentSliderPosition, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(reviewRatingSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(createReviewLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)))
+                    .addComponent(createReviewLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(26, 26, 26)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -331,11 +319,6 @@ public class MainMenuPanel extends javax.swing.JPanel {
         updateReviews();
     }//GEN-LAST:event_newReviewButtonActionPerformed
 
-    private void reviewRatingSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_reviewRatingSliderStateChanged
-        String currentRating = Integer.toString(reviewRatingSlider.getValue());
-        currentSliderPosition.setText(currentRating + "/5");
-    }//GEN-LAST:event_reviewRatingSliderStateChanged
-
     private void reviewSortSelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reviewSortSelActionPerformed
         updateReviews();
     }//GEN-LAST:event_reviewSortSelActionPerformed
@@ -362,7 +345,6 @@ public class MainMenuPanel extends javax.swing.JPanel {
     private javax.swing.JLabel publishedDateLabel;
     private javax.swing.JLabel publisherLabel;
     private javax.swing.JLabel reviewLabel;
-    private javax.swing.JSlider reviewRatingSlider;
     private javax.swing.JComboBox<String> reviewSortSel;
     private javax.swing.JTextArea reviewTextArea;
     // End of variables declaration//GEN-END:variables
