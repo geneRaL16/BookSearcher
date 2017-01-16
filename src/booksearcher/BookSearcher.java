@@ -97,7 +97,7 @@ public class BookSearcher {
      * bad words in the String
      * @param phrase String phrase to be compared against bad word file
      * @return Boolean if swear words are in the String
-     */
+     **/
     public static boolean checkBadWord(String phrase) {
         String[] temp = phrase.toLowerCase().split(" ");
         for (int i = 0; i < temp.length; i++) {
