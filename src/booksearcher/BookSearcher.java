@@ -288,9 +288,6 @@ public class BookSearcher {
         // TITLE SECTION
         MLAString += "<italics>" + getTitle(ISBN, bookString) + "</italics>.";
         
-        // TRANSLATION SECTION
-        
-        
         // PUBLISHER SECTION
         
         
