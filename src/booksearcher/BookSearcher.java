@@ -65,7 +65,6 @@ public class BookSearcher {
         addReview("0735619670", 4, "Could have been better");
     }
 
-
     /**
      * Initializes the File Input/Output streams for reading and writing to the
      * local book database files
@@ -92,12 +91,15 @@ public class BookSearcher {
             System.out.println("Warning: Bad Word file not found. Profanity may be added to any reviews!");
         }
     }
+
     /**
-     * Checks all of the words in a given String against a file to see if there are any
-     * bad words in the String
+     * Checks all of the words in a given String against a file to see if there
+     * are any bad words in the String
+     *
      * @param phrase String phrase to be compared against bad word file
      * @return Boolean if swear words are in the String
-     **/
+     *
+     */
     public static boolean checkBadWord(String phrase) {
         String[] temp = phrase.toLowerCase().split(" ");
         for (int i = 0; i < temp.length; i++) {
@@ -109,7 +111,7 @@ public class BookSearcher {
         }
         return true;
     }
-    
+
     /**
      * Searches through the book data for the given ISBN, if not found adds book
      * to text file
@@ -160,7 +162,7 @@ public class BookSearcher {
 
         String[] authors = getAuthors(ISBN, bookString);
         String[] categories = getCategories(ISBN, bookString);
-        
+
         for (int i = 0; i < authors.length; i++) { // add multiple authors' names to info list
             info += authors[i];
             if (i != authors.length - 1) {
@@ -169,7 +171,7 @@ public class BookSearcher {
                 info += Character.toString((char) 31);
             }
         }
-        
+
         for (int i = 0; i < categories.length; i++) { // add multiple categories
             info += categories[i];
             if (i != categories.length - 1) {
@@ -178,11 +180,109 @@ public class BookSearcher {
                 info += Character.toString((char) 31);
             }
         }
-        
+
         info += getPublisher(ISBN, bookString); // add publisher to string info
         info += getPublishDate(ISBN, bookString); // add publishing date to string info
         info += getDescription(ISBN, bookString); // add description to string info
         return info.split(Character.toString((char) 31));
+    }
+
+    /**
+     * Finds the book's title from within a string
+     * 
+     * @param ISBN ISBN of the book
+     * @param bookString the online text that contains the title
+     * @return String title
+     */
+    private static String getTitle(String ISBN, String bookString) {
+        return bookString.split("\"title\": \"")[1].split("\"")[0] + Character.toString((char) 31);
+    }
+
+    /**
+     * Finds the book's publisher from within a string
+     * 
+     * @param ISBN ISBN of the book
+     * @param bookString the online text that contains the publisher
+     * @return String publisher
+     */
+    private static String getPublisher(String ISBN, String bookString) {
+        return bookString.split("\"publisher\": \"")[1].split("\"")[0] + Character.toString((char) 31);
+    }
+
+    /**
+     * Finds the book's date of publication from within a string
+     * 
+     * @param ISBN ISBN of the book
+     * @param bookString the online text that contains the date
+     * @return String date
+     */
+    private static String getPublishDate(String ISBN, String bookString) {
+        return bookString.split("\"publishedDate\": \"")[1].split("\"")[0] + Character.toString((char) 31);
+    }
+
+    /**
+     * Finds the book's description from within a string
+     * 
+     * @param ISBN ISBN of the book
+     * @param bookString the online text that contains the description
+     * @return String description
+     */
+    private static String getDescription(String ISBN, String bookString) {
+        return bookString.split("\"description\": \"")[1].split("\"")[0] + Character.toString((char) 31);
+    }
+
+    /**
+     * Finds the names of all authors for a book from within a string
+     *
+     * @param ISBN ISBN of the book
+     * @param bookString the online text to find the authors' names in
+     * @return array of author names
+     */
+    private static String[] getAuthors(String ISBN, String bookString) {
+        String[] authors = bookString.split("\"authors\": \\[ \"")[1].split("\" \\],")[0].split("\", \"");
+        return authors;
+    }
+
+    /**
+     * Finds all of the book's categories from within a string
+     * 
+     * @param ISBN ISBN of the book
+     * @param bookString the online text to find the categories in
+     * @return array of categories
+     */
+    private static String[] getCategories(String ISBN, String bookString) {
+        String[] authors = bookString.split("\"categories\": \\[ \"")[1].split("\" \\],")[0].split("\", \"");
+        return authors;
+    }
+
+    /**
+     * Returns the MLA formatting of the book to the user as a String
+     *
+     * @param ISBN book ISBN
+     * @return String of book information in MLA format
+     */
+    public static String MLA(String ISBN) {
+        // Last, First, and first last, ... . <I>Title of Book</I>. (Translated by First Last,) Publisher, Publication Date.
+        String bookString = "", MLAString = "";
+        try {
+            bookString = Jsoup.connect("https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN).ignoreContentType(true).get().toString();
+        } catch (IOException ex) {
+            Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String[] authors = getAuthors(ISBN, bookString);
+        String[] firstAuthor = authors[0].split(" ");
+        MLAString += firstAuthor[firstAuthor.length - 1];
+        for (int i = 0; i < firstAuthor.length - 1; i++) {
+            MLAString += " " + firstAuthor[i];
+        }
+        if (authors.length > 1) {
+            MLAString += ", and";
+            for (int i = 1; i < authors.length; i++) {
+                MLAString += " " + authors[i];
+            }
+        }
+        MLAString += ". ";
+        return MLAString;
     }
 
     /**
@@ -209,18 +309,23 @@ public class BookSearcher {
         }
         return temp;
     }
-    
 
-    public static int getAverageRatings (String ISBN) {
+    /**
+     * Gets the average star rating from user reviews (integer value for graphic stars)
+     * 
+     * @param ISBN ISBN of book with ratings of interest
+     * @return average user rating, rounded to the nearest integer value
+     */
+    public static int getAverageRatings(String ISBN) {
         double averageRating = 0;
         double count = 0;
-        
-        try {           
+
+        try {
             Scanner s4 = new Scanner(bookDB);
             if (searchISBN(ISBN) >= 0) {
-                for (int i = 0; i < searchISBN(ISBN) ; i++) {
+                for (int i = 0; i < searchISBN(ISBN); i++) {
                     s4.nextLine();
-                }              
+                }
                 String line = s4.nextLine();
                 System.out.println(line);
                 String[] temp = line.split(Character.toString((char) 31) + "| -");
@@ -229,17 +334,17 @@ public class BookSearcher {
                     averageRating += Integer.parseInt(temp[i]);
                     count++;
                 }
-                averageRating = averageRating/count; 
+                averageRating = averageRating / count;
                 averageRating = Math.round(averageRating);
-            }          
+            }
             s4.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println(averageRating);       
+        System.out.println(averageRating);
         return (int) averageRating;
     }
-    
+
     /**
      * Gets the Google thumbnail image of the book
      *
@@ -330,68 +435,5 @@ public class BookSearcher {
                 Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }
-    
-    
-    
-    private static String getTitle(String ISBN, String bookString) {
-        return bookString.split("\"title\": \"")[1].split("\"")[0] + Character.toString((char) 31);
-    }
-    
-    private static String getPublisher(String ISBN, String bookString) {
-        return bookString.split("\"publisher\": \"")[1].split("\"")[0] + Character.toString((char) 31);
-    }
-    
-    private static String getPublishDate(String ISBN, String bookString) {
-        return bookString.split("\"publishedDate\": \"")[1].split("\"")[0] + Character.toString((char) 31);
-    }
-
-    private static String getDescription(String ISBN, String bookString) {
-        return bookString.split("\"description\": \"")[1].split("\"")[0] + Character.toString((char) 31);
-    }
- /** 
-     * Finds the names of all authors for a book
-     * 
-     * @param ISBN ISBN of the book
-     * @return array of author names
-     */
-    private static String[] getAuthors(String ISBN, String bookString) {
-        String[] authors = bookString.split("\"authors\": \\[ \"")[1].split("\" \\],")[0].split("\", \"");
-        return authors;
-    }
-    
-    private static String[] getCategories(String ISBN, String bookString) {
-        String[] authors = bookString.split("\"categories\": \\[ \"")[1].split("\" \\],")[0].split("\", \"");
-        return authors;
-    }
-    
-    /**
-     * tells the MLA formatting of the book to the user
-     * 
-     * @param ISBN book ISBN
-     * @return String of book information in MLA format
-     */
-    public static String MLA(String ISBN) {
-        // Last, First, and first last, ... . <I>Title of Book</I>. (Translated by First Last,) Publisher, Publication Date.
-        String bookString = "", MLAString = "";
-        try {
-            bookString = Jsoup.connect("https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN).ignoreContentType(true).get().toString();
-        } catch (IOException ex) {
-            Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        String[] authors = getAuthors(ISBN, bookString);
-        String[] firstAuthor = authors[0].split(" ");
-        MLAString += firstAuthor[firstAuthor.length - 1];
-        for (int i = 0; i < firstAuthor.length - 1; i++) {
-            MLAString += " " + firstAuthor[i];
-        }
-        if (authors.length > 1) {
-            MLAString += ", and";
-            for (int i = 1; i < authors.length; i++) {
-                MLAString += " " + authors[i];
-            }
-        }
-        MLAString += ". ";
-        return MLAString;
     }
 }
