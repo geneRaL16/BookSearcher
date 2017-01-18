@@ -269,19 +269,32 @@ public class BookSearcher {
         } catch (IOException ex) {
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        // AUTHOR SECTION
         String[] authors = getAuthors(ISBN, bookString);
         String[] firstAuthor = authors[0].split(" ");
-        MLAString += firstAuthor[firstAuthor.length - 1];
+        MLAString += firstAuthor[firstAuthor.length - 1] + ", ";
         for (int i = 0; i < firstAuthor.length - 1; i++) {
             MLAString += " " + firstAuthor[i];
         }
         if (authors.length > 1) {
-            MLAString += ", and";
+            authors[1] = "and " + authors[1];
             for (int i = 1; i < authors.length; i++) {
-                MLAString += " " + authors[i];
+                MLAString += ", " + authors[i];
             }
         }
         MLAString += ". ";
+        
+        // TITLE SECTION
+        MLAString += "<italics>" + getTitle(ISBN, bookString) + "</italics>.";
+        
+        // TRANSLATION SECTION
+        
+        
+        // PUBLISHER SECTION
+        
+        
+        // PUBLICATION DATE SECTION
         return MLAString;
     }
 
