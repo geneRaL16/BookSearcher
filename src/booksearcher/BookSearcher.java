@@ -302,13 +302,19 @@ public class BookSearcher {
     }
 
     /**
-     * Returns the MLA citation format of the book to the user as a String
+     * Returns the MLA citation format of the book to the user as a String. MLA
+     * format is: [First Author's Last Name], [First Author's First Name], and
+     * [2nd author's first name] [2nd author's last name], [3rd author's first
+     * name] [3rd author's last name]... . [Italicized Book Title]. [Publisher],
+     * [Publication Date].
+     *
+     * [Publication Date] is "n.d." if no date is available.
      *
      * @param ISBN book ISBN
      * @return String of book information in MLA format
      */
     public static String MLA(String ISBN) {
-        // Last, First, and first last, ... . <I>Title of Book</I>. Publisher, Publication Date.
+        // 
         String bookString = "", MLAString = "";
         try {
             bookString = Jsoup.connect("https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN).ignoreContentType(true).get().toString();
@@ -338,7 +344,12 @@ public class BookSearcher {
         MLAString += getPublisher(ISBN, bookString) + ", ";
 
         // PUBLICATION DATE SECTION
-        MLAString += getPublishDate(ISBN, bookString) + ".";
+        String date = getPublishDate(ISBN, bookString) + ".";
+        if (date.equals("")) {
+            MLAString += "n.d.";
+        } else {
+            MLAString += date + ".";
+        }
 
         return MLAString;
     }
