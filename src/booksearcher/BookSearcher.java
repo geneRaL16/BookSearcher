@@ -189,7 +189,7 @@ public class BookSearcher {
 
     /**
      * Finds the book's title from within a string
-     * 
+     *
      * @param ISBN ISBN of the book
      * @param bookString the online text that contains the title
      * @return String title
@@ -200,7 +200,7 @@ public class BookSearcher {
 
     /**
      * Finds the book's publisher from within a string
-     * 
+     *
      * @param ISBN ISBN of the book
      * @param bookString the online text that contains the publisher
      * @return String publisher
@@ -211,18 +211,64 @@ public class BookSearcher {
 
     /**
      * Finds the book's date of publication from within a string
-     * 
+     *
      * @param ISBN ISBN of the book
      * @param bookString the online text that contains the date
      * @return String date
      */
     private static String getPublishDate(String ISBN, String bookString) {
-        return bookString.split("\"publishedDate\": \"")[1].split("\"")[0] + Character.toString((char) 31);
+        String date = bookString.split("\"publishedDate\": \"")[1].split("\"")[0];
+        String d[] = date.split("-");
+        if (d.length == 3) {
+            switch (d[1]) {
+                case "01":
+                    d[1] = "January";
+                    break;
+                case "02":
+                    d[1] = "February";
+                    break;
+                case "03":
+                    d[1] = "March";
+                    break;
+                case "04":
+                    d[1] = "April";
+                    break;
+                case "05":
+                    d[1] = "May";
+                    break;
+                case "06":
+                    d[1] = "June";
+                    break;
+                case "07":
+                    d[1] = "July";
+                    break;
+                case "08":
+                    d[1] = "August";
+                    break;
+                case "09":
+                    d[1] = "September";
+                    break;
+                case "10":
+                    d[1] = "October";
+                    break;
+                case "11":
+                    d[1] = "November";
+                    break;
+                case "12":
+                    d[1] = "December";
+                    break;
+            }
+            return d[1] + " " + d[2] + " " + d[0] + Character.toString((char) 31);
+        } else if (d.length > 0) {
+            return d[0] + Character.toString((char) 31);
+        } else {
+            return date + Character.toString((char) 31);
+        }
     }
 
     /**
      * Finds the book's description from within a string
-     * 
+     *
      * @param ISBN ISBN of the book
      * @param bookString the online text that contains the description
      * @return String description
@@ -245,7 +291,7 @@ public class BookSearcher {
 
     /**
      * Finds all of the book's categories from within a string
-     * 
+     *
      * @param ISBN ISBN of the book
      * @param bookString the online text to find the categories in
      * @return array of categories
@@ -262,14 +308,14 @@ public class BookSearcher {
      * @return String of book information in MLA format
      */
     public static String MLA(String ISBN) {
-        // Last, First, and first last, ... . <I>Title of Book</I>. (Translated by First Last,) Publisher, Publication Date.
+        // Last, First, and first last, ... . <I>Title of Book</I>. Publisher, Publication Date.
         String bookString = "", MLAString = "";
         try {
             bookString = Jsoup.connect("https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN).ignoreContentType(true).get().toString();
         } catch (IOException ex) {
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         // AUTHOR SECTION
         String[] authors = getAuthors(ISBN, bookString);
         String[] firstAuthor = authors[0].split(" ");
@@ -284,14 +330,16 @@ public class BookSearcher {
             }
         }
         MLAString += ". ";
-        
+
         // TITLE SECTION
-        MLAString += "<italics>" + getTitle(ISBN, bookString) + "</italics>.";
-        
+        MLAString += "<italics>" + getTitle(ISBN, bookString) + "</italics>. ";
+
         // PUBLISHER SECTION
-        
-        
+        MLAString += getPublisher(ISBN, bookString) + ", ";
+
         // PUBLICATION DATE SECTION
+        MLAString += getPublishDate(ISBN, bookString) + ".";
+
         return MLAString;
     }
 
@@ -321,8 +369,9 @@ public class BookSearcher {
     }
 
     /**
-     * Gets the average star rating from user reviews (integer value for graphic stars)
-     * 
+     * Gets the average star rating from user reviews (integer value for graphic
+     * stars)
+     *
      * @param ISBN ISBN of book with ratings of interest
      * @return average user rating, rounded to the nearest integer value
      */
