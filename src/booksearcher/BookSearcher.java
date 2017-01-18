@@ -175,7 +175,7 @@ public class BookSearcher {
      * @return array of reviews (null if no array)
      */
     public static String[] getReviews(String ISBN) {
-        String[] temp = {"no reviews"};
+        String[] temp = {};
         try {
             Scanner s3 = new Scanner(bookDB);
             if (searchISBN(ISBN) >= 0) {
@@ -194,13 +194,14 @@ public class BookSearcher {
     }
     
 
-    public static double getAverageRatings (String ISBN) {
+    public static int getAverageRatings (String ISBN) {
         double averageRating = 0;
         double count = 0;
+        
         try {           
             Scanner s4 = new Scanner(bookDB);
             if (searchISBN(ISBN) >= 0) {
-                for (int i = 0; i < searchISBN(ISBN) -1 ; i++) {
+                for (int i = 0; i < searchISBN(ISBN) ; i++) {
                     s4.nextLine();
                 }              
                 String line = s4.nextLine();
@@ -219,7 +220,7 @@ public class BookSearcher {
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
         }
         System.out.println(averageRating);       
-        return averageRating;
+        return (int) averageRating;
     }
     
     /**

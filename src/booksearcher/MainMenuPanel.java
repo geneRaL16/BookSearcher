@@ -50,6 +50,10 @@ public class MainMenuPanel extends javax.swing.JPanel {
      */
     public void updateReviews() {
         String[] reviews = BookSearcher.getReviews(ISBNField.getText());
+        if (reviews.length == 0) {
+            reviewTextArea.setText("No reviews");
+            return;
+        }
         Arrays.sort(reviews);
         String temp = "";
         System.out.println(String.valueOf(reviewSortSel.getSelectedItem()));
@@ -342,9 +346,8 @@ public class MainMenuPanel extends javax.swing.JPanel {
             Image scaleImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
             Dimension bookSize = new Dimension(width, height);
             bookImageLabel.setPreferredSize(bookSize);
-
             bookImageLabel.setIcon(new ImageIcon(scaleImage));
-            BookSearcher.getAverageRatings(ISBNField.getText());
+            updateReviewStars(BookSearcher.getAverageRatings(ISBNField.getText()));
             ISBNField.selectAll();
         } catch (IndexOutOfBoundsException e) {
             JOptionPane.showMessageDialog(null, "Book not found in database!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
@@ -354,7 +357,7 @@ public class MainMenuPanel extends javax.swing.JPanel {
 
     private void newReviewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newReviewButtonActionPerformed
         int isbnLoc = BookSearcher.searchISBN(ISBNField.getText());
-        if (newReviewTextArea.getText().length() >= 0 && isbnLoc >= 0) {
+        if (newReviewTextArea.getText().length() >= 0 && isbnLoc >= 0 && bookRating > 0) {
             if (BookSearcher.checkBadWord(newReviewTextArea.getText())) {
                 BookSearcher.addReview(ISBNField.getText(), bookRating, newReviewTextArea.getText());
             } else {
@@ -364,6 +367,8 @@ public class MainMenuPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Please enter a valid ISBN!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
         } else if (newReviewTextArea.getText().length() <= 0) {
             JOptionPane.showMessageDialog(null, "Please enter a review first!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
+        } else if (bookRating == 0) {
+            JOptionPane.showMessageDialog(null, "Please enter a valid rating", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
         }
         updateReviews();
     }//GEN-LAST:event_newReviewButtonActionPerformed
