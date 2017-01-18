@@ -194,7 +194,34 @@ public class BookSearcher {
     }
     
 
-
+    public static double getAverageRatings (String ISBN) {
+        double averageRating = 0;
+        double count = 0;
+        try {           
+            Scanner s4 = new Scanner(bookDB);
+            if (searchISBN(ISBN) >= 0) {
+                for (int i = 0; i < searchISBN(ISBN) -1 ; i++) {
+                    s4.nextLine();
+                }              
+                String line = s4.nextLine();
+                System.out.println(line);
+                String[] temp = line.split(Character.toString((char) 31) + "| -");
+                for (int i = 1; i < temp.length - 1; i += 2) {
+                    System.out.println(temp[i]);
+                    averageRating += Integer.parseInt(temp[i]);
+                    count++;
+                }
+                averageRating = averageRating/count; 
+                averageRating = Math.round(averageRating);
+            }          
+            s4.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println(averageRating);       
+        return averageRating;
+    }
+    
     /**
      * Gets the Google thumbnail image of the book
      *

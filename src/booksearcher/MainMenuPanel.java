@@ -344,6 +344,7 @@ public class MainMenuPanel extends javax.swing.JPanel {
             bookImageLabel.setPreferredSize(bookSize);
 
             bookImageLabel.setIcon(new ImageIcon(scaleImage));
+            BookSearcher.getAverageRatings(ISBNField.getText());
             ISBNField.selectAll();
         } catch (IndexOutOfBoundsException e) {
             JOptionPane.showMessageDialog(null, "Book not found in database!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
