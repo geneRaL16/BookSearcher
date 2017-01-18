@@ -324,18 +324,20 @@ public class BookSearcher {
 
         // AUTHOR SECTION
         String[] authors = getAuthors(ISBN, bookString);
-        String[] firstAuthor = authors[0].split(" ");
-        MLAString += firstAuthor[firstAuthor.length - 1] + ", ";
-        for (int i = 0; i < firstAuthor.length - 1; i++) {
-            MLAString += " " + firstAuthor[i];
-        }
-        if (authors.length > 1) {
-            authors[1] = "and " + authors[1];
-            for (int i = 1; i < authors.length; i++) {
-                MLAString += ", " + authors[i];
+        if (authors.length > 0) {
+            String[] firstAuthor = authors[0].split(" ");
+            MLAString += firstAuthor[firstAuthor.length - 1] + ", ";
+            for (int i = 0; i < firstAuthor.length - 1; i++) {
+                MLAString += " " + firstAuthor[i];
             }
+            if (authors.length > 1) {
+                authors[1] = "and " + authors[1];
+                for (int i = 1; i < authors.length; i++) {
+                    MLAString += ", " + authors[i];
+                }
+            }
+            MLAString += ". ";
         }
-        MLAString += ". ";
 
         // TITLE SECTION
         MLAString += "<italics>" + getTitle(ISBN, bookString) + "</italics>. ";
@@ -344,7 +346,7 @@ public class BookSearcher {
         MLAString += getPublisher(ISBN, bookString) + ", ";
 
         // PUBLICATION DATE SECTION
-        String date = getPublishDate(ISBN, bookString) + ".";
+        String date = getPublishDate(ISBN, bookString);
         if (date.equals("")) {
             MLAString += "n.d.";
         } else {
@@ -355,7 +357,7 @@ public class BookSearcher {
     }
 
     /**
-     * Returns the APA citation format to the user as a String
+     * Returns the APA citation format to the user as a String.
      *
      * @param ISBN book ISBN
      * @return String of book information in APA format
