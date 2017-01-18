@@ -213,7 +213,7 @@ public class MainMenuPanel extends javax.swing.JPanel {
             }
         });
 
-        starSelCanvas.setBackground(new java.awt.Color(204, 204, 204));
+        starSelCanvas.setBackground(new java.awt.Color(240, 240, 240));
         starSelCanvas.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 starSelCanvasMouseClicked(evt);
