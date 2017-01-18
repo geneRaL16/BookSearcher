@@ -302,7 +302,7 @@ public class BookSearcher {
     }
 
     /**
-     * Returns the MLA formatting of the book to the user as a String
+     * Returns the MLA citation format of the book to the user as a String
      *
      * @param ISBN book ISBN
      * @return String of book information in MLA format
@@ -341,6 +341,16 @@ public class BookSearcher {
         MLAString += getPublishDate(ISBN, bookString) + ".";
 
         return MLAString;
+    }
+
+    /**
+     * Returns the APA citation format to the user as a String
+     *
+     * @param ISBN book ISBN
+     * @return String of book information in APA format
+     */
+    public static String APA(String ISBN) {
+        return "";
     }
 
     /**
