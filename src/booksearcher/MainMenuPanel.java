@@ -74,13 +74,15 @@ public class MainMenuPanel extends javax.swing.JPanel {
     }
 
     public void updateReviewStars(int rating) {
-        starSelCanvas.getGraphics().clearRect(0, 0, starSelCanvas.getWidth(), starSelCanvas.getHeight());
-        currentSliderPosition.setText(rating + "/5");
-        for (int i = 0; i < rating; i++) {
-            starSelCanvas.getGraphics().drawImage(starFill, starSelCanvas.getWidth() / 5 * i, 0, starSelCanvas.getWidth() / 5, starSelCanvas.getHeight(), null);
-        }
-        for (int x = rating; x < 5; x++) {
-            starSelCanvas.getGraphics().drawImage(starEmpty, starSelCanvas.getWidth() / 5 * x, 0, starSelCanvas.getWidth() / 5, starSelCanvas.getHeight(), null);
+        if (rating != Integer.parseInt(Character.toString(currentSliderPosition.getText().charAt(0)))) { //Only updates if new star is selected
+            starSelCanvas.getGraphics().clearRect(0, 0, starSelCanvas.getWidth(), starSelCanvas.getHeight());
+            currentSliderPosition.setText(rating + "/5");
+            for (int i = 0; i < rating; i++) {
+                starSelCanvas.getGraphics().drawImage(starFill, starSelCanvas.getWidth() / 5 * i, 0, starSelCanvas.getWidth() / 5, starSelCanvas.getHeight(), null);
+            }
+            for (int x = rating; x < 5; x++) {
+                starSelCanvas.getGraphics().drawImage(starEmpty, starSelCanvas.getWidth() / 5 * x, 0, starSelCanvas.getWidth() / 5, starSelCanvas.getHeight(), null);
+            }
         }
     }
 
