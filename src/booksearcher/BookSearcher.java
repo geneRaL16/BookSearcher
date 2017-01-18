@@ -156,7 +156,6 @@ public class BookSearcher {
         try {
             info += bookString.split("\"averageRating\": ")[1].split(",")[0] + Character.toString((char) 31); // add rating to string info
         } catch (ArrayIndexOutOfBoundsException e) { //No rating found for book
-            System.out.println("No rating for book " + ISBN);
             info += "N/R" + Character.toString((char) 31);
         }
 
