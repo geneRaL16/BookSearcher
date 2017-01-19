@@ -219,7 +219,7 @@ public class BookSearcher {
      * @param bookString the online text that contains the date
      * @return String date
      */
-    private static String getPublishDate(String ISBN, String bookString) {
+    private static String getPublishDate(String ISBN, String bookString) { // COULD RETURN DATE AS AN ARRAY INSTEAD OF A STRING??
         String date = bookString.split("\"publishedDate\": \"")[1].split("\"")[0];
         String d[] = date.split("-");
         if (d.length == 3) {
