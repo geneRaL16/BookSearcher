@@ -183,6 +183,8 @@ public class BookSearcher {
         info += getPublisher(ISBN, bookString) + Character.toString((char) 31); // add publisher to string info
         info += getPublishDate(ISBN, bookString) + Character.toString((char) 31); // add publishing date to string info
         info += getDescription(ISBN, bookString) + Character.toString((char) 31); // add description to string info
+        info += MLA(ISBN, bookString) + Character.toString((char) 31); // add MLA citation to string info
+        info += APA(ISBN, bookString) + Character.toString((char) 31); // add APA citation to string info
         return info.split(Character.toString((char) 31));
     }
 
@@ -318,13 +320,8 @@ public class BookSearcher {
      * @param ISBN book ISBN
      * @return String of book information in MLA format
      */
-    public static String MLA(String ISBN) {
-        String bookString = "", MLAString = "";
-        try {
-            bookString = Jsoup.connect("https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN).ignoreContentType(true).get().toString();
-        } catch (IOException ex) {
-            Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public static String MLA(String ISBN, String bookString) {
+        String MLAString = "";
 
         // AUTHOR NAMES
         String[] authors = getAuthors(ISBN, bookString);
@@ -344,7 +341,7 @@ public class BookSearcher {
         }
 
         // TITLE
-        MLAString += "<italics>" + getTitle(ISBN, bookString) + "</italics>. ";
+        MLAString += "<i>" + getTitle(ISBN, bookString) + "</i>. ";
 
         // PUBLISHER
         MLAString += getPublisher(ISBN, bookString) + ", ";
@@ -370,13 +367,9 @@ public class BookSearcher {
      * @param ISBN book ISBN
      * @return String of book information in APA format
      */
-    public static String APA(String ISBN) {
-        String bookString = "", APAString = "", temp, tempArray[];
-        try {
-            bookString = Jsoup.connect("https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN).ignoreContentType(true).get().toString();
-        } catch (IOException ex) {
-            Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public static String APA(String ISBN, String bookString) {
+        String APAString = "", temp, tempArray[];
+        
         // AUTHOR NAMES
         String[] authors = getAuthors(ISBN, bookString);
         if (authors.length > 0) {
@@ -407,15 +400,15 @@ public class BookSearcher {
         // TITLE
         temp = getTitle(ISBN, bookString);
         tempArray = temp.split(":");
-        APAString += "<italics>";
+        APAString += "<i>";
         for (String tempArray1 : tempArray) { // subtitles also begin with a capital letter
             temp = "" + tempArray1.charAt(0);
             APAString += temp + tempArray1.substring(1, tempArray1.length()); // THIS MAY NEED ADJUSTMENT BECAUSE OF STRING LENGTH AND ALL THAT FUN STUFF FEEL FREE TO PLAY WITH IT PLS LET'S NOT FORGET TO TEST
         }
-        APAString += "</italics>. ";
+        APAString += "</i>. ";
 
         // LOCATION
-        APAString += "<country abbr.>" + getCountry(ISBN, bookString) + "</country abbr.>: ";
+        APAString += "(country abbreviation)" + getCountry(ISBN, bookString) + "(end abbr.): ";
 
         // PUBLISHER
         APAString += getPublisher(ISBN, bookString) + ".";
