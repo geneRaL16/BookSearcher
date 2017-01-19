@@ -367,13 +367,24 @@ public class BookSearcher {
      * @return String of book information in APA format
      */
     public static String APA(String ISBN) {
-        String APAString = "";
-        
+        String bookString = "", APAString = "", temp;
+        try {
+            bookString = Jsoup.connect("https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN).ignoreContentType(true).get().toString();
+        } catch (IOException ex) {
+            Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
+        }
         // AUTHOR NAMES
         
         
         // YEAR
-        
+        temp = getPublishDate(ISBN, bookString);
+        APAString += "(";
+        if (temp.length() >= 4) {
+            APAString += temp.substring(temp.length() - 4, temp.length()); // THIS MAY NEED ADJUSTMENT BECAUSE OF STRING LENGTH AND ALL THAT FUN STUFF FEEL FREE TO PLAY WITH IT PLS LET'S NOT FORGET TO TEST
+        } else {
+            APAString += "n.d.";
+        }
+        APAString += ")";
         
         // TITLE
         
