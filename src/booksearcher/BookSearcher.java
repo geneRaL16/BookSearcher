@@ -256,6 +256,8 @@ public class BookSearcher {
                 case "12":
                     d[1] = "December";
                     break;
+                default:
+                    break;
             }
             return d[1] + " " + d[2] + " " + d[0] + Character.toString((char) 31);
         } else if (d.length > 0) {
