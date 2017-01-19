@@ -420,7 +420,7 @@ public class BookSearcher {
         // PUBLISHER
         APAString += getPublisher(ISBN, bookString) + ".";
         
-        return "";
+        return APAString;
     }
 
     /**
