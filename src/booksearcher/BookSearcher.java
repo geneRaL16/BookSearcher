@@ -28,6 +28,7 @@ public class BookSearcher {
      */
     static File bookDB;
     static File bookDB2;
+    static File categoriesDB;
     static File badWords;
     static FileWriter fw;
     static FileWriter fwF;
@@ -36,6 +37,7 @@ public class BookSearcher {
     static PrintWriter pw2;
     static Scanner s;
     static Scanner s2;
+    static Scanner catScanner;
     static Scanner badWordScanner; //Scanner used for bad words file
     static Document book;
     static ArrayList<String> badWordTempList;
@@ -65,6 +67,42 @@ public class BookSearcher {
         addReview("0735619670", 4, "Could have been better");
     }
 
+    public static String[] getCategory(String categories) {
+        try {
+            catScanner = new Scanner(categoriesDB);
+            while (!catScanner.nextLine().equals(categories) && catScanner.hasNextLine()) {
+                catScanner.nextLine();
+            }
+            return catScanner.nextLine().split(Character.toString((char) 31));
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public static void addToCategory(String ISBN, String bookString) {
+        String[] categories = getCategories(ISBN, bookString);
+        try {
+            catScanner = new Scanner(categoriesDB);
+            pw2 = new PrintWriter(new FileOutputStream(bookDB2, false));
+            String temp;
+            temp = catScanner.nextLine();
+            while (catScanner.hasNextLine()) {
+                while (!temp.equals(categories) && catScanner.hasNextLine()) {
+                    pw2.println(temp);
+                    temp = catScanner.nextLine();
+                }
+                if (temp.equals(categories)) {
+                    temp = catScanner.nextLine();
+                    temp += ISBN;
+                    pw2.println(temp);
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     /**
      * Initializes the File Input/Output streams for reading and writing to the
      * local book database files
@@ -73,6 +111,7 @@ public class BookSearcher {
         bookDB = new File("bookdb.txt");
         bookDB2 = new File("bookdb2.txt");
         badWords = new File("badword.txt");
+        categoriesDB = new File("categories.txt");
     }
 
     /**
