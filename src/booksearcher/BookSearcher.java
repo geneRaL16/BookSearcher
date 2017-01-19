@@ -303,7 +303,7 @@ public class BookSearcher {
 
     /**
      * Returns the MLA citation format of the book to the user as a String. MLA
-     * format is: [First Author's Last Name], [First Author's First Name], and
+     * format is: [First author's last name], [rest of first author's name], and
      * [2nd author's first name] [2nd author's last name], [3rd author's first
      * name] [3rd author's last name]... . [Italicized Book Title]. [Publisher],
      * [Publication Date].
@@ -357,7 +357,11 @@ public class BookSearcher {
     }
 
     /**
-     * Returns the APA citation format to the user as a String.
+     * Returns the APA citation format of the book to the user as a String. APA
+     * format is: [First author's last name], [rest of first author's name], &
+     * [2nd author's first name] [2nd author's last name], [3rd author's first
+     * name] [3rd author's last name]... . ([year]). [Italicized Book Title].
+     * [Location of publication]: [Publisher].
      *
      * @param ISBN book ISBN
      * @return String of book information in APA format
