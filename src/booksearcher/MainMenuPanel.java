@@ -54,17 +54,14 @@ public class MainMenuPanel extends javax.swing.JPanel {
         }
         Arrays.sort(reviews);
         String temp = "";
-        System.out.println(String.valueOf(reviewSortSel.getSelectedItem()));
         switch (String.valueOf(reviewSortSel.getSelectedItem())) {
 
             case "LowToHigh":
-                System.out.println("LowToHigh");
                 for (int i = 1; i < reviews.length; i++) {
                     temp += reviews[i] + "\n";
                 }
                 break;
             case "HighToLow":
-                System.out.println("HighToLow");
                 for (int i = reviews.length - 1; i > 0; i--) {
                     temp += reviews[i] + "\n";
                 }

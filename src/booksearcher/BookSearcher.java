@@ -498,10 +498,8 @@ public class BookSearcher {
                     s4.nextLine();
                 }
                 String line = s4.nextLine();
-                System.out.println(line);
                 String[] temp = line.split(Character.toString((char) 31) + "| -");
                 for (int i = 1; i < temp.length - 1; i += 2) {
-                    System.out.println(temp[i]);
                     averageRating += Integer.parseInt(temp[i]);
                     count++;
                 }
@@ -512,7 +510,6 @@ public class BookSearcher {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println(averageRating);
         return (int) averageRating;
     }
 
