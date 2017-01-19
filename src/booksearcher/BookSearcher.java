@@ -152,7 +152,7 @@ public class BookSearcher {
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
         }
         String info = "";
-        info += getTitle(ISBN, bookString); // add title to string info
+        info += getTitle(ISBN, bookString) + Character.toString((char) 31); // add title to string info
         try {
             info += bookString.split("\"averageRating\": ")[1].split(",")[0] + Character.toString((char) 31); // add rating to string info
         } catch (ArrayIndexOutOfBoundsException e) { //No rating found for book
