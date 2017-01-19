@@ -40,7 +40,6 @@ public class BookSearcher {
     static Scanner s2;
     static Scanner catScanner;
     static Scanner badWordScanner; //Scanner used for bad words file
-    static Document book;
     static ArrayList<String> badWordTempList;
     static String[] badWordList; //List of bad words to be checked against
     static Scanner kb;
@@ -68,6 +67,15 @@ public class BookSearcher {
         addReview("0735619670", 4, "Could have been better");
     }
 
+    public static String getBookString(String ISBN) {
+        try {
+            return Jsoup.connect("https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN).ignoreContentType(true).get().toString();
+        } catch (IOException ex) {
+            Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    return null;
+    }
+
     public static String[] getCategory(String categories) {
         try {
             catScanner = new Scanner(categoriesDB);
@@ -81,32 +89,41 @@ public class BookSearcher {
         return null;
     }
 
-    public static void addToCategory(String ISBN, String bookString) {
-        String[] categories = getCategories(ISBN, bookString);
+    /**
+     * Adds given book to category text file based on ISBN given
+     *
+     * @param ISBN String ISBN number of the given book
+     */
+    public static void addToCategory(String ISBN) {
+        String[] categories = getCategories(ISBN, getBookString(ISBN));
         try {
             boolean catFound = false;
             s2 = new Scanner(bookDB2);
             catScanner = new Scanner(categoriesDB);
             pw2 = new PrintWriter(new FileOutputStream(bookDB2, false));
-            String temp;
-            temp = catScanner.nextLine();
-                while (!temp.equals(categories[0]) && catScanner.hasNextLine()) {
-                    pw2.println(temp);
-                    System.out.println(temp);
-                    temp = catScanner.nextLine();
-                }
-                if (temp.equals(categories[0])) {
-                    pw2.println(temp);
-                    catFound = true;
-                    System.out.println("Found category " + temp);
-                    temp = catScanner.nextLine();
-                    temp += ISBN;
-                    pw2.println(temp);
-                }
-                while (catScanner.hasNextLine()) {
-                    pw2.println(catScanner.nextLine());
-                }
+            String temp = "";
+            if (catScanner.hasNextLine()) {
+                temp = catScanner.nextLine();
+            }
+            while (!temp.equals(categories[0]) && catScanner.hasNextLine()) {
+                pw2.println(temp);
+                System.out.println("Writing " + temp);
+                temp = catScanner.nextLine();
+            }
+            if (temp.equals(categories[0])) {
+                pw2.println(temp);
+                catFound = true;
+                System.out.println("Found category " + temp);
+                temp = catScanner.nextLine();
+                temp += ISBN + Character.toString((char) 31);
+                System.out.println("Adding " + temp);
+                pw2.println(temp);
+            }
+            while (catScanner.hasNextLine()) {
+                pw2.println(catScanner.nextLine());
+            }
             if (!catFound) {
+                pw2.println(temp);
                 System.out.println("No category found - creating " + categories[0]);
                 pw2.println(categories[0]);
                 pw2.print(ISBN + Character.toString((char) 31));
@@ -205,11 +222,7 @@ public class BookSearcher {
      */
     public static String[] getBookInfo(String ISBN) throws IndexOutOfBoundsException {
         String bookString = "";
-        try {
-            bookString = Jsoup.connect("https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN).ignoreContentType(true).get().toString();
-        } catch (IOException ex) {
-            Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        bookString = getBookString(ISBN);
         String info = "";
         info += getTitle(ISBN, bookString) + Character.toString((char) 31); // add title to string info
         try {
@@ -220,7 +233,6 @@ public class BookSearcher {
 
         String[] authors = getAuthors(ISBN, bookString);
         String[] categories = getCategories(ISBN, bookString);
-        addToCategory(ISBN, bookString); //NEW CODE - TESTING
         for (int i = 0; i < authors.length; i++) { // add multiple authors' names to info list
             info += authors[i];
             if (i != authors.length - 1) {
@@ -428,7 +440,7 @@ public class BookSearcher {
      */
     public static String APA(String ISBN, String bookString) {
         String APAString = "", temp, tempArray[];
-        
+
         // AUTHOR NAMES
         String[] authors = getAuthors(ISBN, bookString);
         if (authors.length > 0) {
@@ -540,12 +552,7 @@ public class BookSearcher {
      * @return Google thumbnail image
      */
     public static BufferedImage getBookImage(String ISBN) {
-        try {
-            book = Jsoup.connect("https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN).ignoreContentType(true).get();
-        } catch (IOException ex) {
-            Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        String bookString = book.toString();
+        String bookString = getBookString(ISBN);
         try {
             URL bookURL = new URL(bookString.split("\"thumbnail\": \"")[1].split("\"")[0].replaceAll("&amp;", "&"));
 
@@ -572,6 +579,7 @@ public class BookSearcher {
      */
     public static void addBook(String ISBN) {
         if (searchISBN(ISBN) == -1) {
+            addToCategory(ISBN);
             try {
                 pw = new PrintWriter(new FileOutputStream(bookDB, true));
                 pw.println(ISBN + Character.toString((char) 31)); //Delimited by invisible character
