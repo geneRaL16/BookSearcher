@@ -36,10 +36,6 @@ public class MainMenuPanel extends javax.swing.JPanel {
 
         BookSearcher.initFileIO();
         BookSearcher.loadBadWords();
-        String[] test = BookSearcher.getCategory("Fiction");
-        for (int i = 0; i < test.length; i++) {
-            System.out.println(test[i]);
-        }
     }
 
     public void setFocusField() {
