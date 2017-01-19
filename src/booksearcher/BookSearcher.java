@@ -180,9 +180,9 @@ public class BookSearcher {
             }
         }
 
-        info += getPublisher(ISBN, bookString); // add publisher to string info
-        info += getPublishDate(ISBN, bookString); // add publishing date to string info
-        info += getDescription(ISBN, bookString); // add description to string info
+        info += getPublisher(ISBN, bookString) + Character.toString((char) 31); // add publisher to string info
+        info += getPublishDate(ISBN, bookString) + Character.toString((char) 31); // add publishing date to string info
+        info += getDescription(ISBN, bookString) + Character.toString((char) 31); // add description to string info
         return info.split(Character.toString((char) 31));
     }
 
@@ -194,7 +194,7 @@ public class BookSearcher {
      * @return String title
      */
     private static String getTitle(String ISBN, String bookString) {
-        return bookString.split("\"title\": \"")[1].split("\"")[0] + Character.toString((char) 31);
+        return bookString.split("\"title\": \"")[1].split("\"")[0];
     }
 
     /**
@@ -205,7 +205,11 @@ public class BookSearcher {
      * @return String publisher
      */
     private static String getPublisher(String ISBN, String bookString) {
-        return bookString.split("\"publisher\": \"")[1].split("\"")[0] + Character.toString((char) 31);
+        return bookString.split("\"publisher\": \"")[1].split("\"")[0];
+    }
+    
+    private static String getCountry(String ISBN, String bookString) {
+        return bookString.split("\"country\": \"")[1].split("\"")[0];
     }
 
     /**
@@ -259,11 +263,11 @@ public class BookSearcher {
                 default:
                     break;
             }
-            return d[1] + " " + d[2] + " " + d[0] + Character.toString((char) 31);
+            return d[1] + " " + d[2] + " " + d[0];
         } else if (d.length > 0) {
-            return d[0] + Character.toString((char) 31); // year is in position 0
+            return d[0]; // year is in position 0
         } else {
-            return date + Character.toString((char) 31);
+            return date;
         }
     }
     
@@ -275,7 +279,7 @@ public class BookSearcher {
      * @return String description
      */
     private static String getDescription(String ISBN, String bookString) {
-        return bookString.split("\"description\": \"")[1].split("\"")[0] + Character.toString((char) 31);
+        return bookString.split("\"description\": \"")[1].split("\"")[0];
     }
 
     /**
@@ -322,7 +326,7 @@ public class BookSearcher {
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        // AUTHOR
+        // AUTHOR NAMES
         String[] authors = getAuthors(ISBN, bookString);
         if (authors.length > 0) {
             String[] firstAuthor = authors[0].split(" ");
@@ -367,14 +371,28 @@ public class BookSearcher {
      * @return String of book information in APA format
      */
     public static String APA(String ISBN) {
-        String bookString = "", APAString = "", temp;
+        String bookString = "", APAString = "", temp, tempArray[];
         try {
             bookString = Jsoup.connect("https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN).ignoreContentType(true).get().toString();
         } catch (IOException ex) {
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
         }
         // AUTHOR NAMES
-        
+        String[] authors = getAuthors(ISBN, bookString);
+        if (authors.length > 0) {
+            String[] firstAuthor = authors[0].split(" ");
+            APAString += firstAuthor[firstAuthor.length - 1] + ", ";
+            for (int i = 0; i < firstAuthor.length - 1; i++) {
+                APAString += " " + firstAuthor[i];
+            }
+            if (authors.length > 1) {
+                authors[1] = "& " + authors[1];
+                for (int i = 1; i < authors.length; i++) {
+                    APAString += ", " + authors[i];
+                }
+            }
+            APAString += ". ";
+        }
         
         // YEAR
         temp = getPublishDate(ISBN, bookString);
@@ -384,16 +402,23 @@ public class BookSearcher {
         } else {
             APAString += "n.d.";
         }
-        APAString += ")";
+        APAString += "). ";
         
         // TITLE
-        
+        temp = getTitle(ISBN, bookString);
+        tempArray = temp.split(":");
+        APAString += "<italics>";
+        for (int i = 0; i < tempArray.length; i++) { // subtitles also begin with a capital letter
+            temp = "" + tempArray[i].charAt(0);
+            APAString += temp + tempArray[i].substring(1, tempArray[i].length()); // THIS MAY NEED ADJUSTMENT BECAUSE OF STRING LENGTH AND ALL THAT FUN STUFF FEEL FREE TO PLAY WITH IT PLS LET'S NOT FORGET TO TEST
+        }
+        APAString += "</italics>. ";
         
         // LOCATION
-        
+        APAString += "<country abbr.>" + getCountry(ISBN, bookString) + "</country abbr.>: ";
         
         // PUBLISHER
-        
+        APAString += getPublisher(ISBN, bookString) + ".";
         
         return "";
     }
