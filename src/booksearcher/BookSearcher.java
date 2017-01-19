@@ -191,7 +191,7 @@ public class BookSearcher {
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
         }
         String info = "";
-        info += getTitle(ISBN, bookString); // add title to string info
+        info += getTitle(ISBN, bookString) + Character.toString((char) 31); // add title to string info
         try {
             info += bookString.split("\"averageRating\": ")[1].split(",")[0] + Character.toString((char) 31); // add rating to string info
         } catch (ArrayIndexOutOfBoundsException e) { //No rating found for book
@@ -447,9 +447,9 @@ public class BookSearcher {
         temp = getTitle(ISBN, bookString);
         tempArray = temp.split(":");
         APAString += "<italics>";
-        for (int i = 0; i < tempArray.length; i++) { // subtitles also begin with a capital letter
-            temp = "" + tempArray[i].charAt(0);
-            APAString += temp + tempArray[i].substring(1, tempArray[i].length()); // THIS MAY NEED ADJUSTMENT BECAUSE OF STRING LENGTH AND ALL THAT FUN STUFF FEEL FREE TO PLAY WITH IT PLS LET'S NOT FORGET TO TEST
+        for (String tempArray1 : tempArray) { // subtitles also begin with a capital letter
+            temp = "" + tempArray1.charAt(0);
+            APAString += temp + tempArray1.substring(1, tempArray1.length()); // THIS MAY NEED ADJUSTMENT BECAUSE OF STRING LENGTH AND ALL THAT FUN STUFF FEEL FREE TO PLAY WITH IT PLS LET'S NOT FORGET TO TEST
         }
         APAString += "</italics>. ";
 
