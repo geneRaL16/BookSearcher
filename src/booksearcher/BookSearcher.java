@@ -28,14 +28,17 @@ public class BookSearcher {
      */
     static File bookDB;
     static File bookDB2;
+    static File categoriesDB;
     static File badWords;
     static FileWriter fw;
     static FileWriter fwF;
     static FileWriter fw2;
     static PrintWriter pw;
     static PrintWriter pw2;
+    static PrintWriter pwCategories;
     static Scanner s;
     static Scanner s2;
+    static Scanner catScanner;
     static Scanner badWordScanner; //Scanner used for bad words file
     static Document book;
     static ArrayList<String> badWordTempList;
@@ -65,6 +68,61 @@ public class BookSearcher {
         addReview("0735619670", 4, "Could have been better");
     }
 
+    public static String[] getCategory(String categories) {
+        try {
+            catScanner = new Scanner(categoriesDB);
+            while (!catScanner.nextLine().equals(categories) && catScanner.hasNextLine()) {
+                catScanner.nextLine();
+            }
+            return catScanner.nextLine().split(Character.toString((char) 31));
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public static void addToCategory(String ISBN, String bookString) {
+        String[] categories = getCategories(ISBN, bookString);
+        try {
+            boolean catFound = false;
+            s2 = new Scanner(bookDB2);
+            catScanner = new Scanner(categoriesDB);
+            pw2 = new PrintWriter(new FileOutputStream(bookDB2, false));
+            String temp;
+            temp = catScanner.nextLine();
+                while (!temp.equals(categories[0]) && catScanner.hasNextLine()) {
+                    pw2.println(temp);
+                    System.out.println(temp);
+                    temp = catScanner.nextLine();
+                }
+                if (temp.equals(categories[0])) {
+                    pw2.println(temp);
+                    catFound = true;
+                    System.out.println("Found category " + temp);
+                    temp = catScanner.nextLine();
+                    temp += ISBN;
+                    pw2.println(temp);
+                }
+                while (catScanner.hasNextLine()) {
+                    pw2.println(catScanner.nextLine());
+                }
+            if (!catFound) {
+                System.out.println("No category found - creating " + categories[0]);
+                pw2.println(categories[0]);
+                pw2.print(ISBN + Character.toString((char) 31));
+            }
+            pw2.close();
+            pwCategories = new PrintWriter(new FileOutputStream(categoriesDB, false));
+            while (s2.hasNextLine()) {
+                pwCategories.println(s2.nextLine());
+            }
+            pwCategories.close();
+
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     /**
      * Initializes the File Input/Output streams for reading and writing to the
      * local book database files
@@ -73,6 +131,7 @@ public class BookSearcher {
         bookDB = new File("bookdb.txt");
         bookDB2 = new File("bookdb2.txt");
         badWords = new File("badword.txt");
+        categoriesDB = new File("categories.txt");
     }
 
     /**
@@ -152,7 +211,7 @@ public class BookSearcher {
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
         }
         String info = "";
-        info += getTitle(ISBN, bookString); // add title to string info
+        info += getTitle(ISBN, bookString) + Character.toString((char) 31); // add title to string info
         try {
             info += bookString.split("\"averageRating\": ")[1].split(",")[0] + Character.toString((char) 31); // add rating to string info
         } catch (ArrayIndexOutOfBoundsException e) { //No rating found for book
@@ -161,7 +220,7 @@ public class BookSearcher {
 
         String[] authors = getAuthors(ISBN, bookString);
         String[] categories = getCategories(ISBN, bookString);
-
+        addToCategory(ISBN, bookString); //NEW CODE - TESTING
         for (int i = 0; i < authors.length; i++) { // add multiple authors' names to info list
             info += authors[i];
             if (i != authors.length - 1) {
@@ -180,9 +239,11 @@ public class BookSearcher {
             }
         }
 
-        info += getPublisher(ISBN, bookString); // add publisher to string info
-        info += getPublishDate(ISBN, bookString); // add publishing date to string info
-        info += getDescription(ISBN, bookString); // add description to string info
+        info += getPublisher(ISBN, bookString) + Character.toString((char) 31); // add publisher to string info
+        info += getPublishDate(ISBN, bookString) + Character.toString((char) 31); // add publishing date to string info
+        info += getDescription(ISBN, bookString) + Character.toString((char) 31); // add description to string info
+        info += MLA(ISBN, bookString) + Character.toString((char) 31); // add MLA citation to string info
+        info += APA(ISBN, bookString) + Character.toString((char) 31); // add APA citation to string info
         return info.split(Character.toString((char) 31));
     }
 
@@ -194,7 +255,7 @@ public class BookSearcher {
      * @return String title
      */
     private static String getTitle(String ISBN, String bookString) {
-        return bookString.split("\"title\": \"")[1].split("\"")[0] + Character.toString((char) 31);
+        return bookString.split("\"title\": \"")[1].split("\"")[0];
     }
 
     /**
@@ -205,7 +266,11 @@ public class BookSearcher {
      * @return String publisher
      */
     private static String getPublisher(String ISBN, String bookString) {
-        return bookString.split("\"publisher\": \"")[1].split("\"")[0] + Character.toString((char) 31);
+        return bookString.split("\"publisher\": \"")[1].split("\"")[0];
+    }
+
+    private static String getCountry(String ISBN, String bookString) {
+        return bookString.split("\"country\": \"")[1].split("\"")[0];
     }
 
     /**
@@ -215,7 +280,7 @@ public class BookSearcher {
      * @param bookString the online text that contains the date
      * @return String date
      */
-    private static String getPublishDate(String ISBN, String bookString) {
+    private static String getPublishDate(String ISBN, String bookString) { // COULD RETURN DATE AS AN ARRAY INSTEAD OF A STRING??
         String date = bookString.split("\"publishedDate\": \"")[1].split("\"")[0];
         String d[] = date.split("-");
         if (d.length == 3) {
@@ -256,12 +321,14 @@ public class BookSearcher {
                 case "12":
                     d[1] = "December";
                     break;
+                default:
+                    break;
             }
-            return d[1] + " " + d[2] + " " + d[0] + Character.toString((char) 31);
+            return d[1] + " " + d[2] + " " + d[0];
         } else if (d.length > 0) {
-            return d[0] + Character.toString((char) 31);
+            return d[0]; // year is in position 0
         } else {
-            return date + Character.toString((char) 31);
+            return date;
         }
     }
 
@@ -273,7 +340,7 @@ public class BookSearcher {
      * @return String description
      */
     private static String getDescription(String ISBN, String bookString) {
-        return bookString.split("\"description\": \"")[1].split("\"")[0] + Character.toString((char) 31);
+        return bookString.split("\"description\": \"")[1].split("\"")[0];
     }
 
     /**
@@ -302,7 +369,7 @@ public class BookSearcher {
 
     /**
      * Returns the MLA citation format of the book to the user as a String. MLA
-     * format is: [First Author's Last Name], [First Author's First Name], and
+     * format is: [First author's last name], [rest of first author's name], and
      * [2nd author's first name] [2nd author's last name], [3rd author's first
      * name] [3rd author's last name]... . [Italicized Book Title]. [Publisher],
      * [Publication Date].
@@ -312,38 +379,34 @@ public class BookSearcher {
      * @param ISBN book ISBN
      * @return String of book information in MLA format
      */
-    public static String MLA(String ISBN) {
-        // 
-        String bookString = "", MLAString = "";
-        try {
-            bookString = Jsoup.connect("https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN).ignoreContentType(true).get().toString();
-        } catch (IOException ex) {
-            Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public static String MLA(String ISBN, String bookString) {
+        String MLAString = "";
 
-        // AUTHOR SECTION
+        // AUTHOR NAMES
         String[] authors = getAuthors(ISBN, bookString);
-        String[] firstAuthor = authors[0].split(" ");
-        MLAString += firstAuthor[firstAuthor.length - 1] + ", ";
-        for (int i = 0; i < firstAuthor.length - 1; i++) {
-            MLAString += " " + firstAuthor[i];
-        }
-        if (authors.length > 1) {
-            authors[1] = "and " + authors[1];
-            for (int i = 1; i < authors.length; i++) {
-                MLAString += ", " + authors[i];
+        if (authors.length > 0) {
+            String[] firstAuthor = authors[0].split(" ");
+            MLAString += firstAuthor[firstAuthor.length - 1] + ", ";
+            for (int i = 0; i < firstAuthor.length - 1; i++) {
+                MLAString += " " + firstAuthor[i];
             }
+            if (authors.length > 1) {
+                authors[1] = "and " + authors[1];
+                for (int i = 1; i < authors.length; i++) {
+                    MLAString += ", " + authors[i];
+                }
+            }
+            MLAString += ". ";
         }
-        MLAString += ". ";
 
-        // TITLE SECTION
-        MLAString += "<italics>" + getTitle(ISBN, bookString) + "</italics>. ";
+        // TITLE
+        MLAString += "<i>" + getTitle(ISBN, bookString) + "</i>. ";
 
-        // PUBLISHER SECTION
+        // PUBLISHER
         MLAString += getPublisher(ISBN, bookString) + ", ";
 
-        // PUBLICATION DATE SECTION
-        String date = getPublishDate(ISBN, bookString) + ".";
+        // PUBLICATION DATE
+        String date = getPublishDate(ISBN, bookString);
         if (date.equals("")) {
             MLAString += "n.d.";
         } else {
@@ -354,13 +417,62 @@ public class BookSearcher {
     }
 
     /**
-     * Returns the APA citation format to the user as a String
+     * Returns the APA citation format of the book to the user as a String. APA
+     * format is: [First author's last name], [rest of first author's name], &
+     * [2nd author's first name] [2nd author's last name], [3rd author's first
+     * name] [3rd author's last name]... . ([year]). [Italicized Book Title].
+     * [Location of publication]: [Publisher].
      *
      * @param ISBN book ISBN
      * @return String of book information in APA format
      */
-    public static String APA(String ISBN) {
-        return "";
+    public static String APA(String ISBN, String bookString) {
+        String APAString = "", temp, tempArray[];
+        
+        // AUTHOR NAMES
+        String[] authors = getAuthors(ISBN, bookString);
+        if (authors.length > 0) {
+            String[] firstAuthor = authors[0].split(" ");
+            APAString += firstAuthor[firstAuthor.length - 1] + ", ";
+            for (int i = 0; i < firstAuthor.length - 1; i++) {
+                APAString += " " + firstAuthor[i];
+            }
+            if (authors.length > 1) {
+                authors[1] = "& " + authors[1];
+                for (int i = 1; i < authors.length; i++) {
+                    APAString += ", " + authors[i];
+                }
+            }
+            APAString += ". ";
+        }
+
+        // YEAR
+        temp = getPublishDate(ISBN, bookString);
+        APAString += "(";
+        if (temp.length() >= 4) {
+            APAString += temp.substring(temp.length() - 4, temp.length()); // THIS MAY NEED ADJUSTMENT BECAUSE OF STRING LENGTH AND ALL THAT FUN STUFF FEEL FREE TO PLAY WITH IT PLS LET'S NOT FORGET TO TEST
+        } else {
+            APAString += "n.d.";
+        }
+        APAString += "). ";
+
+        // TITLE
+        temp = getTitle(ISBN, bookString);
+        tempArray = temp.split(":");
+        APAString += "<i>";
+        for (String tempArray1 : tempArray) { // subtitles also begin with a capital letter
+            temp = "" + tempArray1.charAt(0);
+            APAString += temp + tempArray1.substring(1, tempArray1.length()); // THIS MAY NEED ADJUSTMENT BECAUSE OF STRING LENGTH AND ALL THAT FUN STUFF FEEL FREE TO PLAY WITH IT PLS LET'S NOT FORGET TO TEST
+        }
+        APAString += "</i>. ";
+
+        // LOCATION
+        APAString += "(country abbreviation)" + getCountry(ISBN, bookString) + "(end abbr.): ";
+
+        // PUBLISHER
+        APAString += getPublisher(ISBN, bookString) + ".";
+
+        return APAString;
     }
 
     /**
@@ -406,10 +518,8 @@ public class BookSearcher {
                     s4.nextLine();
                 }
                 String line = s4.nextLine();
-                System.out.println(line);
                 String[] temp = line.split(Character.toString((char) 31) + "| -");
                 for (int i = 1; i < temp.length - 1; i += 2) {
-                    System.out.println(temp[i]);
                     averageRating += Integer.parseInt(temp[i]);
                     count++;
                 }
@@ -420,7 +530,6 @@ public class BookSearcher {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println(averageRating);
         return (int) averageRating;
     }
 

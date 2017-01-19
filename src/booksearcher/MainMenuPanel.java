@@ -1,6 +1,7 @@
 package booksearcher;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
@@ -53,17 +54,14 @@ public class MainMenuPanel extends javax.swing.JPanel {
         }
         Arrays.sort(reviews);
         String temp = "";
-        System.out.println(String.valueOf(reviewSortSel.getSelectedItem()));
         switch (String.valueOf(reviewSortSel.getSelectedItem())) {
 
             case "LowToHigh":
-                System.out.println("LowToHigh");
                 for (int i = 1; i < reviews.length; i++) {
                     temp += reviews[i] + "\n";
                 }
                 break;
             case "HighToLow":
-                System.out.println("HighToLow");
                 for (int i = reviews.length - 1; i > 0; i--) {
                     temp += reviews[i] + "\n";
                 }
@@ -101,8 +99,6 @@ public class MainMenuPanel extends javax.swing.JPanel {
         categoryLabel = new javax.swing.JLabel();
         publisherLabel = new javax.swing.JLabel();
         publishedDateLabel = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        descriptionTextArea = new javax.swing.JTextArea();
         ISBNField = new javax.swing.JTextField();
         SearchButton = new javax.swing.JButton();
         ISBNLabel = new javax.swing.JLabel();
@@ -118,6 +114,14 @@ public class MainMenuPanel extends javax.swing.JPanel {
         bookImageLabel = new javax.swing.JLabel();
         reviewSortSel = new javax.swing.JComboBox<>();
         starSelCanvas = new java.awt.Canvas();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        descriptionEditorPane = new javax.swing.JEditorPane("text/html", "") {
+            @Override
+            public boolean getScrollableTracksViewportWidth()
+            {
+                return true;
+            }
+        };
 
         bookTitleLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         bookTitleLabel.setText("Title:");
@@ -136,14 +140,6 @@ public class MainMenuPanel extends javax.swing.JPanel {
 
         publishedDateLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         publishedDateLabel.setText("Published: ");
-
-        descriptionTextArea.setEditable(false);
-        descriptionTextArea.setColumns(20);
-        descriptionTextArea.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
-        descriptionTextArea.setLineWrap(true);
-        descriptionTextArea.setRows(5);
-        descriptionTextArea.setWrapStyleWord(true);
-        jScrollPane1.setViewportView(descriptionTextArea);
 
         SearchButton.setText("Search");
         SearchButton.addActionListener(new java.awt.event.ActionListener() {
@@ -194,16 +190,15 @@ public class MainMenuPanel extends javax.swing.JPanel {
         maxImageSizeLayout.setHorizontalGroup(
             maxImageSizeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(maxImageSizeLayout.createSequentialGroup()
-                .addGap(29, 29, 29)
+                .addContainerGap()
                 .addComponent(bookImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         maxImageSizeLayout.setVerticalGroup(
             maxImageSizeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, maxImageSizeLayout.createSequentialGroup()
-                .addContainerGap(25, Short.MAX_VALUE)
-                .addComponent(bookImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
-                .addGap(29, 29, 29))
+            .addGroup(maxImageSizeLayout.createSequentialGroup()
+                .addComponent(bookImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         reviewSortSel.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "LowToHigh", "HighToLow" }));
@@ -228,6 +223,9 @@ public class MainMenuPanel extends javax.swing.JPanel {
             }
         });
 
+        descriptionEditorPane.setEditable(false);
+        jScrollPane4.setViewportView(descriptionEditorPane);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -244,18 +242,17 @@ public class MainMenuPanel extends javax.swing.JPanel {
                         .addGap(87, 87, 87))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(googleRatingLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(googleRatingLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
                                     .addComponent(publisherLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(publishedDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(bookTitleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(authorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(categoryLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(18, 18, 18)
-                                .addComponent(maxImageSize)
-                                .addGap(34, 34, 34))
-                            .addComponent(jScrollPane1))
+                                .addComponent(maxImageSize)))
                         .addGap(18, 18, 18)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -268,7 +265,7 @@ public class MainMenuPanel extends javax.swing.JPanel {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(newReviewButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(reviewLabel)
@@ -283,21 +280,19 @@ public class MainMenuPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(bookTitleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(googleRatingLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(authorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(categoryLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(13, 13, 13)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(publisherLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(13, 13, 13)
-                        .addComponent(publishedDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(37, 37, 37))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(maxImageSize)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 310, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(publishedDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(maxImageSize))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(ISBNLabel)
@@ -318,7 +313,7 @@ public class MainMenuPanel extends javax.swing.JPanel {
                     .addComponent(createReviewLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(starSelCanvas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(newReviewButton, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -335,16 +330,25 @@ public class MainMenuPanel extends javax.swing.JPanel {
             categoryLabel.setText("Category: " + info[3]);
             publisherLabel.setText("Publisher: " + info[4]);
             publishedDateLabel.setText("Pusblished: " + info[5]);
-            descriptionTextArea.setText(info[6]);
+            descriptionEditorPane.setText(info[6] + "<br>MLA: " + info[7] + "<br>APA: " + info[8]);
 
             ImageIcon icon = new ImageIcon(BookSearcher.getBookImage(ISBNField.getText()));
-            int height = icon.getIconHeight() * 2;
-            int width = icon.getIconWidth() * 2;
-            int maxHeight = maxImageSize.getHeight();
-            int maxWidth = maxImageSize.getWidth();
-            Image scaleImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+            int height = icon.getIconHeight();
+            int width = icon.getIconWidth();
+            int maxHeight = bookImageLabel.getHeight();
+            int maxWidth = bookImageLabel.getWidth();
             Dimension bookSize = new Dimension(width, height);
-            bookImageLabel.setPreferredSize(bookSize);
+            Dimension maxSize = new Dimension(maxWidth, maxHeight);
+            for (Dimension i = bookSize; i.height * 1.1 < maxSize.height && i.width * 1.1 < maxSize.width; i.setSize(i.width, i.height)) {
+                i.height = (int) (i.height * 1.1);
+                i.width = (int) (i.width * 1.1);
+                bookSize.setSize(i.width, i.height);
+            }
+            System.out.println(height + " " + width);
+            System.out.println(bookSize.toString());
+            System.out.println(maxSize.toString());
+            System.out.println(bookImageLabel.getSize());
+            Image scaleImage = icon.getImage().getScaledInstance(bookSize.width, bookSize.height, Image.SCALE_SMOOTH);
             bookImageLabel.setIcon(new ImageIcon(scaleImage));
             updateReviewStars(BookSearcher.getAverageRatings(ISBNField.getText()));
             ISBNField.selectAll();
@@ -400,11 +404,11 @@ public class MainMenuPanel extends javax.swing.JPanel {
     private javax.swing.JLabel categoryLabel;
     private javax.swing.JLabel createReviewLabel;
     private javax.swing.JLabel currentSliderPosition;
-    private javax.swing.JTextArea descriptionTextArea;
+    private javax.swing.JEditorPane descriptionEditorPane;
     private javax.swing.JLabel googleRatingLabel;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLayeredPane maxImageSize;
     private javax.swing.JButton newReviewButton;
     private javax.swing.JTextArea newReviewTextArea;
