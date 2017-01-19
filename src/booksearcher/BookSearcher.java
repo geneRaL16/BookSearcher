@@ -267,6 +267,16 @@ public class BookSearcher {
         }
     }
 
+    
+    private static String getYear(String ISBN, String bookString) {
+        String year = bookString.split("\"publishedDate\": \"")[1].split("\"")[0].substring(0, 3);
+        if (year.equals("" + Integer.parseInt(year))) {
+            return year;
+        } else {
+            return "year unknown";
+        }
+    }
+    
     /**
      * Finds the book's description from within a string
      *
