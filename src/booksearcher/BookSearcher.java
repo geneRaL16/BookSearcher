@@ -261,19 +261,9 @@ public class BookSearcher {
             }
             return d[1] + " " + d[2] + " " + d[0] + Character.toString((char) 31);
         } else if (d.length > 0) {
-            return d[0] + Character.toString((char) 31);
+            return d[0] + Character.toString((char) 31); // year is in position 0
         } else {
             return date + Character.toString((char) 31);
-        }
-    }
-
-    
-    private static String getYear(String ISBN, String bookString) {
-        String year = bookString.split("\"publishedDate\": \"")[1].split("\"")[0].substring(0, 3);
-        if (year.equals("" + Integer.parseInt(year))) {
-            return year;
-        } else {
-            return "year unknown";
         }
     }
     
@@ -325,7 +315,6 @@ public class BookSearcher {
      * @return String of book information in MLA format
      */
     public static String MLA(String ISBN) {
-        // 
         String bookString = "", MLAString = "";
         try {
             bookString = Jsoup.connect("https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN).ignoreContentType(true).get().toString();
@@ -333,7 +322,7 @@ public class BookSearcher {
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        // AUTHOR SECTION
+        // AUTHOR
         String[] authors = getAuthors(ISBN, bookString);
         if (authors.length > 0) {
             String[] firstAuthor = authors[0].split(" ");
@@ -350,13 +339,13 @@ public class BookSearcher {
             MLAString += ". ";
         }
 
-        // TITLE SECTION
+        // TITLE
         MLAString += "<italics>" + getTitle(ISBN, bookString) + "</italics>. ";
 
-        // PUBLISHER SECTION
+        // PUBLISHER
         MLAString += getPublisher(ISBN, bookString) + ", ";
 
-        // PUBLICATION DATE SECTION
+        // PUBLICATION DATE
         String date = getPublishDate(ISBN, bookString);
         if (date.equals("")) {
             MLAString += "n.d.";
@@ -378,6 +367,23 @@ public class BookSearcher {
      * @return String of book information in APA format
      */
     public static String APA(String ISBN) {
+        String APAString = "";
+        
+        // AUTHOR NAMES
+        
+        
+        // YEAR
+        
+        
+        // TITLE
+        
+        
+        // LOCATION
+        
+        
+        // PUBLISHER
+        
+        
         return "";
     }
 
