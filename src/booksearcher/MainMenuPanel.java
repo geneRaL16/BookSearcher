@@ -190,16 +190,15 @@ public class MainMenuPanel extends javax.swing.JPanel {
         maxImageSizeLayout.setHorizontalGroup(
             maxImageSizeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(maxImageSizeLayout.createSequentialGroup()
-                .addGap(29, 29, 29)
-                .addComponent(bookImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
-                .addContainerGap())
+                .addContainerGap()
+                .addComponent(bookImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         maxImageSizeLayout.setVerticalGroup(
             maxImageSizeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, maxImageSizeLayout.createSequentialGroup()
-                .addContainerGap(105, Short.MAX_VALUE)
-                .addComponent(bookImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE)
-                .addGap(29, 29, 29))
+            .addGroup(maxImageSizeLayout.createSequentialGroup()
+                .addComponent(bookImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         reviewSortSel.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "LowToHigh", "HighToLow" }));
@@ -243,10 +242,10 @@ public class MainMenuPanel extends javax.swing.JPanel {
                         .addGap(87, 87, 87))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(googleRatingLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
+                                    .addComponent(googleRatingLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
                                     .addComponent(publisherLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(publishedDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(bookTitleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -254,7 +253,7 @@ public class MainMenuPanel extends javax.swing.JPanel {
                                     .addComponent(categoryLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(18, 18, 18)
                                 .addComponent(maxImageSize)))
-                        .addGap(52, 52, 52)))
+                        .addGap(18, 18, 18)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(createReviewLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -293,7 +292,7 @@ public class MainMenuPanel extends javax.swing.JPanel {
                         .addComponent(publishedDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(maxImageSize))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(ISBNLabel)
@@ -314,7 +313,7 @@ public class MainMenuPanel extends javax.swing.JPanel {
                     .addComponent(createReviewLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(starSelCanvas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(newReviewButton, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -332,16 +331,24 @@ public class MainMenuPanel extends javax.swing.JPanel {
             publisherLabel.setText("Publisher: " + info[4]);
             publishedDateLabel.setText("Pusblished: " + info[5]);
             descriptionEditorPane.setText(info[6] + "<br>MLA: " + info[7] + "<br>APA: " + info[8]);
-            
-            
+
             ImageIcon icon = new ImageIcon(BookSearcher.getBookImage(ISBNField.getText()));
-            int height = icon.getIconHeight() * 2;
-            int width = icon.getIconWidth() * 2;
-            int maxHeight = maxImageSize.getHeight();
-            int maxWidth = maxImageSize.getWidth();
-            Image scaleImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+            int height = icon.getIconHeight();
+            int width = icon.getIconWidth();
+            int maxHeight = bookImageLabel.getHeight();
+            int maxWidth = bookImageLabel.getWidth();
             Dimension bookSize = new Dimension(width, height);
-            bookImageLabel.setPreferredSize(bookSize);
+            Dimension maxSize = new Dimension(maxWidth, maxHeight);
+            for (Dimension i = bookSize; i.height * 1.1 < maxSize.height && i.width * 1.1 < maxSize.width; i.setSize(i.width, i.height)) {
+                i.height = (int) (i.height * 1.1);
+                i.width = (int) (i.width * 1.1);
+                bookSize.setSize(i.width, i.height);
+            }
+            System.out.println(height + " " + width);
+            System.out.println(bookSize.toString());
+            System.out.println(maxSize.toString());
+            System.out.println(bookImageLabel.getSize());
+            Image scaleImage = icon.getImage().getScaledInstance(bookSize.width, bookSize.height, Image.SCALE_SMOOTH);
             bookImageLabel.setIcon(new ImageIcon(scaleImage));
             updateReviewStars(BookSearcher.getAverageRatings(ISBNField.getText()));
             ISBNField.selectAll();
