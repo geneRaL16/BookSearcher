@@ -35,6 +35,7 @@ public class BookSearcher {
     static FileWriter fw2;
     static PrintWriter pw;
     static PrintWriter pw2;
+    static PrintWriter pwCategories;
     static Scanner s;
     static Scanner s2;
     static Scanner catScanner;
@@ -83,21 +84,40 @@ public class BookSearcher {
     public static void addToCategory(String ISBN, String bookString) {
         String[] categories = getCategories(ISBN, bookString);
         try {
+            boolean catFound = false;
+            s2 = new Scanner(bookDB2);
             catScanner = new Scanner(categoriesDB);
             pw2 = new PrintWriter(new FileOutputStream(bookDB2, false));
             String temp;
             temp = catScanner.nextLine();
-            while (catScanner.hasNextLine()) {
-                while (!temp.equals(categories) && catScanner.hasNextLine()) {
+                while (!temp.equals(categories[0]) && catScanner.hasNextLine()) {
                     pw2.println(temp);
+                    System.out.println(temp);
                     temp = catScanner.nextLine();
                 }
-                if (temp.equals(categories)) {
+                if (temp.equals(categories[0])) {
+                    pw2.println(temp);
+                    catFound = true;
+                    System.out.println("Found category " + temp);
                     temp = catScanner.nextLine();
                     temp += ISBN;
                     pw2.println(temp);
                 }
+                while (catScanner.hasNextLine()) {
+                    pw2.println(catScanner.nextLine());
+                }
+            if (!catFound) {
+                System.out.println("No category found - creating " + categories[0]);
+                pw2.println(categories[0]);
+                pw2.print(ISBN + Character.toString((char) 31));
             }
+            pw2.close();
+            pwCategories = new PrintWriter(new FileOutputStream(categoriesDB, false));
+            while (s2.hasNextLine()) {
+                pwCategories.println(s2.nextLine());
+            }
+            pwCategories.close();
+
         } catch (FileNotFoundException ex) {
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -200,7 +220,7 @@ public class BookSearcher {
 
         String[] authors = getAuthors(ISBN, bookString);
         String[] categories = getCategories(ISBN, bookString);
-
+        addToCategory(ISBN, bookString); //NEW CODE - TESTING
         for (int i = 0; i < authors.length; i++) { // add multiple authors' names to info list
             info += authors[i];
             if (i != authors.length - 1) {
