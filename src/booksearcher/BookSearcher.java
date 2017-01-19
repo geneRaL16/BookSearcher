@@ -207,7 +207,7 @@ public class BookSearcher {
     private static String getPublisher(String ISBN, String bookString) {
         return bookString.split("\"publisher\": \"")[1].split("\"")[0];
     }
-    
+
     private static String getCountry(String ISBN, String bookString) {
         return bookString.split("\"country\": \"")[1].split("\"")[0];
     }
@@ -270,7 +270,7 @@ public class BookSearcher {
             return date;
         }
     }
-    
+
     /**
      * Finds the book's description from within a string
      *
@@ -393,7 +393,7 @@ public class BookSearcher {
             }
             APAString += ". ";
         }
-        
+
         // YEAR
         temp = getPublishDate(ISBN, bookString);
         APAString += "(";
@@ -403,23 +403,23 @@ public class BookSearcher {
             APAString += "n.d.";
         }
         APAString += "). ";
-        
+
         // TITLE
         temp = getTitle(ISBN, bookString);
         tempArray = temp.split(":");
         APAString += "<italics>";
-        for (int i = 0; i < tempArray.length; i++) { // subtitles also begin with a capital letter
-            temp = "" + tempArray[i].charAt(0);
-            APAString += temp + tempArray[i].substring(1, tempArray[i].length()); // THIS MAY NEED ADJUSTMENT BECAUSE OF STRING LENGTH AND ALL THAT FUN STUFF FEEL FREE TO PLAY WITH IT PLS LET'S NOT FORGET TO TEST
+        for (String tempArray1 : tempArray) { // subtitles also begin with a capital letter
+            temp = "" + tempArray1.charAt(0);
+            APAString += temp + tempArray1.substring(1, tempArray1.length()); // THIS MAY NEED ADJUSTMENT BECAUSE OF STRING LENGTH AND ALL THAT FUN STUFF FEEL FREE TO PLAY WITH IT PLS LET'S NOT FORGET TO TEST
         }
         APAString += "</italics>. ";
-        
+
         // LOCATION
         APAString += "<country abbr.>" + getCountry(ISBN, bookString) + "</country abbr.>: ";
-        
+
         // PUBLISHER
         APAString += getPublisher(ISBN, bookString) + ".";
-        
+
         return APAString;
     }
 
