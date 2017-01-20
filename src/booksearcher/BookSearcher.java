@@ -13,7 +13,6 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
