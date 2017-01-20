@@ -73,7 +73,7 @@ public class BookSearcher {
         } catch (IOException ex) {
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
         }
-    return null;
+        return null;
     }
 
     public static String[] getCategory(String categories) {
@@ -445,12 +445,12 @@ public class BookSearcher {
         String[] authors = getAuthors(ISBN, bookString);
         if (authors.length > 0) {
             String[] firstAuthor = authors[0].split(" ");
-            APAString += firstAuthor[firstAuthor.length - 1] + ", ";
+            APAString += firstAuthor[firstAuthor.length - 1] + ",";
             for (int i = 0; i < firstAuthor.length - 1; i++) {
                 APAString += " " + firstAuthor[i];
             }
             if (authors.length > 1) {
-                authors[1] = "& " + authors[1];
+                authors[1] = ", & " + authors[1];
                 for (int i = 1; i < authors.length; i++) {
                     APAString += ", " + authors[i];
                 }
@@ -478,7 +478,7 @@ public class BookSearcher {
         }
         APAString += "</i>. ";
 
-        // LOCATION
+        // LOCATION FIND A WAY TO SEARCH THROUGH THE 2D ARRAY FOR THIS THINGY AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
         APAString += "(country abbreviation)" + getCountry(ISBN, bookString) + "(end abbr.): ";
 
         // PUBLISHER
