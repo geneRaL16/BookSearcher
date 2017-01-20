@@ -320,8 +320,8 @@ public class MainMenuPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void SearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchButtonActionPerformed
-        BookSearcher.addBook(ISBNField.getText());
         try {
+            BookSearcher.addBook(ISBNField.getText());
             String[] info = BookSearcher.getBookInfo(ISBNField.getText());
             bookTitleLabel.setText("Title: " + info[0]);
             googleRatingLabel.setText("Google Rating: " + info[1]);
@@ -380,8 +380,11 @@ public class MainMenuPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_reviewSortSelActionPerformed
 
     private void starSelCanvasMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_starSelCanvasMouseMoved
-        int starsSelected = (starSelCanvas.getMousePosition().x / (starSelCanvas.getSize().width / 5) + 1);
-        updateReviewStars(starsSelected);
+        try {
+            int starsSelected = (starSelCanvas.getMousePosition().x / (starSelCanvas.getSize().width / 5) + 1);
+            updateReviewStars(starsSelected);
+        } catch (NullPointerException e) {
+        }
     }//GEN-LAST:event_starSelCanvasMouseMoved
 
     private void starSelCanvasMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_starSelCanvasMouseExited

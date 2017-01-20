@@ -73,6 +73,7 @@ public class BookSearcher {
         } catch (IOException ex) {
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
         }
+        System.out.println("here");
         return null;
     }
 
@@ -506,8 +507,7 @@ public class BookSearcher {
                 temp = s3.nextLine().split(Character.toString((char) 31));
             }
             s3.close();
-        } catch (Exception e) {
-            System.out.println(e);
+        } catch (FileNotFoundException e) {
         }
         return temp;
     }
@@ -579,16 +579,14 @@ public class BookSearcher {
      */
     public static void addBook(String ISBN) {
         if (searchISBN(ISBN) == -1) {
-            addToCategory(ISBN);
             try {
+                addToCategory(ISBN);
                 pw = new PrintWriter(new FileOutputStream(bookDB, true));
                 pw.println(ISBN + Character.toString((char) 31)); //Delimited by invisible character
                 pw.flush();
                 pw.close();
             } catch (IOException ex) {
                 Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (Exception e) {
-                System.out.print("book with ISBN " + ISBN + " is not in database");//Book will not be added to the text file
             }
         }
     }
