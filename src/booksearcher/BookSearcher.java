@@ -631,12 +631,24 @@ public class BookSearcher {
     }
 
     public static boolean isISBN(String s) {
-        try {
-            Integer.parseInt(s);
+
+        try { // check all but the last character
+            Long.parseLong(s.substring(0, s.length() - 1));
         } catch (NumberFormatException e) {
             return false;
         } catch (NullPointerException e) {
             return false;
+        }
+
+        // if last character not x
+        if (!("" + s.charAt(s.length() - 1)).equalsIgnoreCase("x")) {
+            try {
+                Integer.parseInt("" + s.charAt(s.length() - 1));
+            } catch (NumberFormatException e) {
+                return false;
+            } catch (NullPointerException e) {
+                return false;
+            }
         }
         return true;
     }
