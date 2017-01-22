@@ -36,6 +36,7 @@ public class CategoryPanel extends javax.swing.JPanel {
         categoryEditorPanel = new javax.swing.JEditorPane("text/html", "");
         categoryTextField = new javax.swing.JTextField();
         categorySearchButton = new javax.swing.JButton();
+        backButton = new javax.swing.JButton();
 
         categoryEditorPanel.setEditable(false);
         jScrollPane1.setViewportView(categoryEditorPanel);
@@ -44,6 +45,13 @@ public class CategoryPanel extends javax.swing.JPanel {
         categorySearchButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 categorySearchButtonActionPerformed(evt);
+            }
+        });
+
+        backButton.setText("Back");
+        backButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backButtonActionPerformed(evt);
             }
         });
 
@@ -60,13 +68,15 @@ public class CategoryPanel extends javax.swing.JPanel {
                         .addGap(290, 290, 290)
                         .addComponent(categoryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(categorySearchButton)))
+                        .addComponent(categorySearchButton))
+                    .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(409, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(48, 48, 48)
+                .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(categoryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(categorySearchButton))
@@ -82,8 +92,13 @@ public class CategoryPanel extends javax.swing.JPanel {
         
     }//GEN-LAST:event_categorySearchButtonActionPerformed
 
+    private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
+        BookSearcherFrame.toScreen1();
+    }//GEN-LAST:event_backButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton backButton;
     private javax.swing.JEditorPane categoryEditorPanel;
     private javax.swing.JButton categorySearchButton;
     private javax.swing.JTextField categoryTextField;
