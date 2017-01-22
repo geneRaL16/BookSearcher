@@ -38,7 +38,10 @@ public class BookSearcherFrame extends javax.swing.JFrame {
         CardLayout card = (CardLayout) mainPanel1.getLayout();
         card.show(mainPanel1, "card1");
     }
-
+    public static void toScreen3() {
+        CardLayout card = (CardLayout) mainPanel1.getLayout();
+        card.show(mainPanel1, "card3");
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -51,11 +54,13 @@ public class BookSearcherFrame extends javax.swing.JFrame {
         mainPanel1 = new booksearcher.MainPanel();
         startup1 = new booksearcher.Startup();
         mainMenuPanel1 = new booksearcher.MainMenuPanel();
+        categoryPanel1 = new booksearcher.CategoryPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         mainPanel1.add(startup1, "card1");
         mainPanel1.add(mainMenuPanel1, "card2");
+        mainPanel1.add(categoryPanel1, "card3");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -117,6 +122,7 @@ public class BookSearcherFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private booksearcher.CategoryPanel categoryPanel1;
     private static booksearcher.MainMenuPanel mainMenuPanel1;
     private static booksearcher.MainPanel mainPanel1;
     private static booksearcher.Startup startup1;
