@@ -320,41 +320,45 @@ public class MainMenuPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void SearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchButtonActionPerformed
-        try {
-            BookSearcher.addBook(ISBNField.getText());
-            String[] info = BookSearcher.getBookInfo(ISBNField.getText());
-            bookTitleLabel.setText("Title: " + info[0]);
-            googleRatingLabel.setText("Google Rating: " + info[1]);
-            authorLabel.setText("Author: " + info[2]);
-            categoryLabel.setText("Category: " + info[3]);
-            publisherLabel.setText("Publisher: " + info[4]);
-            publishedDateLabel.setText("Pusblished: " + info[5]);
-            descriptionEditorPane.setText(info[6] + "<br>MLA: " + info[7] + "<br>APA: " + info[8]);
+        if (!ISBNField.getText().equals("") && BookSearcher.isISBN(ISBNField.getText())) {
+            try {
+                BookSearcher.addBook(ISBNField.getText());
+                String[] info = BookSearcher.getBookInfo(ISBNField.getText());
+                bookTitleLabel.setText("Title: " + info[0]);
+                googleRatingLabel.setText("Google Rating: " + info[1]);
+                authorLabel.setText("Author: " + info[2]);
+                categoryLabel.setText("Category: " + info[3]);
+                publisherLabel.setText("Publisher: " + info[4]);
+                publishedDateLabel.setText("Pusblished: " + info[5]);
+                descriptionEditorPane.setText(info[6] + "<br>MLA: " + info[7] + "<br>APA: " + info[8]);
 
-            ImageIcon icon = new ImageIcon(BookSearcher.getBookImage(ISBNField.getText()));
-            int height = icon.getIconHeight();
-            int width = icon.getIconWidth();
-            int maxHeight = bookImageLabel.getHeight();
-            int maxWidth = bookImageLabel.getWidth();
-            Dimension bookSize = new Dimension(width, height);
-            Dimension maxSize = new Dimension(maxWidth, maxHeight);
-            for (Dimension i = bookSize; i.height * 1.1 < maxSize.height && i.width * 1.1 < maxSize.width; i.setSize(i.width, i.height)) {
-                i.height = (int) (i.height * 1.1);
-                i.width = (int) (i.width * 1.1);
-                bookSize.setSize(i.width, i.height);
+                ImageIcon icon = new ImageIcon(BookSearcher.getBookImage(ISBNField.getText()));
+                int height = icon.getIconHeight();
+                int width = icon.getIconWidth();
+                int maxHeight = bookImageLabel.getHeight();
+                int maxWidth = bookImageLabel.getWidth();
+                Dimension bookSize = new Dimension(width, height);
+                Dimension maxSize = new Dimension(maxWidth, maxHeight);
+                for (Dimension i = bookSize; i.height * 1.1 < maxSize.height && i.width * 1.1 < maxSize.width; i.setSize(i.width, i.height)) {
+                    i.height = (int) (i.height * 1.1);
+                    i.width = (int) (i.width * 1.1);
+                    bookSize.setSize(i.width, i.height);
+                }
+                System.out.println(height + " " + width);
+                System.out.println(bookSize.toString());
+                System.out.println(maxSize.toString());
+                System.out.println(bookImageLabel.getSize());
+                Image scaleImage = icon.getImage().getScaledInstance(bookSize.width, bookSize.height, Image.SCALE_SMOOTH);
+                bookImageLabel.setIcon(new ImageIcon(scaleImage));
+                updateReviewStars(BookSearcher.getAverageRatings(ISBNField.getText()));
+                ISBNField.selectAll();
+            } catch (IndexOutOfBoundsException e) {
+                JOptionPane.showMessageDialog(null, "Book not found in database!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
             }
-            System.out.println(height + " " + width);
-            System.out.println(bookSize.toString());
-            System.out.println(maxSize.toString());
-            System.out.println(bookImageLabel.getSize());
-            Image scaleImage = icon.getImage().getScaledInstance(bookSize.width, bookSize.height, Image.SCALE_SMOOTH);
-            bookImageLabel.setIcon(new ImageIcon(scaleImage));
-            updateReviewStars(BookSearcher.getAverageRatings(ISBNField.getText()));
-            ISBNField.selectAll();
-        } catch (IndexOutOfBoundsException e) {
-            JOptionPane.showMessageDialog(null, "Book not found in database!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
+            updateReviews();
+        } else {
+            JOptionPane.showMessageDialog(null, "Please enter a valid ISBN!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
         }
-        updateReviews();
     }//GEN-LAST:event_SearchButtonActionPerformed
 
     private void newReviewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newReviewButtonActionPerformed

@@ -629,4 +629,15 @@ public class BookSearcher {
             }
         }
     }
+
+    public static boolean isISBN(String s) {
+        try {
+            Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            return false;
+        } catch (NullPointerException e) {
+            return false;
+        }
+        return true;
+    }
 }
