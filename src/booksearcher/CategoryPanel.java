@@ -9,6 +9,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 
 /**
  *
@@ -34,9 +36,9 @@ public class CategoryPanel extends javax.swing.JPanel {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         categoryEditorPanel = new javax.swing.JEditorPane("text/html", "");
-        categoryTextField = new javax.swing.JTextField();
         categorySearchButton = new javax.swing.JButton();
         backButton = new javax.swing.JButton();
+        catComboBox = new javax.swing.JComboBox<>();
 
         categoryEditorPanel.setEditable(false);
         jScrollPane1.setViewportView(categoryEditorPanel);
@@ -55,6 +57,8 @@ public class CategoryPanel extends javax.swing.JPanel {
             }
         });
 
+        catComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(BookSearcher.loadExistingCategories()));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -65,9 +69,9 @@ public class CategoryPanel extends javax.swing.JPanel {
                         .addGap(249, 249, 249)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 476, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(290, 290, 290)
-                        .addComponent(categoryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(363, 363, 363)
+                        .addComponent(catComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(143, 143, 143)
                         .addComponent(categorySearchButton))
                     .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(409, Short.MAX_VALUE))
@@ -78,8 +82,8 @@ public class CategoryPanel extends javax.swing.JPanel {
                 .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(categoryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(categorySearchButton))
+                    .addComponent(categorySearchButton)
+                    .addComponent(catComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(37, 37, 37)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 485, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(44, Short.MAX_VALUE))
@@ -87,11 +91,20 @@ public class CategoryPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void categorySearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categorySearchButtonActionPerformed
-        String[] categories = BookSearcher.getCategory(categoryTextField.getText());
-        categoryEditorPanel.setText("<html><img src=\"file:\\\\c:\\images\\example.gif\\\" width=200 height=200></img>");
-        
+        String[] categories = BookSearcher.getCategory(catComboBox.getSelectedItem().toString());
+        categoryEditorPanel.setText("<a href=" +categories[0] + ">"+BookSearcher.getBookInfo(categories[0])[0]+"</a>" + "<html><img src="+BookSearcher.getBookImageString(categories[0])+" width=150 height=200></img>" + "<html><img src="+BookSearcher.getBookImageString(categories[0])+" width=150 height=200></img>" + "<html><img src="+BookSearcher.getBookImageString(categories[0])+" width=150 height=200></img>");
+        categoryEditorPanel.addHyperlinkListener(new HyperlinkListener() {
+        public void hyperlinkUpdate(HyperlinkEvent e) {
+            if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
+                BookSearcherFrame.toScreen2();
+                MainMenuPanel.ISBNField.setText(e.getDescription());
+                MainMenuPanel.SearchButton.doClick();
+            }
+        }
+    });
     }//GEN-LAST:event_categorySearchButtonActionPerformed
 
+    
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         BookSearcherFrame.toScreen1();
     }//GEN-LAST:event_backButtonActionPerformed
@@ -99,9 +112,9 @@ public class CategoryPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
+    private javax.swing.JComboBox<String> catComboBox;
     private javax.swing.JEditorPane categoryEditorPanel;
     private javax.swing.JButton categorySearchButton;
-    private javax.swing.JTextField categoryTextField;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }

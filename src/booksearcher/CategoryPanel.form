@@ -23,9 +23,9 @@
                       <Component id="jScrollPane1" min="-2" pref="476" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="290" max="-2" attributes="0"/>
-                      <Component id="categoryTextField" min="-2" pref="262" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="363" max="-2" attributes="0"/>
+                      <Component id="catComboBox" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="143" max="-2" attributes="0"/>
                       <Component id="categorySearchButton" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="backButton" min="-2" pref="94" max="-2" attributes="0"/>
@@ -40,8 +40,8 @@
               <Component id="backButton" min="-2" pref="37" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="categoryTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="categorySearchButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="catComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
               <Component id="jScrollPane1" min="-2" pref="485" max="-2" attributes="0"/>
@@ -68,8 +68,6 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JTextField" name="categoryTextField">
-    </Component>
     <Component class="javax.swing.JButton" name="categorySearchButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="Search"/>
@@ -85,6 +83,16 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="backButtonActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="catComboBox">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="new javax.swing.DefaultComboBoxModel&lt;&gt;(BookSearcher.loadExistingCategories())" type="code"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
     </Component>
   </SubComponents>
 </Form>

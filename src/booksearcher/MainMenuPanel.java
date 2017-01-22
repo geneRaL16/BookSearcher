@@ -417,9 +417,9 @@ BookSearcherFrame.toScreen1();
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField ISBNField;
+    static javax.swing.JTextField ISBNField;
     private javax.swing.JLabel ISBNLabel;
-    protected static javax.swing.JButton SearchButton;
+    static javax.swing.JButton SearchButton;
     private javax.swing.JLabel authorLabel;
     private javax.swing.JButton backButton;
     private javax.swing.JLabel bookImageLabel;

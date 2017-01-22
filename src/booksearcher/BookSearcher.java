@@ -151,6 +151,22 @@ public class BookSearcher {
         categoriesDB = new File("categories.txt");
     }
 
+    public static String[] loadExistingCategories () {
+        ArrayList<String> temp = null;
+        try {
+            temp = new ArrayList<>();
+            catScanner = new Scanner(categoriesDB);
+            while (catScanner.hasNextLine()) {
+                temp.add(catScanner.nextLine());
+                catScanner.nextLine(); //Skips additional line as this is order for category naming
+            }
+           
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return temp.toArray(new String[temp.size()]);
+    }
+    
     /**
      * Loads the entire list of bad words into an Array to be checked against
      * when users enter reviews for books.
@@ -569,6 +585,16 @@ public class BookSearcher {
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null; //Will never occur (Should this be here?)
+    }
+
+        /**
+         * Gets the Google string for the image of the book
+         * @param ISBN  String ISBN number of the book
+         * @return String Image URL of the cover of the book
+         */
+    public static String getBookImageString(String ISBN) {
+        String bookString = getBookString(ISBN);
+        return (bookString.split("\"thumbnail\": \"")[1].split("\"")[0].replaceAll("&amp;", "&"));
     }
 
     /**
