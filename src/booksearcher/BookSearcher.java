@@ -630,26 +630,36 @@ public class BookSearcher {
         }
     }
 
+    /**
+     * Checks if a string is an ISBN
+     *
+     * @param s string to check
+     * @return true if valid ISBN
+     */
     public static boolean isISBN(String s) {
-
-        try { // check all but the last character
-            Long.parseLong(s.substring(0, s.length() - 1));
-        } catch (NumberFormatException e) {
-            return false;
-        } catch (NullPointerException e) {
-            return false;
-        }
-
-        // if last character not x
-        if (!("" + s.charAt(s.length() - 1)).equalsIgnoreCase("x")) {
-            try {
-                Integer.parseInt("" + s.charAt(s.length() - 1));
+        int length = s.length();
+        if (length == 10 || length == 13) {
+            try { // check all but the last character
+                Long.parseLong(s.substring(0, length - 1));
             } catch (NumberFormatException e) {
                 return false;
             } catch (NullPointerException e) {
                 return false;
             }
+
+            // if last character not x
+            if (!("" + s.charAt(s.length() - 1)).equalsIgnoreCase("x")) {
+                try {
+                    Integer.parseInt("" + s.charAt(length - 1));
+                } catch (NumberFormatException e) {
+                    return false;
+                } catch (NullPointerException e) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return false;
         }
-        return true;
     }
 }
