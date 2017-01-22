@@ -638,12 +638,10 @@ public class BookSearcher {
      */
     public static boolean isISBN(String s) {
         int length = s.length();
-        if (length == 10 || length == 13) {
+        if (length == 13 | length == 10) {
             try { // check all but the last character
                 Long.parseLong(s.substring(0, length - 1));
-            } catch (NumberFormatException e) {
-                return false;
-            } catch (NullPointerException e) {
+            } catch (NumberFormatException | NullPointerException e) {
                 return false;
             }
 
@@ -651,9 +649,7 @@ public class BookSearcher {
             if (!("" + s.charAt(s.length() - 1)).equalsIgnoreCase("x")) {
                 try {
                     Integer.parseInt("" + s.charAt(length - 1));
-                } catch (NumberFormatException e) {
-                    return false;
-                } catch (NullPointerException e) {
+                } catch (NumberFormatException | NullPointerException e) {
                     return false;
                 }
             }
