@@ -1,5 +1,6 @@
 package booksearcher;
 
+import java.awt.CardLayout;
 import java.awt.Toolkit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,16 +17,26 @@ public class BookSearcherFrame extends javax.swing.JFrame {
      * Creates new form BookSearcherFrame
      */
     public BookSearcherFrame() {
-        
+
         this.setExtendedState(BookSearcherFrame.MAXIMIZED_BOTH);
         this.setUndecorated(true);
         this.setVisible(true);
         initComponents();
         this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
         this.getRootPane().setDefaultButton(MainMenuPanel.SearchButton);
-        mainMenuPanel2.setFocusField();
-        
+        //mainMenuPanel2.setFocusField();
+
         //this.setDefaultCloseOperation(BookSearcherFrame.DO_NOTHING_ON_CLOSE);
+    }
+
+    public static void toScreen2() {
+        CardLayout card = (CardLayout) mainPanel1.getLayout();
+        card.show(mainPanel1, "card2");
+    }
+
+    public static void toScreen1() {
+        CardLayout card = (CardLayout) mainPanel1.getLayout();
+        card.show(mainPanel1, "card1");
     }
 
     /**
@@ -37,19 +48,24 @@ public class BookSearcherFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        mainMenuPanel2 = new booksearcher.MainMenuPanel();
+        mainPanel1 = new booksearcher.MainPanel();
+        startup1 = new booksearcher.Startup();
+        mainMenuPanel1 = new booksearcher.MainMenuPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        mainPanel1.add(startup1, "card1");
+        mainPanel1.add(mainMenuPanel1, "card2");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainMenuPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 990, Short.MAX_VALUE)
+            .addComponent(mainPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 990, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainMenuPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 776, Short.MAX_VALUE)
+            .addComponent(mainPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 776, Short.MAX_VALUE)
         );
 
         pack();
@@ -101,6 +117,8 @@ public class BookSearcherFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private booksearcher.MainMenuPanel mainMenuPanel2;
+    private static booksearcher.MainMenuPanel mainMenuPanel1;
+    private static booksearcher.MainPanel mainPanel1;
+    private static booksearcher.Startup startup1;
     // End of variables declaration//GEN-END:variables
 }
