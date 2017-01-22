@@ -78,6 +78,7 @@ public class CategoryPanel extends javax.swing.JPanel {
 
     private void categorySearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categorySearchButtonActionPerformed
         String[] categories = BookSearcher.getCategory(categoryTextField.getText());
+        categoryEditorPanel.setText("<html><img src=\"file:\\\\c:\\images\\example.gif\\\" width=200 height=200></img>");
         
     }//GEN-LAST:event_categorySearchButtonActionPerformed
 
