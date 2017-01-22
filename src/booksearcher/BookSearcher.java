@@ -29,6 +29,7 @@ public class BookSearcher {
     static File bookDB2;
     static File categoriesDB;
     static File badWords;
+    static File countries;
     static FileWriter fw;
     static FileWriter fwF;
     static FileWriter fw2;
@@ -42,6 +43,23 @@ public class BookSearcher {
     static ArrayList<String> badWordTempList;
     static String[] badWordList; //List of bad words to be checked against
     static Scanner kb;
+    static String[][] countryConvert = new String[249][2];
+
+    /**
+     * method used to initialize some required components
+     */
+    public static void setup() {
+        String[] temp;
+        try { // puts country conversion things in a two-dimensional array
+            s = new Scanner(countries);
+            for (int i = 0; i < countryConvert.length && s.hasNextLine(); i++) {
+                temp = s.nextLine().split(";");
+                countryConvert[i][1] = temp[0];
+                countryConvert[i][0] = temp[1];
+            }
+        } catch (FileNotFoundException e) {
+        }
+    }
 
     /**
      * just a quick test, see if stuff runs
