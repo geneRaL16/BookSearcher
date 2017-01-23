@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import org.jsoup.Jsoup;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
+import org.jsoup.HttpStatusException;
 
 /**
  *
@@ -60,20 +61,15 @@ public class BookSearcher {
         }
 
         String isbn = "9780552152679";
-        addBook(isbn);
-        addBook("9780375753770");
-        addBook("0735619670");
+        //addBook(isbn);
+        //addBook("9780375753770");
+        //addBook("0735619670");
         addReview("0735619670", 4, "Could have been better");
     }
 
-    public static String getBookString(String ISBN) {
-        try {
+    public static String getBookString(String ISBN) throws IOException {
             return Jsoup.connect("https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN).ignoreContentType(true).get().toString();
-        } catch (IOException ex) {
-            Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        System.out.println("here");
-        return null;
+        //return "";
     }
 
     public static String[] getCategory(String categories) {
@@ -94,7 +90,7 @@ public class BookSearcher {
      *
      * @param ISBN String ISBN number of the given book
      */
-    public static void addToCategory(String ISBN) {
+    public static void addToCategory(String ISBN) throws IOException {
         String[] categories = getCategories(ISBN, getBookString(ISBN));
         try {
             boolean catFound = false;
@@ -236,7 +232,7 @@ public class BookSearcher {
      * @param ISBN book ISBN to search by
      * @return array of Strings holding all of the relevant information
      */
-    public static String[] getBookInfo(String ISBN) throws IndexOutOfBoundsException {
+    public static String[] getBookInfo(String ISBN) throws IndexOutOfBoundsException, IOException {
         String bookString = "";
         bookString = getBookString(ISBN);
         String info = "";
@@ -566,7 +562,7 @@ public class BookSearcher {
      * @param ISBN String ISBN number of the book
      * @return Google thumbnail image
      */
-    public static BufferedImage getBookImage(String ISBN) {
+    public static BufferedImage getBookImage(String ISBN) throws IOException {
         String bookString = getBookString(ISBN);
         BufferedImage stock = null;
         try {
@@ -590,7 +586,7 @@ public class BookSearcher {
      * @param ISBN String ISBN number of the book
      * @return String Image URL of the cover of the book
      */
-    public static String getBookImageString(String ISBN) {
+    public static String getBookImageString(String ISBN) throws IOException {
         String bookString = getBookString(ISBN);
         return (bookString.split("\"thumbnail\": \"")[1].split("\"")[0].replaceAll("&amp;", "&"));
     }
@@ -600,7 +596,7 @@ public class BookSearcher {
      *
      * @param ISBN String book ISBN
      */
-    public static void addBook(String ISBN) {
+    public static void addBook(String ISBN) throws org.jsoup.HttpStatusException {
         if (searchISBN(ISBN) == -1) {
             try {
                 addToCategory(ISBN);

@@ -5,14 +5,17 @@
  */
 package booksearcher;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+import org.jsoup.HttpStatusException;
 
 /**
  *
@@ -101,28 +104,47 @@ public class CategoryPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void categorySearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categorySearchButtonActionPerformed
-        String[] categories = BookSearcher.getCategory(catComboBox.getSelectedItem().toString());
-        String[][] catInfo = new String[categories.length][2];
-        for (int i = 0; i < categories.length; i++) {
-            catInfo[i][0] = Integer.toString(BookSearcher.getAverageRatings(categories[i]));
-            catInfo[i][1] = categories[i];
-        }
-        Arrays.sort(catInfo, new ColumnComparator(0));
-
-        String temp = "";
-        for (int i = 0; i < categories.length; i++) {
-            temp += "<a href=" + catInfo[i][1] + ">" + BookSearcher.getBookInfo(catInfo[i][1])[0] + "</a>" + "<html><img src=" + BookSearcher.getBookImageString(catInfo[i][1]) + " width=150 height=200></img>";
-        }
-        categoryEditorPanel.setText(temp);
-        categoryEditorPanel.addHyperlinkListener(new HyperlinkListener() {
-            public void hyperlinkUpdate(HyperlinkEvent e) {
-                if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
-                    BookSearcherFrame.toScreen2();
-                    MainMenuPanel.ISBNField.setText(e.getDescription());
-                    MainMenuPanel.SearchButton.doClick();
-                }
+        try {
+            String[] categories = BookSearcher.getCategory(catComboBox.getSelectedItem().toString());
+            String[][] catInfo = new String[categories.length][2];
+            for (int i = 0; i < categories.length; i++) {
+                catInfo[i][0] = Integer.toString(BookSearcher.getAverageRatings(categories[i]));
+                catInfo[i][1] = categories[i];
             }
-        });
+            Arrays.sort(catInfo, new ColumnComparator(0));
+            int booksPerLine = categoryEditorPanel.getWidth() / 400;
+            int lines = categoryEditorPanel.getHeight() / 100;
+            System.out.println(booksPerLine);
+            String temp = "";
+            for (int x = 0; x < categories.length; x += booksPerLine) {
+                for (int i = x; i < categories.length && i < (x + booksPerLine); i++) {
+                    temp += "<html> <img src= " + BookSearcher.getBookImageString(catInfo[i][1]) + "/>";
+                    for (int y = 0; y < booksPerLine * 4.5; y++) {
+                        temp += " &nbsp; ";
+                    }
+                }
+                temp += "<br>";
+                for (int i = x; i < categories.length && i < (x + booksPerLine); i++) {
+                    temp += "<a href=" + catInfo[i][1] + ">" + BookSearcher.getBookInfo(catInfo[i][1])[0] + " - " + catInfo[i][0] + "/5 </a>";
+                    for (int y = 0; y < booksPerLine * 4; y++) {
+                        temp += " &nbsp; ";
+                    }
+                }
+                temp += "<br>"; //Adds a space between books
+            }
+            categoryEditorPanel.setText(temp);
+            categoryEditorPanel.addHyperlinkListener(new HyperlinkListener() {
+                public void hyperlinkUpdate(HyperlinkEvent e) {
+                    if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
+                        BookSearcherFrame.toScreen2();
+                        MainMenuPanel.ISBNField.setText(e.getDescription());
+                        MainMenuPanel.SearchButton.doClick();
+                    }
+                }
+            });
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error 403  - Please wait 10 seconds before performing any more searches!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
+        }
     }//GEN-LAST:event_categorySearchButtonActionPerformed
 
 
