@@ -568,24 +568,21 @@ public class BookSearcher {
      */
     public static BufferedImage getBookImage(String ISBN) {
         String bookString = getBookString(ISBN);
+        BufferedImage stock = null;
         try {
-            URL bookURL = new URL(bookString.split("\"thumbnail\": \"")[1].split("\"")[0].replaceAll("&amp;", "&"));
-
+            URL bookURL = new URL(bookString.split("\"xthumbnail\": \"")[1].split("\"")[0].replaceAll("&amp;", "&"));
+            stock = ImageIO.read(new File("res" + File.pathSeparator + "Images" + File.pathSeparator + "defaultBookImage.png"));
             return ImageIO.read(bookURL);
         } catch (ArrayIndexOutOfBoundsException e) { //No image available
             System.out.println("No thumbnail found for book " + ISBN);
-            try { //Returns "No Image Available" image
-                return ImageIO.read(new File("res" + File.pathSeparator + "Images" + File.pathSeparator + "defaultBookImage.png"));
-            } catch (IOException ex) {
-                Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
-            }
+
         } catch (MalformedURLException ex) {
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("No Image book file not found '/res/Images/defaultBookImage.png')");
         }
-        return null; //Will never occur (Should this be here?)
-    }
+            return null;
+        }
 
         /**
          * Gets the Google string for the image of the book

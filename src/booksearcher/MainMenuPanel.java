@@ -69,6 +69,7 @@ public class MainMenuPanel extends javax.swing.JPanel {
         reviewTextArea.setText(temp);
         newReviewTextArea.setText("");
     }
+    
 
     public void updateReviewStars(int rating) {
         if (rating != Integer.parseInt(Character.toString(currentSliderPosition.getText().charAt(0)))) { //Only updates if new star is selected
@@ -162,6 +163,11 @@ public class MainMenuPanel extends javax.swing.JPanel {
         newReviewTextArea.setLineWrap(true);
         newReviewTextArea.setRows(5);
         newReviewTextArea.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        newReviewTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                newReviewTextAreaKeyTyped(evt);
+            }
+        });
         jScrollPane2.setViewportView(newReviewTextArea);
 
         reviewTextArea.setEditable(false);
@@ -359,7 +365,9 @@ public class MainMenuPanel extends javax.swing.JPanel {
                 }
                 Image scaleImage = icon.getImage().getScaledInstance(bookSize.width, bookSize.height, Image.SCALE_SMOOTH);
                 bookImageLabel.setIcon(new ImageIcon(scaleImage));
+                bookRating = BookSearcher.getAverageRatings(ISBNField.getText());
                 updateReviewStars(bookRating);
+                ISBNField.selectAll();
             } catch (IndexOutOfBoundsException e) {
                 JOptionPane.showMessageDialog(null, "Book not found in database!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -371,6 +379,7 @@ public class MainMenuPanel extends javax.swing.JPanel {
         ISBNField.selectAll();
         newReviewTextArea.getDocument().putProperty("filterNewlines", Boolean.TRUE);
     }//GEN-LAST:event_SearchButtonActionPerformed
+
 
     private void reviewSortSelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reviewSortSelActionPerformed
         updateReviews();
@@ -419,6 +428,10 @@ public class MainMenuPanel extends javax.swing.JPanel {
         updateReviews();
     }//GEN-LAST:event_newReviewButtonActionPerformed
 
+    private void newReviewTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_newReviewTextAreaKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_newReviewTextAreaKeyTyped
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     static javax.swing.JTextField ISBNField;
@@ -444,6 +457,6 @@ public class MainMenuPanel extends javax.swing.JPanel {
     private javax.swing.JLabel reviewLabel;
     private javax.swing.JComboBox<String> reviewSortSel;
     private javax.swing.JTextArea reviewTextArea;
-    private java.awt.Canvas starSelCanvas;
+    static java.awt.Canvas starSelCanvas;
     // End of variables declaration//GEN-END:variables
 }
