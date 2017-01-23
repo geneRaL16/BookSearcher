@@ -421,6 +421,8 @@ public class MainMenuPanel extends javax.swing.JPanel {
         } else if (bookRating == 0) {
             JOptionPane.showMessageDialog(null, "Please enter a valid rating", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
         }
+        bookRating = BookSearcher.getAverageRatings(ISBNField.getText());
+        updateReviewStars(bookRating);
         ISBNField.requestFocus();
         ISBNField.selectAll();
         updateReviews();
