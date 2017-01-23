@@ -157,11 +157,6 @@ public class MainMenuPanel extends javax.swing.JPanel {
                 newReviewButtonActionPerformed(evt);
             }
         });
-        newReviewButton.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                newReviewButtonKeyPressed(evt);
-            }
-        });
 
         newReviewTextArea.setColumns(20);
         newReviewTextArea.setLineWrap(true);
@@ -349,7 +344,7 @@ public class MainMenuPanel extends javax.swing.JPanel {
                 publisherLabel.setText("Publisher: " + info[4]);
                 publishedDateLabel.setText("Pusblished: " + info[5]);
                 descriptionEditorPane.setText(info[6] + "<br>MLA: " + info[7] + "<br>APA: " + info[8]);
-
+                bookRating = BookSearcher.getAverageRatings(ISBNField.getText());
                 ImageIcon icon = new ImageIcon(BookSearcher.getBookImage(ISBNField.getText()));
                 int height = icon.getIconHeight();
                 int width = icon.getIconWidth();
@@ -362,14 +357,9 @@ public class MainMenuPanel extends javax.swing.JPanel {
                     i.width = (int) (i.width * 1.1);
                     bookSize.setSize(i.width, i.height);
                 }
-                System.out.println(height + " " + width);
-                System.out.println(bookSize.toString());
-                System.out.println(maxSize.toString());
-                System.out.println(bookImageLabel.getSize());
                 Image scaleImage = icon.getImage().getScaledInstance(bookSize.width, bookSize.height, Image.SCALE_SMOOTH);
                 bookImageLabel.setIcon(new ImageIcon(scaleImage));
-                updateReviewStars(BookSearcher.getAverageRatings(ISBNField.getText()));
-                ISBNField.selectAll();
+                updateReviewStars(bookRating);
             } catch (IndexOutOfBoundsException e) {
                 JOptionPane.showMessageDialog(null, "Book not found in database!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -377,25 +367,10 @@ public class MainMenuPanel extends javax.swing.JPanel {
         } else {
             JOptionPane.showMessageDialog(null, "Please enter a valid ISBN!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
         }
+        ISBNField.requestFocus();
+        ISBNField.selectAll();
+        newReviewTextArea.getDocument().putProperty("filterNewlines", Boolean.TRUE);
     }//GEN-LAST:event_SearchButtonActionPerformed
-
-    private void newReviewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newReviewButtonActionPerformed
-        int isbnLoc = BookSearcher.searchISBN(ISBNField.getText());
-        if (newReviewTextArea.getText().length() > 0 && isbnLoc >= 0 && bookRating > 0) {
-            if (BookSearcher.checkBadWord(newReviewTextArea.getText())) {
-                BookSearcher.addReview(ISBNField.getText(), bookRating, newReviewTextArea.getText());
-            } else {
-                JOptionPane.showMessageDialog(null, "Reviews cannot contain profanity!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
-            }
-        } else if (isbnLoc < 0) {
-            JOptionPane.showMessageDialog(null, "Please enter a valid ISBN!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
-        } else if (newReviewTextArea.getText().length() <= 0) {
-            JOptionPane.showMessageDialog(null, "Please enter a review first!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
-        } else if (bookRating == 0) {
-            JOptionPane.showMessageDialog(null, "Please enter a valid rating", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
-        }
-        updateReviews();
-    }//GEN-LAST:event_newReviewButtonActionPerformed
 
     private void reviewSortSelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reviewSortSelActionPerformed
         updateReviews();
@@ -422,11 +397,25 @@ public class MainMenuPanel extends javax.swing.JPanel {
         Startup.jButton1.requestFocus();
     }//GEN-LAST:event_backButtonActionPerformed
 
-    private void newReviewButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_newReviewButtonKeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            newReviewButton.doClick();
+    private void newReviewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newReviewButtonActionPerformed
+        int isbnLoc = BookSearcher.searchISBN(ISBNField.getText());
+        if (newReviewTextArea.getText().length() > 0 && isbnLoc >= 0 && bookRating > 0) {
+            if (BookSearcher.checkBadWord(newReviewTextArea.getText())) {
+                BookSearcher.addReview(ISBNField.getText(), bookRating, newReviewTextArea.getText());
+            } else {
+                JOptionPane.showMessageDialog(null, "Reviews cannot contain profanity!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else if (isbnLoc < 0) {
+            JOptionPane.showMessageDialog(null, "Please enter a valid ISBN!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
+        } else if (newReviewTextArea.getText().length() <= 0) {
+            JOptionPane.showMessageDialog(null, "Please enter a review first!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
+        } else if (bookRating == 0) {
+            JOptionPane.showMessageDialog(null, "Please enter a valid rating", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
         }
-    }//GEN-LAST:event_newReviewButtonKeyPressed
+        ISBNField.requestFocus();
+        ISBNField.selectAll();
+        updateReviews();
+    }//GEN-LAST:event_newReviewButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
