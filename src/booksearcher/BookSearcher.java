@@ -151,7 +151,7 @@ public class BookSearcher {
         categoriesDB = new File("categories.txt");
     }
 
-    public static String[] loadExistingCategories () {
+    public static String[] loadExistingCategories() {
         ArrayList<String> temp = null;
         try {
             temp = new ArrayList<>();
@@ -160,13 +160,13 @@ public class BookSearcher {
                 temp.add(catScanner.nextLine());
                 catScanner.nextLine(); //Skips additional line as this is order for category naming
             }
-           
+
         } catch (FileNotFoundException ex) {
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
         }
         return temp.toArray(new String[temp.size()]);
     }
-    
+
     /**
      * Loads the entire list of bad words into an Array to be checked against
      * when users enter reviews for books.
@@ -570,25 +570,26 @@ public class BookSearcher {
         String bookString = getBookString(ISBN);
         BufferedImage stock = null;
         try {
-            URL bookURL = new URL(bookString.split("\"xthumbnail\": \"")[1].split("\"")[0].replaceAll("&amp;", "&"));
             stock = ImageIO.read(new File("res" + File.pathSeparator + "Images" + File.pathSeparator + "defaultBookImage.png"));
+            URL bookURL = new URL(bookString.split("\"xthumbnail\": \"")[1].split("\"")[0].replaceAll("&amp;", "&"));
             return ImageIO.read(bookURL);
         } catch (ArrayIndexOutOfBoundsException e) { //No image available
             System.out.println("No thumbnail found for book " + ISBN);
-
+            return stock;
         } catch (MalformedURLException ex) {
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             System.out.println("No Image book file not found '/res/Images/defaultBookImage.png')");
         }
-            return null;
-        }
+        return null;
+    }
 
-        /**
-         * Gets the Google string for the image of the book
-         * @param ISBN  String ISBN number of the book
-         * @return String Image URL of the cover of the book
-         */
+    /**
+     * Gets the Google string for the image of the book
+     *
+     * @param ISBN String ISBN number of the book
+     * @return String Image URL of the cover of the book
+     */
     public static String getBookImageString(String ISBN) {
         String bookString = getBookString(ISBN);
         return (bookString.split("\"thumbnail\": \"")[1].split("\"")[0].replaceAll("&amp;", "&"));
