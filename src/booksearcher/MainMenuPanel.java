@@ -2,6 +2,7 @@ package booksearcher;
 
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -154,6 +155,11 @@ public class MainMenuPanel extends javax.swing.JPanel {
         newReviewButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 newReviewButtonActionPerformed(evt);
+            }
+        });
+        newReviewButton.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                newReviewButtonKeyPressed(evt);
             }
         });
 
@@ -412,8 +418,15 @@ public class MainMenuPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_starSelCanvasMouseClicked
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-BookSearcherFrame.toScreen1();
+        BookSearcherFrame.toScreen1();
+        Startup.jButton1.requestFocus();
     }//GEN-LAST:event_backButtonActionPerformed
+
+    private void newReviewButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_newReviewButtonKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            newReviewButton.doClick();
+        }
+    }//GEN-LAST:event_newReviewButtonKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
