@@ -570,8 +570,8 @@ public class BookSearcher {
         String bookString = getBookString(ISBN);
         BufferedImage stock = null;
         try {
-            stock = ImageIO.read(new File("res" + File.pathSeparator + "Images" + File.pathSeparator + "defaultBookImage.png"));
-            URL bookURL = new URL(bookString.split("\"xthumbnail\": \"")[1].split("\"")[0].replaceAll("&amp;", "&"));
+            stock = ImageIO.read(new File("defaultBookImage.png"));
+            URL bookURL = new URL(bookString.split("\"thumbnail\": \"")[1].split("\"")[0].replaceAll("&amp;", "&"));
             return ImageIO.read(bookURL);
         } catch (ArrayIndexOutOfBoundsException e) { //No image available
             System.out.println("No thumbnail found for book " + ISBN);
