@@ -7,6 +7,8 @@ package booksearcher;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.HyperlinkEvent;
@@ -57,8 +59,6 @@ public class CategoryPanel extends javax.swing.JPanel {
             }
         });
 
-        catComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(BookSearcher.loadExistingCategories()));
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -101,23 +101,30 @@ public class CategoryPanel extends javax.swing.JPanel {
 
     private void categorySearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categorySearchButtonActionPerformed
         String[] categories = BookSearcher.getCategory(catComboBox.getSelectedItem().toString());
+        String[][] catInfo = new String[categories.length][2];
+        for (int i = 0; i < categories.length; i++) {
+            catInfo[i][0] = Integer.toString(BookSearcher.getAverageRatings(categories[i]));
+            catInfo[i][1] = categories[i];
+        }
+        Arrays.sort(catInfo, new ColumnComparator(0));
+
         String temp = "";
         for (int i = 0; i < categories.length; i++) {
-            temp += "<a href=" +categories[i] + ">"+BookSearcher.getBookInfo(categories[i])[0]+"</a>" + "<html><img src="+BookSearcher.getBookImageString(categories[i])+" width=150 height=200></img>";
+            temp += "<a href=" + catInfo[i][1] + ">" + BookSearcher.getBookInfo(catInfo[i][1])[0] + "</a>" + "<html><img src=" + BookSearcher.getBookImageString(catInfo[i][1]) + " width=150 height=200></img>";
         }
         categoryEditorPanel.setText(temp);
         categoryEditorPanel.addHyperlinkListener(new HyperlinkListener() {
-        public void hyperlinkUpdate(HyperlinkEvent e) {
-            if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
-                BookSearcherFrame.toScreen2();
-                MainMenuPanel.ISBNField.setText(e.getDescription());
-                MainMenuPanel.SearchButton.doClick();
+            public void hyperlinkUpdate(HyperlinkEvent e) {
+                if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
+                    BookSearcherFrame.toScreen2();
+                    MainMenuPanel.ISBNField.setText(e.getDescription());
+                    MainMenuPanel.SearchButton.doClick();
+                }
             }
-        }
-    });
+        });
     }//GEN-LAST:event_categorySearchButtonActionPerformed
 
-    
+
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         BookSearcherFrame.toScreen1();
         Startup.jButton1.requestFocus();
@@ -126,9 +133,24 @@ public class CategoryPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
-    private javax.swing.JComboBox<String> catComboBox;
+    static javax.swing.JComboBox<String> catComboBox;
     private javax.swing.JEditorPane categoryEditorPanel;
     public static javax.swing.JButton categorySearchButton;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+}
+
+class ColumnComparator implements Comparator {
+
+    int columnToSort;
+
+    ColumnComparator(int columnToSort) {
+        this.columnToSort = columnToSort;
+    }
+
+    public int compare(Object o1, Object o2) {
+        String[] row1 = (String[]) o1;
+        String[] row2 = (String[]) o2;
+        return row2[columnToSort].compareTo(row1[columnToSort]);
+    }
 }

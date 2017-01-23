@@ -7,6 +7,9 @@ package booksearcher;
 
 import java.awt.CardLayout;
 import java.awt.Toolkit;
+import java.util.Arrays;
+import javafx.scene.control.ComboBox;
+import javax.swing.JComboBox;
 
 /**
  *
@@ -87,6 +90,12 @@ public class Startup extends javax.swing.JPanel {
 
     private void categorySearcherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categorySearcherActionPerformed
         BookSearcherFrame.toScreen3();
+        String[] temp = BookSearcher.loadExistingCategories();
+        Arrays.sort(temp);
+        CategoryPanel.catComboBox.removeAllItems();
+        for (int i = 0; i < temp.length; i++) {
+            CategoryPanel.catComboBox.addItem(temp[i]);
+        }
         CategoryPanel.categorySearchButton.requestFocus();
     }//GEN-LAST:event_categorySearcherActionPerformed
 
