@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jsoup.Jsoup;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.imageio.ImageIO;
 
 /**
@@ -29,7 +30,7 @@ public class BookSearcher {
     static File bookDB2;
     static File categoriesDB;
     static File badWords;
-    static File countries;
+    static File countries = new File("countries.txt");
     static FileWriter fw;
     static FileWriter fwF;
     static FileWriter fw2;
@@ -43,7 +44,8 @@ public class BookSearcher {
     static ArrayList<String> badWordTempList;
     static String[] badWordList; //List of bad words to be checked against
     static Scanner kb;
-    static String[][] countryConvert = new String[249][2];
+    static String[] countryName = new String[249];
+    static String[] countryAbbr = new String[249];
 
     /**
      * method used to initialize some required components
@@ -52,10 +54,10 @@ public class BookSearcher {
         String[] temp;
         try { // puts country conversion things in a two-dimensional array
             s = new Scanner(countries);
-            for (int i = 0; i < countryConvert.length && s.hasNextLine(); i++) {
+            for (int i = 0; i < 249 && s.hasNextLine(); i++) {
                 temp = s.nextLine().split(";");
-                countryConvert[i][1] = temp[0];
-                countryConvert[i][0] = temp[1];
+                countryName[i] = temp[0];
+                countryAbbr[i] = temp[1];
             }
         } catch (FileNotFoundException e) {
         }
@@ -84,16 +86,22 @@ public class BookSearcher {
         addReview("0735619670", 4, "Could have been better");
     }
 
+    /**
+     * Creates the URL for the book's info
+     *
+     * @param ISBN book's isbn
+     * @return URL
+     */
     public static String getBookString(String ISBN) {
         try {
             return Jsoup.connect("https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN).ignoreContentType(true).get().toString();
         } catch (IOException ex) {
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("here");
         return null;
     }
 
+    
     public static String[] getCategory(String categories) {
         try {
             catScanner = new Scanner(categoriesDB);
@@ -496,8 +504,9 @@ public class BookSearcher {
         }
         APAString += "</i>. ";
 
-        // LOCATION FIND A WAY TO SEARCH THROUGH THE 2D ARRAY FOR THIS THINGY AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
-        APAString += "(country abbreviation)" + getCountry(ISBN, bookString) + "(end abbr.): ";
+        // LOCATION
+        String country = getCountry(ISBN, bookString);
+        APAString += "(country abbreviation)" + countryName[Arrays.binarySearch(countryAbbr, country)] + "(end abbr.): ";
 
         // PUBLISHER
         APAString += getPublisher(ISBN, bookString) + ".";
