@@ -368,7 +368,7 @@ public class BookSearcher {
      * @return String description
      */
     private static String getDescription(String ISBN, String bookString) {
-        return bookString.split("\"description\": \"")[1].split("\"")[0];
+        return bookString.split("\"description\": \"")[1].split("\"")[0].replaceAll("&amp;", "&");
     }
 
     /**
@@ -379,7 +379,7 @@ public class BookSearcher {
      * @return array of author names
      */
     private static String[] getAuthors(String ISBN, String bookString) {
-        String[] authors = bookString.split("\"authors\": \\[ \"")[1].split("\" \\],")[0].split("\", \"");
+        String[] authors = bookString.split("\"authors\": \\[ \"")[1].split("\" \\],")[0].replaceAll("&amp;", "&").split("\", \"");
         return authors;
     }
 
@@ -391,7 +391,7 @@ public class BookSearcher {
      * @return array of categories
      */
     private static String[] getCategories(String ISBN, String bookString) {
-        String[] authors = bookString.split("\"categories\": \\[ \"")[1].split("\" \\],")[0].split("\", \"");
+        String[] authors = bookString.split("\"categories\": \\[ \"")[1].split("\" \\],")[0].replaceAll("&amp;", "&").split("\", \"");
         return authors;
     }
 

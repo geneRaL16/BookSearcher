@@ -101,7 +101,11 @@ public class CategoryPanel extends javax.swing.JPanel {
 
     private void categorySearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categorySearchButtonActionPerformed
         String[] categories = BookSearcher.getCategory(catComboBox.getSelectedItem().toString());
-        categoryEditorPanel.setText("<a href=" +categories[0] + ">"+BookSearcher.getBookInfo(categories[0])[0]+"</a>" + "<html><img src="+BookSearcher.getBookImageString(categories[0])+" width=150 height=200></img>" + "<html><img src="+BookSearcher.getBookImageString(categories[0])+" width=150 height=200></img>" + "<html><img src="+BookSearcher.getBookImageString(categories[0])+" width=150 height=200></img>");
+        String temp = "";
+        for (int i = 0; i < categories.length; i++) {
+            temp += "<a href=" +categories[i] + ">"+BookSearcher.getBookInfo(categories[i])[0]+"</a>" + "<html><img src="+BookSearcher.getBookImageString(categories[i])+" width=150 height=200></img>";
+        }
+        categoryEditorPanel.setText(temp);
         categoryEditorPanel.addHyperlinkListener(new HyperlinkListener() {
         public void hyperlinkUpdate(HyperlinkEvent e) {
             if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
