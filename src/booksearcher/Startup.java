@@ -5,9 +5,7 @@
  */
 package booksearcher;
 
-import java.awt.CardLayout;
-import java.awt.Toolkit;
-
+import java.util.Arrays;
 /**
  *
  * @author 068685601
@@ -82,16 +80,24 @@ public class Startup extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         BookSearcherFrame.toScreen2();
-        
+        MainMenuPanel.ISBNField.requestFocus();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void categorySearcherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categorySearcherActionPerformed
-BookSearcherFrame.toScreen3();    }//GEN-LAST:event_categorySearcherActionPerformed
+        BookSearcherFrame.toScreen3();
+        String[] temp = BookSearcher.loadExistingCategories();
+        Arrays.sort(temp);
+        CategoryPanel.catComboBox.removeAllItems();
+        for (int i = 0; i < temp.length; i++) {
+            CategoryPanel.catComboBox.addItem(temp[i]);
+        }
+        CategoryPanel.categorySearchButton.requestFocus();
+    }//GEN-LAST:event_categorySearcherActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton categorySearcher;
-    private javax.swing.JButton jButton1;
+    public static javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }

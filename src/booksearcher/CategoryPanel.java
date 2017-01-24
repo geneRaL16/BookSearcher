@@ -5,10 +5,17 @@
  */
 package booksearcher;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+import org.jsoup.HttpStatusException;
 
 /**
  *
@@ -34,9 +41,10 @@ public class CategoryPanel extends javax.swing.JPanel {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         categoryEditorPanel = new javax.swing.JEditorPane("text/html", "");
-        categoryTextField = new javax.swing.JTextField();
         categorySearchButton = new javax.swing.JButton();
         backButton = new javax.swing.JButton();
+        catComboBox = new javax.swing.JComboBox<>();
+        catLabel = new javax.swing.JLabel();
 
         categoryEditorPanel.setEditable(false);
         jScrollPane1.setViewportView(categoryEditorPanel);
@@ -48,6 +56,7 @@ public class CategoryPanel extends javax.swing.JPanel {
             }
         });
 
+        backButton.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         backButton.setText("Back");
         backButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -55,52 +64,128 @@ public class CategoryPanel extends javax.swing.JPanel {
             }
         });
 
+        catLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        catLabel.setText("Category: ");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(158, 158, 158)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(249, 249, 249)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 476, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addGap(151, 151, 151))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(290, 290, 290)
-                        .addComponent(categoryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(categorySearchButton))
-                    .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(409, Short.MAX_VALUE))
+                        .addComponent(catLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
+                        .addGap(57, 57, 57)
+                        .addComponent(catComboBox, 0, 174, Short.MAX_VALUE)
+                        .addGap(58, 58, 58)
+                        .addComponent(categorySearchButton, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+                        .addGap(248, 248, 248))))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(42, 42, 42)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(categoryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(categorySearchButton))
-                .addGap(37, 37, 37)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 485, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(44, Short.MAX_VALUE))
+                    .addComponent(catComboBox)
+                    .addComponent(categorySearchButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(catLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE))
+                .addGap(21, 21, 21)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 502, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void categorySearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categorySearchButtonActionPerformed
-        String[] categories = BookSearcher.getCategory(categoryTextField.getText());
-        
+        try {
+            String[] categories = BookSearcher.getCategory(catComboBox.getSelectedItem().toString());
+            String[][] catInfo = new String[categories.length][2];
+            for (int i = 0; i < categories.length; i++) {
+                catInfo[i][0] = Integer.toString(BookSearcher.getAverageRatings(categories[i]));
+                catInfo[i][1] = categories[i];
+            }
+            Arrays.sort(catInfo, new ColumnComparator(0));
+            int booksPerLine = categoryEditorPanel.getWidth() / 400;
+            int lines = categoryEditorPanel.getHeight() / 100;
+            System.out.println(booksPerLine);
+            String temp = "";
+            for (int x = 0; x < categories.length; x += booksPerLine) {
+                for (int i = x; i < categories.length && i < (x + booksPerLine); i++) {
+                    temp += "<html> <img src= " + BookSearcher.getBookImageString(catInfo[i][1]) + "/>";
+                    for (int y = 0; y < booksPerLine * 4.5; y++) {
+                        temp += " &nbsp; ";
+                    }
+                }
+                temp += "<br>";
+                for (int i = x; i < categories.length && i < (x + booksPerLine); i++) {
+                    String title = BookSearcher.getBookInfo(catInfo[i][1])[0];
+                    if (title.length() > 16) {
+                        title = title.substring(0, 16);
+                        title += "...";
+                    }
+
+                    if (BookSearcher.getAverageRatings(categories[i]) == 0) {
+                        temp += "<a href=" + catInfo[i][1] + ">" + title + " - No reviews </a>";
+                    } else {
+                        temp += "<a href=" + catInfo[i][1] + ">" + title + " - " + catInfo[i][0] + "/5 </a>";
+                    }
+
+                    for (int y = 0; y < booksPerLine * 4; y++) {
+                        temp += " &nbsp; ";
+                    }
+                }
+                temp += "<br>"; //Adds a space between books
+            }
+            categoryEditorPanel.setText(temp);
+            categoryEditorPanel.addHyperlinkListener(new HyperlinkListener() {
+                public void hyperlinkUpdate(HyperlinkEvent e) {
+                    if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
+                        BookSearcherFrame.toScreen2();
+                        MainMenuPanel.ISBNField.setText(e.getDescription());
+                        MainMenuPanel.SearchButton.doClick();
+                    }
+                }
+            });
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error 403  - Please wait 10 seconds before performing any more searches!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
+        }
     }//GEN-LAST:event_categorySearchButtonActionPerformed
+
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         BookSearcherFrame.toScreen1();
+        Startup.jButton1.requestFocus();
     }//GEN-LAST:event_backButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
+    static javax.swing.JComboBox<String> catComboBox;
+    private javax.swing.JLabel catLabel;
     private javax.swing.JEditorPane categoryEditorPanel;
-    private javax.swing.JButton categorySearchButton;
-    private javax.swing.JTextField categoryTextField;
+    public static javax.swing.JButton categorySearchButton;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+}
+
+class ColumnComparator implements Comparator {
+
+    int columnToSort;
+
+    ColumnComparator(int columnToSort) {
+        this.columnToSort = columnToSort;
+    }
+
+    public int compare(Object o1, Object o2) {
+        String[] row1 = (String[]) o1;
+        String[] row2 = (String[]) o2;
+        return row2[columnToSort].compareTo(row1[columnToSort]);
+    }
 }

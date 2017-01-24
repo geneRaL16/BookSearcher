@@ -16,6 +16,7 @@ import org.jsoup.Jsoup;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.imageio.ImageIO;
+import org.jsoup.HttpStatusException;
 
 /**
  *
@@ -83,25 +84,15 @@ public class BookSearcher {
         }
 
         String isbn = "9780552152679";
-        addBook(isbn);
-        addBook("9780375753770");
-        addBook("0735619670");
+        //addBook(isbn);
+        //addBook("9780375753770");
+        //addBook("0735619670");
         addReview("0735619670", 4, "Could have been better");
     }
 
-    /**
-     * Creates the URL for the book's info
-     *
-     * @param ISBN book's isbn
-     * @return URL
-     */
-    public static String getBookString(String ISBN) {
-        try {
+    public static String getBookString(String ISBN) throws IOException {
             return Jsoup.connect("https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN).ignoreContentType(true).get().toString();
-        } catch (IOException ex) {
-            Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
+        //return "";
     }
 
     public static String[] getCategory(String categories) {
@@ -122,7 +113,7 @@ public class BookSearcher {
      *
      * @param ISBN String ISBN number of the given book
      */
-    public static void addToCategory(String ISBN) {
+    public static void addToCategory(String ISBN) throws IOException {
         String[] categories = getCategories(ISBN, getBookString(ISBN));
         try {
             boolean catFound = false;
@@ -178,6 +169,22 @@ public class BookSearcher {
         badWords = new File("badword.txt");
         categoriesDB = new File("categories.txt");
         f = new File("countries.csv");
+    }
+
+    public static String[] loadExistingCategories() {
+        ArrayList<String> temp = null;
+        try {
+            temp = new ArrayList<>();
+            catScanner = new Scanner(categoriesDB);
+            while (catScanner.hasNextLine()) {
+                temp.add(catScanner.nextLine());
+                catScanner.nextLine(); //Skips additional line as this is order for category naming
+            }
+
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return temp.toArray(new String[temp.size()]);
     }
 
     /**
@@ -249,7 +256,7 @@ public class BookSearcher {
      * @param ISBN book ISBN to search by
      * @return array of Strings holding all of the relevant information
      */
-    public static String[] getBookInfo(String ISBN) throws IndexOutOfBoundsException {
+    public static String[] getBookInfo(String ISBN) throws IndexOutOfBoundsException, IOException {
         String bookString = "";
         bookString = getBookString(ISBN);
         String info = "";
@@ -381,7 +388,7 @@ public class BookSearcher {
      * @return String description
      */
     private static String getDescription(String ISBN, String bookString) {
-        return bookString.split("\"description\": \"")[1].split("\"")[0];
+        return bookString.split("\"description\": \"")[1].split("\"")[0].replaceAll("&amp;", "&");
     }
 
     /**
@@ -392,7 +399,7 @@ public class BookSearcher {
      * @return array of author names
      */
     private static String[] getAuthors(String ISBN, String bookString) {
-        String[] authors = bookString.split("\"authors\": \\[ \"")[1].split("\" \\],")[0].split("\", \"");
+        String[] authors = bookString.split("\"authors\": \\[ \"")[1].split("\" \\],")[0].replaceAll("&amp;", "&").split("\", \"");
         return authors;
     }
 
@@ -404,7 +411,7 @@ public class BookSearcher {
      * @return array of categories
      */
     private static String[] getCategories(String ISBN, String bookString) {
-        String[] authors = bookString.split("\"categories\": \\[ \"")[1].split("\" \\],")[0].split("\", \"");
+        String[] authors = bookString.split("\"categories\": \\[ \"")[1].split("\" \\],")[0].replaceAll("&amp;", "&").split("\", \"");
         return authors;
     }
 
@@ -595,25 +602,33 @@ public class BookSearcher {
      * @param ISBN String ISBN number of the book
      * @return Google thumbnail image
      */
-    public static BufferedImage getBookImage(String ISBN) {
+    public static BufferedImage getBookImage(String ISBN) throws IOException {
         String bookString = getBookString(ISBN);
+        BufferedImage stock = null;
         try {
+            stock = ImageIO.read(new File("defaultBookImage.png"));
             URL bookURL = new URL(bookString.split("\"thumbnail\": \"")[1].split("\"")[0].replaceAll("&amp;", "&"));
-
             return ImageIO.read(bookURL);
         } catch (ArrayIndexOutOfBoundsException e) { //No image available
             System.out.println("No thumbnail found for book " + ISBN);
-            try { //Returns "No Image Available" image
-                return ImageIO.read(new File("res" + File.pathSeparator + "Images" + File.pathSeparator + "defaultBookImage.png"));
-            } catch (IOException ex) {
-                Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            return stock;
         } catch (MalformedURLException ex) {
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("No Image book file not found '/res/Images/defaultBookImage.png')");
         }
-        return null; //Will never occur (Should this be here?)
+        return null;
+    }
+
+    /**
+     * Gets the Google string for the image of the book
+     *
+     * @param ISBN String ISBN number of the book
+     * @return String Image URL of the cover of the book
+     */
+    public static String getBookImageString(String ISBN) throws IOException {
+        String bookString = getBookString(ISBN);
+        return (bookString.split("\"thumbnail\": \"")[1].split("\"")[0].replaceAll("&amp;", "&"));
     }
 
     /**
@@ -621,7 +636,7 @@ public class BookSearcher {
      *
      * @param ISBN String book ISBN
      */
-    public static void addBook(String ISBN) {
+    public static void addBook(String ISBN) throws org.jsoup.HttpStatusException {
         if (searchISBN(ISBN) == -1) {
             try {
                 addToCategory(ISBN);
