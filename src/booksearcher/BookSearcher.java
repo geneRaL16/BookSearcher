@@ -2,7 +2,7 @@
 9780552152679
 9780375753770
 0735619670
-*/
+ */
 package booksearcher;
 
 import java.awt.image.BufferedImage;
@@ -52,12 +52,12 @@ public class BookSearcher {
     static String[] countryAbbr = new String[249];
 
     /**
-     * method used to initialize some required components
+     * puts country abbreviations and corresponding iso alpha-2 codes in
+     * parallel arrays
      */
     public static void countrySetup() {
         String[] tempArray;
-        try { // puts country conversion things in a two-dimensional array
-            //File f = new File("countries.txt");
+        try {
             s = new Scanner(f);
             for (int i = 0; i < 249; i++) {
                 tempArray = s.nextLine().split(",");
@@ -69,9 +69,15 @@ public class BookSearcher {
         }
     }
 
+    /**
+     * Generates a URL where book information may be found
+     *
+     * @param ISBN book ISBN
+     * @return URL string
+     * @throws IOException
+     */
     public static String getBookString(String ISBN) throws IOException {
-            return Jsoup.connect("https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN).ignoreContentType(true).get().toString();
-        //return "";
+        return Jsoup.connect("https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN).ignoreContentType(true).get().toString();
     }
 
     public static String[] getCategory(String categories) {
