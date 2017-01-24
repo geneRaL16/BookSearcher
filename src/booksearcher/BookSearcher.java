@@ -35,7 +35,6 @@ public class BookSearcher {
     static File categoriesDB;
     static File badWords;
     static File f;
-    static Scanner countryScanner;
     static FileWriter fw;
     static FileWriter fwF;
     static FileWriter fw2;
@@ -235,9 +234,10 @@ public class BookSearcher {
      *
      * @param ISBN book ISBN to search by
      * @return array of Strings holding all of the relevant information
+     * @throws java.io.IOException
      */
     public static String[] getBookInfo(String ISBN) throws IndexOutOfBoundsException, IOException {
-        String bookString = "";
+        String bookString;
         bookString = getBookString(ISBN);
         String info = "";
         info += getTitle(ISBN, bookString) + Character.toString((char) 31); // add title to string info
@@ -405,6 +405,7 @@ public class BookSearcher {
      * [Publication Date] is "n.d." if no date is available.
      *
      * @param ISBN book ISBN
+     * @param bookString URL
      * @return String of book information in MLA format
      */
     public static String MLA(String ISBN, String bookString) {
