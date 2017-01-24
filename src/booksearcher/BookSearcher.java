@@ -212,9 +212,9 @@ public class BookSearcher {
      */
     public static boolean checkBadWord(String phrase) {
         String[] temp = phrase.toLowerCase().split(" ");
-        for (int i = 0; i < temp.length; i++) {
-            for (int x = 0; x < badWordList.length; x++) {
-                if (temp[i].equals(badWordList[x])) {
+        for (String temp1 : temp) {
+            for (String badWordList1 : badWordList) {
+                if (temp1.equals(badWordList1)) {
                     return false;
                 }
             }
@@ -315,6 +315,14 @@ public class BookSearcher {
         return bookString.split("\"publisher\": \"")[1].split("\"")[0];
     }
 
+    /**
+     * Finds the book's country of publication
+     *
+     * @param ISBN book ISBN
+     * @param bookString the online text that contains the country of
+     * publication
+     * @return country of publication
+     */
     private static String getCountry(String ISBN, String bookString) {
         return bookString.split("\"country\": \"")[1].split("\"")[0];
     }
@@ -433,11 +441,11 @@ public class BookSearcher {
         String[] authors = getAuthors(ISBN, bookString);
         if (authors.length > 0) {
             String[] firstAuthor = authors[0].split(" ");
-            MLAString += firstAuthor[firstAuthor.length - 1] + ", ";
+            MLAString += firstAuthor[firstAuthor.length - 1] + ", "; // first author's last name
             for (int i = 0; i < firstAuthor.length - 1; i++) {
-                MLAString += " " + firstAuthor[i];
+                MLAString += " " + firstAuthor[i]; // rest of first author's name
             }
-            if (authors.length > 1) {
+            if (authors.length > 1) { // rest of authors' names
                 authors[1] = "and " + authors[1];
                 for (int i = 1; i < authors.length; i++) {
                     MLAString += ", " + authors[i];
@@ -455,7 +463,7 @@ public class BookSearcher {
         // PUBLICATION DATE
         String date = getPublishDate(ISBN, bookString);
         if (date.equals("")) {
-            MLAString += "n.d.";
+            MLAString += "n.d."; // replace a missing date with n.d., the accepted notation
         } else {
             MLAString += date + ".";
         }
@@ -479,13 +487,13 @@ public class BookSearcher {
 
         // AUTHOR NAMES
         String[] authors = getAuthors(ISBN, bookString);
-        if (authors.length > 0) {
+        if (authors.length > 0) { 
             String[] firstAuthor = authors[0].split(" ");
-            APAString += firstAuthor[firstAuthor.length - 1] + ",";
+            APAString += firstAuthor[firstAuthor.length - 1] + ","; // first author's last name
             for (int i = 0; i < firstAuthor.length - 1; i++) {
-                APAString += " " + firstAuthor[i];
+                APAString += " " + firstAuthor[i]; // rest of first author's name
             }
-            if (authors.length > 1) {
+            if (authors.length > 1) { // rest of authors' names
                 authors[1] = ", & " + authors[1];
                 for (int i = 1; i < authors.length; i++) {
                     APAString += ", " + authors[i];
@@ -500,24 +508,24 @@ public class BookSearcher {
         if (temp.length() >= 4) {
             APAString += temp.substring(temp.length() - 4, temp.length());
         } else {
-            APAString += "n.d.";
+            APAString += "n.d."; // accepted notation for missing date
         }
         APAString += "). ";
 
         // TITLE
         temp = getTitle(ISBN, bookString);
-        tempArray = temp.split(":");
+        tempArray = temp.split(":"); // checks for subtitles
         APAString += "<i>";
         for (String tempArray1 : tempArray) { // subtitles also begin with a capital letter
             temp = "" + tempArray1.charAt(0);
-            APAString += temp + tempArray1.substring(1, tempArray1.length());
+            APAString += temp.toUpperCase() + tempArray1.substring(1, tempArray1.length());
         }
         APAString += "</i>. ";
 
         // LOCATION
         String country = getCountry(ISBN, bookString);
         int count = -1;
-        try {
+        try { // finds location of country's actual name in its array by finding the ISO alpha 2 code
             do {
                 count++;
             } while (!((countryAbbr[count]).equalsIgnoreCase(country)));
