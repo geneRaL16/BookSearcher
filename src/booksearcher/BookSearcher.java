@@ -70,29 +70,6 @@ public class BookSearcher {
         }
     }
 
-    /**
-     * just a quick test, see if stuff runs
-     *
-     * @param args
-     */
-    public static void main(String[] args) {
-
-        try {
-            kb = new Scanner(System.in);
-            bookDB = new File("bookdb.txt");
-            bookDB2 = new File("bookdb2.txt");
-            s2 = new Scanner(bookDB2);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        String isbn = "9780552152679";
-        //addBook(isbn);
-        //addBook("9780375753770");
-        //addBook("0735619670");
-        addReview("0735619670", 4, "Could have been better");
-    }
-
     public static String getBookString(String ISBN) throws IOException {
             return Jsoup.connect("https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN).ignoreContentType(true).get().toString();
         //return "";
