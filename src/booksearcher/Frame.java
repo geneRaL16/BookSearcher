@@ -11,23 +11,23 @@ import javax.swing.UnsupportedLookAndFeelException;
  *
  * @author liam9
  */
-public class BookSearcherFrame extends javax.swing.JFrame {
+public class Frame extends javax.swing.JFrame {
 
     /**
      * Creates new form BookSearcherFrame
      */
-    public BookSearcherFrame() {
-        this.setExtendedState(BookSearcherFrame.MAXIMIZED_BOTH);
+    public Frame() {
+        this.setExtendedState(Frame.MAXIMIZED_BOTH);
         this.setUndecorated(true);
         this.setVisible(true);
         
         initComponents();
         this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
-        this.getRootPane().setDefaultButton(MainMenuPanel.SearchButton);
+        this.getRootPane().setDefaultButton(BookSearcherPanel.SearchButton);
         BookSearcher.countrySetup();
         //mainMenuPanel2.setFocusField();
 
-        //this.setDefaultCloseOperation(BookSearcherFrame.DO_NOTHING_ON_CLOSE);
+        //this.setDefaultCloseOperation(Frame.DO_NOTHING_ON_CLOSE);
     }
     /**
      * toScreen2
@@ -64,7 +64,7 @@ public class BookSearcherFrame extends javax.swing.JFrame {
 
         mainPanel1 = new booksearcher.MainPanel();
         startup1 = new booksearcher.Startup();
-        mainMenuPanel1 = new booksearcher.MainMenuPanel();
+        mainMenuPanel1 = new booksearcher.BookSearcherPanel();
         categoryPanel1 = new booksearcher.CategoryPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -104,37 +104,37 @@ public class BookSearcherFrame extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(BookSearcherFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Frame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(BookSearcherFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Frame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(BookSearcherFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Frame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(BookSearcherFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Frame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         try {
             //</editor-fold>
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(BookSearcherFrame.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            Logger.getLogger(BookSearcherFrame.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            Logger.getLogger(BookSearcherFrame.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(BookSearcherFrame.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
         }
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new BookSearcherFrame().setVisible(true);
+                new Frame().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private booksearcher.CategoryPanel categoryPanel1;
-    private static booksearcher.MainMenuPanel mainMenuPanel1;
+    private static booksearcher.BookSearcherPanel mainMenuPanel1;
     private static booksearcher.MainPanel mainPanel1;
     private static booksearcher.Startup startup1;
     // End of variables declaration//GEN-END:variables

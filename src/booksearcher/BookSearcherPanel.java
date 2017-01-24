@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
  *
  * @author liam9
  */
-public class MainMenuPanel extends javax.swing.JPanel {
+public class BookSearcherPanel extends javax.swing.JPanel {
 
     static String sortBy = "LowToHigh";
     static Image starEmpty;
@@ -23,7 +23,7 @@ public class MainMenuPanel extends javax.swing.JPanel {
     /**
      * Creates new form MainMenuPanel
      */
-    public MainMenuPanel() {
+    public BookSearcherPanel() {
         initComponents();
 
         try {
@@ -404,7 +404,7 @@ public class MainMenuPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_starSelCanvasMouseClicked
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        BookSearcherFrame.toScreen1();
+        Frame.toScreen1();
         Startup.toBookSearcher.requestFocus();
     }//GEN-LAST:event_backButtonActionPerformed
 

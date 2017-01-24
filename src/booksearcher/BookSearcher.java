@@ -1,3 +1,8 @@
+/* test ISBNs:
+9780552152679
+9780375753770
+0735619670
+*/
 package booksearcher;
 
 import java.awt.image.BufferedImage;

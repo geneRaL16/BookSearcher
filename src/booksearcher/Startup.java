@@ -74,12 +74,12 @@ public class Startup extends javax.swing.JPanel {
 
 
     private void toBookSearcherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toBookSearcherActionPerformed
-        BookSearcherFrame.toScreen2();
-        MainMenuPanel.ISBNField.requestFocus();
+        Frame.toScreen2();
+        BookSearcherPanel.ISBNField.requestFocus();
     }//GEN-LAST:event_toBookSearcherActionPerformed
 
     private void toCategorySearcherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toCategorySearcherActionPerformed
-        BookSearcherFrame.toScreen3();
+        Frame.toScreen3();
         String[] temp = BookSearcher.loadExistingCategories();
         Arrays.sort(temp);
         CategoryPanel.catComboBox.removeAllItems();

@@ -138,9 +138,9 @@ public class CategoryPanel extends javax.swing.JPanel {
                 @Override
                 public void hyperlinkUpdate(HyperlinkEvent e) {
                     if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
-                        BookSearcherFrame.toScreen2();
-                        MainMenuPanel.ISBNField.setText(e.getDescription());
-                        MainMenuPanel.SearchButton.doClick();
+                        Frame.toScreen2();
+                        BookSearcherPanel.ISBNField.setText(e.getDescription());
+                        BookSearcherPanel.SearchButton.doClick();
                     }
                 }
             });
@@ -151,7 +151,7 @@ public class CategoryPanel extends javax.swing.JPanel {
 
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        BookSearcherFrame.toScreen1();
+        Frame.toScreen1();
         Startup.toBookSearcher.requestFocus();
     }//GEN-LAST:event_backButtonActionPerformed
 
