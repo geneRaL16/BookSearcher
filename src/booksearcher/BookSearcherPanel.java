@@ -2,7 +2,6 @@ package booksearcher;
 
 import java.awt.Dimension;
 import java.awt.Image;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -14,7 +13,7 @@ import javax.swing.JOptionPane;
  *
  * @author liam9
  */
-public class MainMenuPanel extends javax.swing.JPanel {
+public class BookSearcherPanel extends javax.swing.JPanel {
 
     static String sortBy = "LowToHigh";
     static Image starEmpty;
@@ -24,7 +23,7 @@ public class MainMenuPanel extends javax.swing.JPanel {
     /**
      * Creates new form MainMenuPanel
      */
-    public MainMenuPanel() {
+    public BookSearcherPanel() {
         initComponents();
 
         try {
@@ -69,8 +68,12 @@ public class MainMenuPanel extends javax.swing.JPanel {
         reviewTextArea.setText(temp);
         newReviewTextArea.setText("");
     }
-    
 
+    /**
+     * Updates star rating graphics
+     *
+     * @param rating rating for stars to display
+     */
     public void updateReviewStars(int rating) {
         if (rating != Integer.parseInt(Character.toString(currentSliderPosition.getText().charAt(0)))) { //Only updates if new star is selected
             starSelCanvas.getGraphics().clearRect(0, 0, starSelCanvas.getWidth(), starSelCanvas.getHeight());
@@ -163,11 +166,6 @@ public class MainMenuPanel extends javax.swing.JPanel {
         newReviewTextArea.setLineWrap(true);
         newReviewTextArea.setRows(5);
         newReviewTextArea.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        newReviewTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                newReviewTextAreaKeyTyped(evt);
-            }
-        });
         jScrollPane2.setViewportView(newReviewTextArea);
 
         reviewTextArea.setEditable(false);
@@ -338,6 +336,12 @@ public class MainMenuPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Searches for a book in the text file, if it doesn't yet exist the book is
+     * added to the text file
+     *
+     * @param evt button pushed
+     */
     private void SearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchButtonActionPerformed
         if (!ISBNField.getText().equals("") && BookSearcher.isISBN(ISBNField.getText())) {
             try {
@@ -370,10 +374,9 @@ public class MainMenuPanel extends javax.swing.JPanel {
                 ISBNField.selectAll();
             } catch (IndexOutOfBoundsException e) {
                 JOptionPane.showMessageDialog(null, "Book not found in database!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "Error 403  - Please wait 10 seconds before performing any more searches!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
             }
-            catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Error 403  - Please wait 10 seconds before performing any more searches!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
-        }
             updateReviews();
         } else {
             JOptionPane.showMessageDialog(null, "Please enter a valid ISBN!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
@@ -382,7 +385,6 @@ public class MainMenuPanel extends javax.swing.JPanel {
         ISBNField.selectAll();
         newReviewTextArea.getDocument().putProperty("filterNewlines", Boolean.TRUE);
     }//GEN-LAST:event_SearchButtonActionPerformed
-
 
     private void reviewSortSelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reviewSortSelActionPerformed
         updateReviews();
@@ -405,10 +407,15 @@ public class MainMenuPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_starSelCanvasMouseClicked
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        BookSearcherFrame.toScreen1();
-        Startup.jButton1.requestFocus();
+        Frame.toScreen1();
+        Startup.toBookSearcher.requestFocus();
     }//GEN-LAST:event_backButtonActionPerformed
 
+    /**
+     * adds a review to a book if it is appropriate and valid
+     * 
+     * @param evt button for creating reviews pushed
+     */
     private void newReviewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newReviewButtonActionPerformed
         int isbnLoc = BookSearcher.searchISBN(ISBNField.getText());
         if (newReviewTextArea.getText().length() > 0 && isbnLoc >= 0 && bookRating > 0) {
@@ -430,10 +437,6 @@ public class MainMenuPanel extends javax.swing.JPanel {
         ISBNField.selectAll();
         updateReviews();
     }//GEN-LAST:event_newReviewButtonActionPerformed
-
-    private void newReviewTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_newReviewTextAreaKeyTyped
-        // TODO add your handling code here:
-    }//GEN-LAST:event_newReviewTextAreaKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

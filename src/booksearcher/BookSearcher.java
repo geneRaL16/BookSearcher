@@ -1,3 +1,8 @@
+/* test ISBNs:
+9780552152679
+9780375753770
+0735619670
+*/
 package booksearcher;
 
 import java.awt.image.BufferedImage;
@@ -29,6 +34,7 @@ public class BookSearcher {
     static File bookDB2;
     static File categoriesDB;
     static File badWords;
+    static File f;
     static FileWriter fw;
     static FileWriter fwF;
     static FileWriter fw2;
@@ -44,28 +50,25 @@ public class BookSearcher {
     static ArrayList<String> badWordTempList;
     static String[] badWordList; //List of bad words to be checked against
     static Scanner kb;
+    static String[] countryName = new String[249];
+    static String[] countryAbbr = new String[249];
 
     /**
-     * just a quick test, see if stuff runs
-     *
-     * @param args
+     * method used to initialize some required components
      */
-    public static void main(String[] args) {
-
-        try {
-            kb = new Scanner(System.in);
-            bookDB = new File("bookdb.txt");
-            bookDB2 = new File("bookdb2.txt");
-            s2 = new Scanner(bookDB2);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
+    public static void countrySetup() {
+        String[] tempArray;
+        try { // puts country conversion things in a two-dimensional array
+            //File f = new File("countries.txt");
+            s = new Scanner(f);
+            for (int i = 0; i < 249; i++) {
+                tempArray = s.nextLine().split(",");
+                countryAbbr[i] = tempArray[0];
+                countryName[i] = tempArray[1];
+            }
+            s.close();
+        } catch (FileNotFoundException e) {
         }
-
-        String isbn = "9780552152679";
-        //addBook(isbn);
-        //addBook("9780375753770");
-        //addBook("0735619670");
-        addReview("0735619670", 4, "Could have been better");
     }
 
     /**
@@ -153,6 +156,7 @@ public class BookSearcher {
         bookDB2 = new File("bookdb2.txt");
         badWords = new File("badword.txt");
         categoriesDB = new File("categories.txt");
+        f = new File("countries.csv");
     }
     /**
      * Loads all the categories which contain books that have been scanned into program
@@ -229,8 +233,7 @@ public class BookSearcher {
                 }
                 linecount++;
             }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException e) {
         }
         s.close();
         return -1;
@@ -242,9 +245,10 @@ public class BookSearcher {
      *
      * @param ISBN book ISBN to search by
      * @return array of Strings holding all of the relevant information
+     * @throws java.io.IOException
      */
     public static String[] getBookInfo(String ISBN) throws IndexOutOfBoundsException, IOException {
-        String bookString = "";
+        String bookString;
         bookString = getBookString(ISBN);
         String info = "";
         info += getTitle(ISBN, bookString) + Character.toString((char) 31); // add title to string info
@@ -412,6 +416,7 @@ public class BookSearcher {
      * [Publication Date] is "n.d." if no date is available.
      *
      * @param ISBN book ISBN
+     * @param bookString URL
      * @return String of book information in MLA format
      */
     public static String MLA(String ISBN, String bookString) {
@@ -459,6 +464,7 @@ public class BookSearcher {
      * [Location of publication]: [Publisher].
      *
      * @param ISBN book ISBN
+     * @param bookString URL
      * @return String of book information in APA format
      */
     public static String APA(String ISBN, String bookString) {
@@ -501,8 +507,23 @@ public class BookSearcher {
         }
         APAString += "</i>. ";
 
-        // LOCATION FIND A WAY TO SEARCH THROUGH THE 2D ARRAY FOR THIS THINGY AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
-        APAString += "(country abbreviation)" + getCountry(ISBN, bookString) + "(end abbr.): ";
+        // LOCATION
+        String country = getCountry(ISBN, bookString);
+        int count = -1;
+        try {
+            do {
+                count++;
+            } while (!((countryAbbr[count]).equalsIgnoreCase(country)));
+        } catch (Exception e) {
+            count = -1;
+        }
+        String place;
+        if (count >= 0) {
+            place = countryName[count];
+        } else {
+            place = country;
+        }
+        APAString += place + ": ";
 
         // PUBLISHER
         APAString += getPublisher(ISBN, bookString) + ".";
@@ -659,31 +680,33 @@ public class BookSearcher {
             }
         }
     }
+
     /**
-     * Checks if the ISBN entered is a valid ISBN for a real book
-     * @param s String ISBN of book tested for real ISBN number
-     * @return Boolean if the ISBN entered is valid
+     * Checks if a string is an ISBN
+     *
+     * @param s string to check
+     * @return true if valid ISBN
      */
     public static boolean isISBN(String s) {
-
-        try { // check all but the last character
-            Long.parseLong(s.substring(0, s.length() - 1));
-        } catch (NumberFormatException e) {
-            return false;
-        } catch (NullPointerException e) {
-            return false;
-        }
-
-        // if last character not x
-        if (!("" + s.charAt(s.length() - 1)).equalsIgnoreCase("x")) {
-            try {
-                Integer.parseInt("" + s.charAt(s.length() - 1));
-            } catch (NumberFormatException e) {
-                return false;
-            } catch (NullPointerException e) {
+        int length = s.length();
+        if (length == 13 | length == 10) {
+            try { // check all but the last character
+                Long.parseLong(s.substring(0, length - 1));
+            } catch (NumberFormatException | NullPointerException e) {
                 return false;
             }
+
+            // if last character not x
+            if (!("" + s.charAt(s.length() - 1)).equalsIgnoreCase("x")) {
+                try {
+                    Integer.parseInt("" + s.charAt(length - 1));
+                } catch (NumberFormatException | NullPointerException e) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return false;
         }
-        return true;
     }
 }
