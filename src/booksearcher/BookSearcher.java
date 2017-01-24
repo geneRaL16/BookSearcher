@@ -42,8 +42,10 @@ public class BookSearcher {
     static PrintWriter pw2;
     static PrintWriter pwCategories;
     static Scanner s;
-    static Scanner s2;
-    static Scanner catScanner;
+    static Scanner s2; //
+    static Scanner s3; //Scanner used for reading reviews
+    static Scanner s4; //Scanner used for average ratings
+    static Scanner catScanner; //Scanner used for reading categories
     static Scanner badWordScanner; //Scanner used for bad words file
     static ArrayList<String> badWordTempList;
     static String[] badWordList; //List of bad words to be checked against
@@ -70,58 +72,62 @@ public class BookSearcher {
     }
 
     /**
-     * Generates a URL where book information may be found
+     * Generates the URL to the Google page of book information
      *
-     * @param ISBN book ISBN
-     * @return URL string
-     * @throws IOException
+     * @param ISBN ISBN of book to be searched
+     * @return URL of Google page of information of book
+     * @throws IOException 403 (forbidden) error from Google when website
+     * receives too many requests from one network location
      */
     public static String getBookString(String ISBN) throws IOException {
         return Jsoup.connect("https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN).ignoreContentType(true).get().toString();
     }
 
+    /**
+     * Gets the list of books in a given category
+     *
+     * @param categories Name of category
+     * @return Book ISBNs that are in the given category
+     */
     public static String[] getCategory(String categories) {
         try {
             catScanner = new Scanner(categoriesDB);
-            while (!catScanner.nextLine().equals(categories) && catScanner.hasNextLine()) {
+            while (!catScanner.nextLine().equals(categories) && catScanner.hasNextLine()) { //Reads through the category file until finds correct category
                 catScanner.nextLine();
             }
-            return catScanner.nextLine().split(Character.toString((char) 31));
+            return catScanner.nextLine().split(Character.toString((char) 31)); //Returns the list of books in given category
         } catch (FileNotFoundException ex) {
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
+        return null; //No category found
     }
 
     /**
      * Adds given book to category text file based on ISBN given
      *
      * @param ISBN String ISBN number of the given book
-     * @throws java.io.IOException
+     * @throws java.io.IOException 403 Google error
      */
     public static void addToCategory(String ISBN) throws IOException {
-        String[] categories = getCategories(ISBN, getBookString(ISBN));
+        String[] categories = getCategories(ISBN, getBookString(ISBN)); //Gets all the categories that a given book  applies too
         try {
             boolean catFound = false;
             s2 = new Scanner(bookDB2);
             catScanner = new Scanner(categoriesDB);
             pw2 = new PrintWriter(new FileOutputStream(bookDB2, false));
             String temp = "";
-            if (catScanner.hasNextLine()) {
+            if (catScanner.hasNextLine()) { //Moves Scanner to first category title
                 temp = catScanner.nextLine();
             }
-            while (!temp.equals(categories[0]) && catScanner.hasNextLine()) {
+            while (!temp.equals(categories[0]) && catScanner.hasNextLine()) { //Moves all content of category file to temp file, until correct category is found
                 pw2.println(temp);
-                System.out.println("Writing " + temp);
                 temp = catScanner.nextLine();
             }
-            if (temp.equals(categories[0])) {
+            if (temp.equals(categories[0])) { //Adds new book to correct category line
                 pw2.println(temp);
                 catFound = true;
-                System.out.println("Found category " + temp);
                 temp = catScanner.nextLine();
                 temp += ISBN + Character.toString((char) 31);
-                System.out.println("Adding " + temp);
                 pw2.println(temp);
             }
             while (catScanner.hasNextLine()) {
@@ -157,6 +163,12 @@ public class BookSearcher {
         f = new File("countries.csv");
     }
 
+    /**
+     * Loads all the categories which contain books that have been scanned into
+     * program
+     *
+     * @return String[] Array of all the different categories with boooks
+     */
     public static String[] loadExistingCategories() {
         ArrayList<String> temp = null;
         try {
@@ -560,15 +572,14 @@ public class BookSearcher {
     public static int getAverageRatings(String ISBN) {
         double averageRating = 0;
         double count = 0;
-
         try {
-            Scanner s4 = new Scanner(bookDB);
-            if (searchISBN(ISBN) >= 0) {
-                for (int i = 0; i < searchISBN(ISBN); i++) {
+            s4 = new Scanner(bookDB);
+            if (searchISBN(ISBN) >= 0) { //Checks if book exists in database
+                for (int i = 0; i < searchISBN(ISBN); i++) { //Reads to line where desired book is located
                     s4.nextLine();
                 }
                 String line = s4.nextLine();
-                String[] temp = line.split(Character.toString((char) 31) + "| -");
+                String[] temp = line.split(Character.toString((char) 31) + "| -"); //
                 for (int i = 1; i < temp.length - 1; i += 2) {
                     averageRating += Integer.parseInt(temp[i]);
                     count++;
@@ -576,7 +587,7 @@ public class BookSearcher {
                 averageRating = averageRating / count;
                 averageRating = Math.round(averageRating);
             }
-            s4.close();
+            s3.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -588,21 +599,24 @@ public class BookSearcher {
      *
      * @param ISBN String ISBN number of the book
      * @return Google thumbnail image
+     * @throws java.io.IOException Throws IOException only if 403 error from
+     * Google
      */
     public static BufferedImage getBookImage(String ISBN) throws IOException {
         String bookString = getBookString(ISBN);
-        BufferedImage stock = null;
+        BufferedImage stock = null; //Image to be returned by file
         try {
-            stock = ImageIO.read(new File("defaultBookImage.png"));
-            URL bookURL = new URL(bookString.split("\"thumbnail\": \"")[1].split("\"")[0].replaceAll("&amp;", "&"));
+            stock = ImageIO.read(new File("defaultBookImage.png")); //Assume default image file
+            URL bookURL = new URL(bookString.split("\"thumbnail\": \"")[1].split("\"")[0].replaceAll("&amp;", "&")); //Load book cover image from Google API
             return ImageIO.read(bookURL);
         } catch (ArrayIndexOutOfBoundsException e) { //No image available
             System.out.println("No thumbnail found for book " + ISBN);
-            return stock;
-        } catch (MalformedURLException ex) {
+            return stock; //Return "No Image Available" image
+        } catch (MalformedURLException ex) { //Catch for incorrect URL form
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
+        } catch (IOException ex) { //Cannot find default book image file
             System.out.println("No Image book file not found '/res/Images/defaultBookImage.png')");
+            return stock;
         }
         return null;
     }
@@ -622,14 +636,14 @@ public class BookSearcher {
      * Adds book to text file if ISBN corresponds to real book
      *
      * @param ISBN String book ISBN
+     * @throws org.jsoup.HttpStatusException Thrown if Google returns 403 error
      */
     public static void addBook(String ISBN) throws org.jsoup.HttpStatusException {
-        if (searchISBN(ISBN) == -1) {
+        if (searchISBN(ISBN) == -1) { //Checks if the book already exists in the book database
             try {
-                addToCategory(ISBN);
+                addToCategory(ISBN); //Adds the book to the category database file
                 pw = new PrintWriter(new FileOutputStream(bookDB, true));
-                pw.println(ISBN + Character.toString((char) 31)); //Delimited by invisible character
-                pw.flush();
+                pw.println(ISBN + Character.toString((char) 31)); //Prints new book, delimited by ASCII character 31
                 pw.close();
             } catch (IOException ex) {
                 Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
@@ -645,33 +659,31 @@ public class BookSearcher {
      * @param review text typed as a review for the book
      */
     public static void addReview(String isbn, int rating, String review) {
-        if (searchISBN(isbn) >= 0) {
+        int position = searchISBN(isbn); //Location of the book which the review is attached to in the text file
+        if (position >= 0) {
             try {
-                pw2 = new PrintWriter(new FileOutputStream(bookDB2, false));
+                pw2 = new PrintWriter(new FileOutputStream(bookDB2, false)); //Print Writer for second file
                 String temp;
-                int position = searchISBN(isbn); //Location of book in text file for review to be added to
                 s = new Scanner(bookDB);
                 for (int i = 0; i < position; i++) { //Moves all content to second text file, and modifies line needed
                     pw2.println(s.nextLine());
                 }
                 temp = s.nextLine();
-                temp += rating + " - " + review + Character.toString((char) 31);
+                temp += rating + " - " + review + Character.toString((char) 31); //Adds new review to the line of current book
                 pw2.println(temp);
-                while (s.hasNextLine()) {
+                while (s.hasNextLine()) { //Prints remainder of file to second file
                     pw2.println(s.nextLine());
                 }
-                pw2.flush();
+                pw2.close();
                 s.close();
                 s2 = new Scanner(bookDB2);
                 pw = new PrintWriter(new FileOutputStream(bookDB, false));
                 while (s2.hasNextLine()) { //Moves all data back to first text file
                     pw.println(s2.nextLine());
                 }
-                pw.flush();
                 pw.close();
-                pw2.close();
                 s2.close();
-            } catch (FileNotFoundException ex) {
+            } catch (FileNotFoundException ex) { //Catch if cannot file bookDB or temp text file
                 Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
