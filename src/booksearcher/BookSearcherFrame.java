@@ -29,16 +29,26 @@ public class BookSearcherFrame extends javax.swing.JFrame {
 
         //this.setDefaultCloseOperation(BookSearcherFrame.DO_NOTHING_ON_CLOSE);
     }
-
+    /**
+     * toScreen2
+     * When called from a button from either screen will swap to the second screen which is Book Searcher
+     */
     public static void toScreen2() {
         CardLayout card = (CardLayout) mainPanel1.getLayout();
         card.show(mainPanel1, "card2");
     }
-
+     /**
+     * toScreen1
+     * When called from a button from either screen will swap to the second screen which is the setUp screen
+     */
     public static void toScreen1() {
         CardLayout card = (CardLayout) mainPanel1.getLayout();
         card.show(mainPanel1, "card1");
     }
+     /**
+     * toScreen3
+     * When called from a button from either screen will swap to the second screen which is the CategoryPanel
+     */
     public static void toScreen3() {
         CardLayout card = (CardLayout) mainPanel1.getLayout();
         card.show(mainPanel1, "card3");
