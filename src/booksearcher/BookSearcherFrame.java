@@ -21,11 +21,13 @@ public class BookSearcherFrame extends javax.swing.JFrame {
         this.setExtendedState(BookSearcherFrame.MAXIMIZED_BOTH);
         this.setUndecorated(true);
         this.setVisible(true);
+        
         initComponents();
         this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
         this.getRootPane().setDefaultButton(MainMenuPanel.SearchButton);
-        //mainMenuPanel2.setFocusField();
-
+        
+        
+        //this.setAlwaysOnTop(true);
         //this.setDefaultCloseOperation(BookSearcherFrame.DO_NOTHING_ON_CLOSE);
     }
 

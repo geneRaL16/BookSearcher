@@ -371,6 +371,9 @@ public class MainMenuPanel extends javax.swing.JPanel {
             } catch (IndexOutOfBoundsException e) {
                 JOptionPane.showMessageDialog(null, "Book not found in database!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
             }
+            catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error 403  - Please wait 10 seconds before performing any more searches!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
+        }
             updateReviews();
         } else {
             JOptionPane.showMessageDialog(null, "Please enter a valid ISBN!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
