@@ -638,7 +638,8 @@ public class BookSearcher {
      * @param rating numerical rating of book between 1 and 5
      * @param review text typed as a review for the book
      */
-    public static void addReview(String isbn, int rating, String review) {
+    public static void addReview(String isbn, int rating, String review) {   
+        review = review.replaceAll("-", "~"); // In case a user submits a review with a dash
         if (searchISBN(isbn) >= 0) {
             try {
                 pw2 = new PrintWriter(new FileOutputStream(bookDB2, false));

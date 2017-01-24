@@ -102,9 +102,9 @@ public class CategoryPanel extends javax.swing.JPanel {
                 catInfo[i][1] = categories[i];
             }
             Arrays.sort(catInfo, new ColumnComparator(0));
+            
             int booksPerLine = categoryEditorPanel.getWidth() / 400;
             int lines = categoryEditorPanel.getHeight() / 100;
-            System.out.println(booksPerLine);
             String temp = "";
             for (int x = 0; x < categories.length; x += booksPerLine) {
                 for (int i = x; i < categories.length && i < (x + booksPerLine); i++) {
@@ -116,13 +116,12 @@ public class CategoryPanel extends javax.swing.JPanel {
                 temp += "<br>";
                 for (int i = x; i < categories.length && i < (x + booksPerLine); i++) {
                     String title = BookSearcher.getBookInfo(catInfo[i][1])[0];
-                    if (title.length() > 16) {
-                        title = title.substring(0, 16);
+                    if (title.length() > 17) {
+                        title = title.substring(0, 17);
                         title += "...";
                     }
-
-                    if (BookSearcher.getAverageRatings(categories[i]) == 0) {
-                        temp += "<a href=" + catInfo[i][1] + ">" + title + " - No reviews </a>";
+                    if (catInfo[i][0].equals("0")) {
+                        temp += "<a href=" + catInfo[i][1] + ">" + title + " - N/R </a>";
                     } else {
                         temp += "<a href=" + catInfo[i][1] + ">" + title + " - " + catInfo[i][0] + "/5 </a>";
                     }
