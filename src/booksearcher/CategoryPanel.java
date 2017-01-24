@@ -125,12 +125,18 @@ public class CategoryPanel extends javax.swing.JPanel {
                 }
                 temp += "<br>";
                 for (int i = x; i < categories.length && i < (x + booksPerLine); i++) {
-                    if (BookSearcher.getAverageRatings(categories[i]) == 0) {
-                    temp += "<a href=" + catInfo[i][1] + ">" + BookSearcher.getBookInfo(catInfo[i][1])[0] + " - No reviews </a>";    
-                    } else {
-                    temp += "<a href=" + catInfo[i][1] + ">" + BookSearcher.getBookInfo(catInfo[i][1])[0] + " - " + catInfo[i][0] + "/5 </a>";
+                    String title = BookSearcher.getBookInfo(catInfo[i][1])[0];
+                    if (title.length() > 16) {
+                        title = title.substring(0, 16);
+                        title += "...";
                     }
-                    
+
+                    if (BookSearcher.getAverageRatings(categories[i]) == 0) {
+                        temp += "<a href=" + catInfo[i][1] + ">" + title + " - No reviews </a>";
+                    } else {
+                        temp += "<a href=" + catInfo[i][1] + ">" + title + " - " + catInfo[i][0] + "/5 </a>";
+                    }
+
                     for (int y = 0; y < booksPerLine * 4; y++) {
                         temp += " &nbsp; ";
                     }
