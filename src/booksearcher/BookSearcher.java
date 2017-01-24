@@ -478,7 +478,7 @@ public class BookSearcher {
         temp = getPublishDate(ISBN, bookString);
         APAString += "(";
         if (temp.length() >= 4) {
-            APAString += temp.substring(temp.length() - 4, temp.length()); // THIS MAY NEED ADJUSTMENT BECAUSE OF STRING LENGTH AND ALL THAT FUN STUFF FEEL FREE TO PLAY WITH IT PLS LET'S NOT FORGET TO TEST
+            APAString += temp.substring(temp.length() - 4, temp.length());
         } else {
             APAString += "n.d.";
         }
@@ -490,7 +490,7 @@ public class BookSearcher {
         APAString += "<i>";
         for (String tempArray1 : tempArray) { // subtitles also begin with a capital letter
             temp = "" + tempArray1.charAt(0);
-            APAString += temp + tempArray1.substring(1, tempArray1.length()); // THIS MAY NEED ADJUSTMENT BECAUSE OF STRING LENGTH AND ALL THAT FUN STUFF FEEL FREE TO PLAY WITH IT PLS LET'S NOT FORGET TO TEST
+            APAString += temp + tempArray1.substring(1, tempArray1.length());
         }
         APAString += "</i>. ";
 
