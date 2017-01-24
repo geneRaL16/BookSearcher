@@ -59,13 +59,13 @@ public class BookSearcher {
         String[] tempArray;
         try { // puts country conversion things in a two-dimensional array
             //File f = new File("countries.txt");
-            countryScanner = new Scanner(f);
+            s = new Scanner(f);
             for (int i = 0; i < 249; i++) {
-                tempArray = countryScanner.nextLine().split(",");
+                tempArray = s.nextLine().split(",");
                 countryAbbr[i] = tempArray[0];
                 countryName[i] = tempArray[1];
             }
-            countryScanner.close();
+            s.close();
         } catch (FileNotFoundException e) {
         }
     }
@@ -223,8 +223,7 @@ public class BookSearcher {
                 }
                 linecount++;
             }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException e) {
         }
         s.close();
         return -1;
