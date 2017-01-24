@@ -161,7 +161,7 @@ public class CategoryPanel extends javax.swing.JPanel {
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         BookSearcherFrame.toScreen1();
-        Startup.jButton1.requestFocus();
+        Startup.toBookSearcher.requestFocus();
     }//GEN-LAST:event_backButtonActionPerformed
 
 
