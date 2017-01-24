@@ -20,8 +20,8 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace min="-2" pref="229" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="categorySearcher" max="32767" attributes="0"/>
-                  <Component id="jButton1" pref="265" max="32767" attributes="0"/>
+                  <Component id="toCategorySearcher" max="32767" attributes="0"/>
+                  <Component id="toBookSearcher" pref="265" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="229" max="-2" attributes="0"/>
           </Group>
@@ -32,9 +32,9 @@
           <Group type="102" alignment="0" attributes="0">
               <Component id="jLabel1" pref="166" max="32767" attributes="0"/>
               <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
-              <Component id="jButton1" pref="56" max="32767" attributes="0"/>
+              <Component id="toBookSearcher" pref="56" max="32767" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="categorySearcher" pref="65" max="32767" attributes="0"/>
+              <Component id="toCategorySearcher" pref="65" max="32767" attributes="0"/>
               <EmptySpace min="-2" pref="125" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -50,7 +50,7 @@
         <Property name="text" type="java.lang.String" value="NHS BookSearcher"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton1">
+    <Component class="javax.swing.JButton" name="toBookSearcher">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Tahoma" size="14" style="0"/>
@@ -58,13 +58,13 @@
         <Property name="text" type="java.lang.String" value="Book Searcher"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="toBookSearcherActionPerformed"/>
       </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>
       </AuxValues>
     </Component>
-    <Component class="javax.swing.JButton" name="categorySearcher">
+    <Component class="javax.swing.JButton" name="toCategorySearcher">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Tahoma" size="14" style="0"/>
@@ -72,7 +72,7 @@
         <Property name="text" type="java.lang.String" value="Category Searcher"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="categorySearcherActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="toCategorySearcherActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>
