@@ -355,18 +355,21 @@ public class BookSearcherPanel extends javax.swing.JPanel {
                 publishedDateLabel.setText("Pusblished: " + info[5]);
                 descriptionEditorPane.setText(info[6] + "<br>MLA: " + info[7] + "<br>APA: " + info[8]);
                 bookRating = BookSearcher.getAverageRatings(ISBNField.getText());
-                ImageIcon icon = new ImageIcon(BookSearcher.getBookImage(ISBNField.getText()));
+                ImageIcon icon = new ImageIcon(BookSearcher.getBookImage(ISBNField.getText())); // Gets book image and makes it a Icon
+                // Set various dimensions for normal and max height
                 int height = icon.getIconHeight();
                 int width = icon.getIconWidth();
                 int maxHeight = bookImageLabel.getHeight();
                 int maxWidth = bookImageLabel.getWidth();
                 Dimension bookSize = new Dimension(width, height);
                 Dimension maxSize = new Dimension(maxWidth, maxHeight);
+                //Increases size of image, keeping ratio
                 for (Dimension i = bookSize; i.height * 1.1 < maxSize.height && i.width * 1.1 < maxSize.width; i.setSize(i.width, i.height)) {
                     i.height = (int) (i.height * 1.1);
                     i.width = (int) (i.width * 1.1);
                     bookSize.setSize(i.width, i.height);
                 }
+                // Svale and set image
                 Image scaleImage = icon.getImage().getScaledInstance(bookSize.width, bookSize.height, Image.SCALE_SMOOTH);
                 bookImageLabel.setIcon(new ImageIcon(scaleImage));
                 bookRating = BookSearcher.getAverageRatings(ISBNField.getText());
@@ -385,11 +388,19 @@ public class BookSearcherPanel extends javax.swing.JPanel {
         ISBNField.selectAll();
         newReviewTextArea.getDocument().putProperty("filterNewlines", Boolean.TRUE);
     }//GEN-LAST:event_SearchButtonActionPerformed
-
+    /**
+     * Calls update reviews
+     *
+     * @param evt
+     */
     private void reviewSortSelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reviewSortSelActionPerformed
         updateReviews();
     }//GEN-LAST:event_reviewSortSelActionPerformed
-
+    /**
+     * Shows stars when hovering over review
+     *
+     * @param evt
+     */
     private void starSelCanvasMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_starSelCanvasMouseMoved
         try {
             int starsSelected = (starSelCanvas.getMousePosition().x / (starSelCanvas.getSize().width / 5) + 1);
@@ -397,15 +408,27 @@ public class BookSearcherPanel extends javax.swing.JPanel {
         } catch (NullPointerException e) {
         }
     }//GEN-LAST:event_starSelCanvasMouseMoved
-
+    /**
+     * reset stars when mouse leaves canvas
+     *
+     * @param evt
+     */
     private void starSelCanvasMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_starSelCanvasMouseExited
         updateReviewStars(bookRating);
     }//GEN-LAST:event_starSelCanvasMouseExited
-
+    /**
+     * sets users current review to that of the star clicked
+     *
+     * @param evt
+     */
     private void starSelCanvasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_starSelCanvasMouseClicked
         bookRating = (starSelCanvas.getMousePosition().x / (starSelCanvas.getSize().width / 5) + 1);
     }//GEN-LAST:event_starSelCanvasMouseClicked
-
+    /**
+     * sends user back to main panel
+     *
+     * @param evt
+     */
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         Frame.toScreen1();
         Startup.toBookSearcher.requestFocus();
@@ -413,7 +436,7 @@ public class BookSearcherPanel extends javax.swing.JPanel {
 
     /**
      * adds a review to a book if it is appropriate and valid
-     * 
+     *
      * @param evt button for creating reviews pushed
      */
     private void newReviewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newReviewButtonActionPerformed
