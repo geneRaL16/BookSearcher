@@ -17,13 +17,13 @@ public class BookSearcherFrame extends javax.swing.JFrame {
      * Creates new form BookSearcherFrame
      */
     public BookSearcherFrame() {
-        BookSearcher.setup();
         this.setExtendedState(BookSearcherFrame.MAXIMIZED_BOTH);
         this.setUndecorated(true);
         this.setVisible(true);
         initComponents();
         this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
         this.getRootPane().setDefaultButton(MainMenuPanel.SearchButton);
+        BookSearcher.countrySetup();
         //mainMenuPanel2.setFocusField();
 
         //this.setDefaultCloseOperation(BookSearcherFrame.DO_NOTHING_ON_CLOSE);

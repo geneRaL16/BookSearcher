@@ -30,7 +30,8 @@ public class BookSearcher {
     static File bookDB2;
     static File categoriesDB;
     static File badWords;
-    static File countries = new File("countries.txt");
+    static File f;
+    static Scanner countryScanner;
     static FileWriter fw;
     static FileWriter fwF;
     static FileWriter fw2;
@@ -50,15 +51,17 @@ public class BookSearcher {
     /**
      * method used to initialize some required components
      */
-    public static void setup() {
-        String[] temp;
+    public static void countrySetup() {
+        String[] tempArray;
         try { // puts country conversion things in a two-dimensional array
-            s = new Scanner(countries);
-            for (int i = 0; i < 249 && s.hasNextLine(); i++) {
-                temp = s.nextLine().split(";");
-                countryName[i] = temp[0];
-                countryAbbr[i] = temp[1];
+            //File f = new File("countries.txt");
+            countryScanner = new Scanner(f);
+            for (int i = 0; i < 249; i++) {
+                tempArray = countryScanner.nextLine().split(",");
+                countryAbbr[i] = tempArray[0];
+                countryName[i] = tempArray[1];
             }
+            countryScanner.close();
         } catch (FileNotFoundException e) {
         }
     }
@@ -101,7 +104,6 @@ public class BookSearcher {
         return null;
     }
 
-    
     public static String[] getCategory(String categories) {
         try {
             catScanner = new Scanner(categoriesDB);
@@ -175,6 +177,7 @@ public class BookSearcher {
         bookDB2 = new File("bookdb2.txt");
         badWords = new File("badword.txt");
         categoriesDB = new File("categories.txt");
+        f = new File("countries.csv");
     }
 
     /**
@@ -462,6 +465,7 @@ public class BookSearcher {
      * [Location of publication]: [Publisher].
      *
      * @param ISBN book ISBN
+     * @param bookString URL
      * @return String of book information in APA format
      */
     public static String APA(String ISBN, String bookString) {
@@ -488,7 +492,7 @@ public class BookSearcher {
         temp = getPublishDate(ISBN, bookString);
         APAString += "(";
         if (temp.length() >= 4) {
-            APAString += temp.substring(temp.length() - 4, temp.length()); // THIS MAY NEED ADJUSTMENT BECAUSE OF STRING LENGTH AND ALL THAT FUN STUFF FEEL FREE TO PLAY WITH IT PLS LET'S NOT FORGET TO TEST
+            APAString += temp.substring(temp.length() - 4, temp.length());
         } else {
             APAString += "n.d.";
         }
@@ -500,13 +504,27 @@ public class BookSearcher {
         APAString += "<i>";
         for (String tempArray1 : tempArray) { // subtitles also begin with a capital letter
             temp = "" + tempArray1.charAt(0);
-            APAString += temp + tempArray1.substring(1, tempArray1.length()); // THIS MAY NEED ADJUSTMENT BECAUSE OF STRING LENGTH AND ALL THAT FUN STUFF FEEL FREE TO PLAY WITH IT PLS LET'S NOT FORGET TO TEST
+            APAString += temp + tempArray1.substring(1, tempArray1.length());
         }
         APAString += "</i>. ";
 
         // LOCATION
         String country = getCountry(ISBN, bookString);
-        APAString += "(country abbreviation)" + countryName[Arrays.binarySearch(countryAbbr, country)] + "(end abbr.): ";
+        int count = -1;
+        try {
+            do {
+                count++;
+            } while (!((countryAbbr[count]).equalsIgnoreCase(country)));
+        } catch (Exception e) {
+            count = -1;
+        }
+        String place;
+        if (count >= 0) {
+            place = countryName[count];
+        } else {
+            place = country;
+        }
+        APAString += place + ": ";
 
         // PUBLISHER
         APAString += getPublisher(ISBN, bookString) + ".";
