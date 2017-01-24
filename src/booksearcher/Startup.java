@@ -82,12 +82,18 @@ public class Startup extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-
+    /**
+     * Switches to Book Searcher Panel and applies focus to ISBNField
+     * @param evt 
+     */
     private void toBookSearcherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toBookSearcherActionPerformed
         BookSearcherFrame.toScreen2();
         MainMenuPanel.ISBNField.requestFocus();
     }//GEN-LAST:event_toBookSearcherActionPerformed
-
+    /**
+     * Switches to Category Panel and refreshes the items in then category box, also applies focus to search button.
+     * @param evt 
+     */
     private void toCategorySearcherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toCategorySearcherActionPerformed
         BookSearcherFrame.toScreen3();
         String[] temp = BookSearcher.loadExistingCategories();
