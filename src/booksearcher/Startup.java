@@ -5,11 +5,7 @@
  */
 package booksearcher;
 
-import java.awt.CardLayout;
-import java.awt.Toolkit;
 import java.util.Arrays;
-import javafx.scene.control.ComboBox;
-import javax.swing.JComboBox;
 
 /**
  *
