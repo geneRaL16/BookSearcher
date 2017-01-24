@@ -14,9 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jsoup.Jsoup;
 import java.util.ArrayList;
-import java.util.Arrays;
 import javax.imageio.ImageIO;
-import org.jsoup.HttpStatusException;
 
 /**
  *
