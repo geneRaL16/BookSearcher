@@ -1,16 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package booksearcher;
 
-import java.awt.CardLayout;
-import java.awt.Toolkit;
 import java.util.Arrays;
-import javafx.scene.control.ComboBox;
-import javax.swing.JComboBox;
-
 /**
  *
  * @author 068685601
@@ -87,20 +77,20 @@ public class Startup extends javax.swing.JPanel {
      * @param evt 
      */
     private void toBookSearcherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toBookSearcherActionPerformed
-        BookSearcherFrame.toScreen2();
-        MainMenuPanel.ISBNField.requestFocus();
+        Frame.toScreen2();
+        BookSearcherPanel.ISBNField.requestFocus();
     }//GEN-LAST:event_toBookSearcherActionPerformed
     /**
      * Switches to Category Panel and refreshes the items in then category box, also applies focus to search button.
      * @param evt 
      */
     private void toCategorySearcherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toCategorySearcherActionPerformed
-        BookSearcherFrame.toScreen3();
+        Frame.toScreen3();
         String[] temp = BookSearcher.loadExistingCategories();
         Arrays.sort(temp);
         CategoryPanel.catComboBox.removeAllItems();
-        for (int i = 0; i < temp.length; i++) {
-            CategoryPanel.catComboBox.addItem(temp[i]);
+        for (String temp1 : temp) {
+            CategoryPanel.catComboBox.addItem(temp1);
         }
         CategoryPanel.categorySearchButton.requestFocus();
     }//GEN-LAST:event_toCategorySearcherActionPerformed

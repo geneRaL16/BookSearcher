@@ -1,21 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package booksearcher;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-import org.jsoup.HttpStatusException;
 
 /**
  *
@@ -145,11 +135,12 @@ public class CategoryPanel extends javax.swing.JPanel {
             }
             categoryEditorPanel.setText(temp);
             categoryEditorPanel.addHyperlinkListener(new HyperlinkListener() {
+                @Override
                 public void hyperlinkUpdate(HyperlinkEvent e) {
                     if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
-                        BookSearcherFrame.toScreen2();
-                        MainMenuPanel.ISBNField.setText(e.getDescription());
-                        MainMenuPanel.SearchButton.doClick();
+                        Frame.toScreen2();
+                        BookSearcherPanel.ISBNField.setText(e.getDescription());
+                        BookSearcherPanel.SearchButton.doClick();
                     }
                 }
             });
@@ -160,7 +151,7 @@ public class CategoryPanel extends javax.swing.JPanel {
 
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        BookSearcherFrame.toScreen1();
+        Frame.toScreen1();
         Startup.toBookSearcher.requestFocus();
     }//GEN-LAST:event_backButtonActionPerformed
 
@@ -183,6 +174,7 @@ class ColumnComparator implements Comparator {
         this.columnToSort = columnToSort;
     }
 
+    @Override
     public int compare(Object o1, Object o2) {
         String[] row1 = (String[]) o1;
         String[] row2 = (String[]) o2;
