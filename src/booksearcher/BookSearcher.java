@@ -110,6 +110,7 @@ public class BookSearcher {
      * Adds given book to category text file based on ISBN given
      *
      * @param ISBN String ISBN number of the given book
+     * @throws java.io.IOException
      */
     public static void addToCategory(String ISBN) throws IOException {
         String[] categories = getCategories(ISBN, getBookString(ISBN));

@@ -135,6 +135,7 @@ public class CategoryPanel extends javax.swing.JPanel {
             }
             categoryEditorPanel.setText(temp);
             categoryEditorPanel.addHyperlinkListener(new HyperlinkListener() {
+                @Override
                 public void hyperlinkUpdate(HyperlinkEvent e) {
                     if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
                         BookSearcherFrame.toScreen2();
@@ -173,6 +174,7 @@ class ColumnComparator implements Comparator {
         this.columnToSort = columnToSort;
     }
 
+    @Override
     public int compare(Object o1, Object o2) {
         String[] row1 = (String[]) o1;
         String[] row2 = (String[]) o2;
