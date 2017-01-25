@@ -376,13 +376,13 @@ public class BookSearcherPanel extends javax.swing.JPanel {
                 updateReviewStars(bookRating);
                 ISBNField.selectAll();
             } catch (IndexOutOfBoundsException e) {
-                JOptionPane.showMessageDialog(null, "Book not found in database!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Error 1 - Book not found in database!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, "Error 403  - Please wait 10 seconds before performing any more searches!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Error 4 - Please wait 30 seconds before performing any more searches!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
             }
             updateReviews();
         } else {
-            JOptionPane.showMessageDialog(null, "Please enter a valid ISBN!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error 2 - Please enter a valid ISBN!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
         }
         ISBNField.requestFocus();
         ISBNField.selectAll();
@@ -448,11 +448,11 @@ public class BookSearcherPanel extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(null, "Reviews cannot contain profanity!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
             }
         } else if (isbnLoc < 0) {
-            JOptionPane.showMessageDialog(null, "Please enter a valid ISBN!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error 2 - Please enter a valid ISBN!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
         } else if (newReviewTextArea.getText().length() <= 0) {
-            JOptionPane.showMessageDialog(null, "Please enter a review first!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error 3 - Please enter a review first!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
         } else if (bookRating == 0) {
-            JOptionPane.showMessageDialog(null, "Please enter a valid rating", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error 5 - Please enter a valid rating", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
         }
         bookRating = BookSearcher.getAverageRatings(ISBNField.getText());
         updateReviewStars(bookRating);
