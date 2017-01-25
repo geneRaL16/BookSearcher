@@ -27,8 +27,8 @@ public class BookSearcherFrame extends javax.swing.JFrame {
         this.getRootPane().setDefaultButton(MainMenuPanel.SearchButton);
         
         
-        //this.setAlwaysOnTop(true);
-        //this.setDefaultCloseOperation(BookSearcherFrame.DO_NOTHING_ON_CLOSE);
+        this.setAlwaysOnTop(true);
+        this.setDefaultCloseOperation(BookSearcherFrame.DO_NOTHING_ON_CLOSE);
     }
 
     public static void toScreen2() {

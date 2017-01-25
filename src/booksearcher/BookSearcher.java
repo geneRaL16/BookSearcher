@@ -68,7 +68,7 @@ public class BookSearcher {
     }
 
     public static String getBookString(String ISBN) throws IOException {
-            return Jsoup.connect("https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN).ignoreContentType(true).get().toString();
+        return Jsoup.connect("https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN).ignoreContentType(true).get().toString();
         //return "";
     }
 
@@ -576,6 +576,7 @@ public class BookSearcher {
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             System.out.println("No Image book file not found '/res/Images/defaultBookImage.png')");
+            return stock;
         }
         return null;
     }
