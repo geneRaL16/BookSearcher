@@ -131,7 +131,7 @@ public class CategoryPanel extends javax.swing.JPanel {
                         temp += "<a href=" + catInfo[i][1] + ">" + title + " - " + catInfo[i][0] + "/5 </a>";
                     }
 
-                    for (int y = 0; y < booksPerLine * 4; y++) {
+                    for (int y = 0; y < booksPerLine * 3.8; y++) {
                         temp += " &nbsp; ";
                     }
                     if (title.length() < 17) {
