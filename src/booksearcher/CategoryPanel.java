@@ -92,7 +92,12 @@ public class CategoryPanel extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
-
+    /**
+     * searches all books in database that matches the chosen category and sorts
+     * by users reviews
+     *
+     * @param evt
+     */
     private void categorySearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categorySearchButtonActionPerformed
         try {
             String[] categories = BookSearcher.getCategory(catComboBox.getSelectedItem().toString());
@@ -102,25 +107,25 @@ public class CategoryPanel extends javax.swing.JPanel {
                 catInfo[i][1] = categories[i];
             }
             Arrays.sort(catInfo, new ColumnComparator(0));
-            
+
             int booksPerLine = categoryEditorPanel.getWidth() / 400;
-            int lines = categoryEditorPanel.getHeight() / 100;
+            booksPerLine = 4;
             String temp = "";
             for (int x = 0; x < categories.length; x += booksPerLine) {
                 for (int i = x; i < categories.length && i < (x + booksPerLine); i++) {
                     temp += "<html> <img src= " + BookSearcher.getBookImageString(catInfo[i][1]) + "/>";
-                    for (int y = 0; y < booksPerLine * 4.5; y++) {
+                    for (int y = 0; y < booksPerLine * 4; y++) {
                         temp += " &nbsp; ";
                     }
                 }
                 temp += "<br>";
                 for (int i = x; i < categories.length && i < (x + booksPerLine); i++) {
                     String title = BookSearcher.getBookInfo(catInfo[i][1])[0];
-                    if (title.length() > 17) {
+                    if (title.length() > 17) { // Shortens title to tidy up the graphics
                         title = title.substring(0, 17);
                         title += "...";
                     }
-                    if (catInfo[i][0].equals("0")) {
+                    if (catInfo[i][0].equals("0")) { // Only show reviews that have user reviews
                         temp += "<a href=" + catInfo[i][1] + ">" + title + " - N/R </a>";
                     } else {
                         temp += "<a href=" + catInfo[i][1] + ">" + title + " - " + catInfo[i][0] + "/5 </a>";
@@ -128,6 +133,11 @@ public class CategoryPanel extends javax.swing.JPanel {
 
                     for (int y = 0; y < booksPerLine * 4; y++) {
                         temp += " &nbsp; ";
+                    }
+                    if (title.length() < 17) {
+                        for (int z = title.length(); z < 18; z++) {
+                            title += "&nbsp";
+                        }
                     }
                 }
                 temp += "<br>"; //Adds a space between books
@@ -148,7 +158,11 @@ public class CategoryPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_categorySearchButtonActionPerformed
 
-
+    /**
+     * Changes back to the menu panel
+     *
+     * @param evt
+     */
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         Frame.toScreen1();
         Startup.toBookSearcher.requestFocus();
