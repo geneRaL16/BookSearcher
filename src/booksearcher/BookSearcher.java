@@ -130,18 +130,17 @@ public class BookSearcher {
                 temp += ISBN + Character.toString((char) 31);
                 pw2.println(temp);
             }
-            while (catScanner.hasNextLine()) {
+            while (catScanner.hasNextLine()) { //Moves data back to original textfile
                 pw2.println(catScanner.nextLine());
             }
             if (!catFound) {
                 pw2.println(temp);
-                System.out.println("No category found - creating " + categories[0]);
                 pw2.println(categories[0]);
                 pw2.print(ISBN + Character.toString((char) 31));
             }
             pw2.close();
             pwCategories = new PrintWriter(new FileOutputStream(categoriesDB, false));
-            while (s2.hasNextLine()) {
+            while (s2.hasNextLine()) { //Print data back to original textfile
                 pwCategories.println(s2.nextLine());
             }
             pwCategories.close();
