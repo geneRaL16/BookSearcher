@@ -26,6 +26,7 @@ public class Frame extends javax.swing.JFrame {
         this.getRootPane().setDefaultButton(BookSearcherPanel.SearchButton);
         BookSearcher.countrySetup();
 
+        this.setAlwaysOnTop(true);
         this.setDefaultCloseOperation(Frame.DO_NOTHING_ON_CLOSE);
     }
     /**
