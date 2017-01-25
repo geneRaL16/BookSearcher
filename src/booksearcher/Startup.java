@@ -1,16 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package booksearcher;
 
-import java.awt.CardLayout;
-import java.awt.Toolkit;
 import java.util.Arrays;
-import javafx.scene.control.ComboBox;
-import javax.swing.JComboBox;
-
 /**
  *
  * @author 068685601
@@ -35,26 +25,26 @@ public class Startup extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        categorySearcher = new javax.swing.JButton();
+        toBookSearcher = new javax.swing.JButton();
+        toCategorySearcher = new javax.swing.JButton();
 
         jLabel1.setFont(new java.awt.Font("Arial Black", 0, 36)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("NHS BookSearcher");
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jButton1.setText("Book Searcher");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        toBookSearcher.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        toBookSearcher.setText("Book Searcher");
+        toBookSearcher.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                toBookSearcherActionPerformed(evt);
             }
         });
 
-        categorySearcher.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        categorySearcher.setText("Category Searcher");
-        categorySearcher.addActionListener(new java.awt.event.ActionListener() {
+        toCategorySearcher.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        toCategorySearcher.setText("Category Searcher");
+        toCategorySearcher.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                categorySearcherActionPerformed(evt);
+                toCategorySearcherActionPerformed(evt);
             }
         });
 
@@ -66,8 +56,8 @@ public class Startup extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(229, 229, 229)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(categorySearcher, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE))
+                    .addComponent(toCategorySearcher, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(toBookSearcher, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE))
                 .addGap(229, 229, 229))
         );
         layout.setVerticalGroup(
@@ -75,34 +65,40 @@ public class Startup extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
                 .addGap(55, 55, 55)
-                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
+                .addComponent(toBookSearcher, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(categorySearcher, javax.swing.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
+                .addComponent(toCategorySearcher, javax.swing.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
                 .addGap(125, 125, 125))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        BookSearcherFrame.toScreen2();
-        MainMenuPanel.ISBNField.requestFocus();
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void categorySearcherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categorySearcherActionPerformed
-        BookSearcherFrame.toScreen3();
+    /**
+     * Switches to Book Searcher Panel and applies focus to ISBNField
+     * @param evt 
+     */
+    private void toBookSearcherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toBookSearcherActionPerformed
+        Frame.toScreen2();
+        BookSearcherPanel.ISBNField.requestFocus();
+    }//GEN-LAST:event_toBookSearcherActionPerformed
+    /**
+     * Switches to Category Panel and refreshes the items in then category box, also applies focus to search button.
+     * @param evt 
+     */
+    private void toCategorySearcherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toCategorySearcherActionPerformed
+        Frame.toScreen3();
         String[] temp = BookSearcher.loadExistingCategories();
         Arrays.sort(temp);
         CategoryPanel.catComboBox.removeAllItems();
-        for (int i = 0; i < temp.length; i++) {
-            CategoryPanel.catComboBox.addItem(temp[i]);
+        for (String temp1 : temp) {
+            CategoryPanel.catComboBox.addItem(temp1);
         }
         CategoryPanel.categorySearchButton.requestFocus();
-    }//GEN-LAST:event_categorySearcherActionPerformed
+    }//GEN-LAST:event_toCategorySearcherActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton categorySearcher;
-    public static javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    public static javax.swing.JButton toBookSearcher;
+    private javax.swing.JButton toCategorySearcher;
     // End of variables declaration//GEN-END:variables
 }

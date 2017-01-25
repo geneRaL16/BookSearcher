@@ -1,12 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package booksearcher;
 
 /**
- *
+ * This panel's only purpose in life is to become a card layout and hold the other panels
  * @author 068685601
  */
 public class MainPanel extends javax.swing.JPanel {

@@ -2,7 +2,6 @@ package booksearcher;
 
 import java.awt.Dimension;
 import java.awt.Image;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -14,7 +13,7 @@ import javax.swing.JOptionPane;
  *
  * @author liam9
  */
-public class MainMenuPanel extends javax.swing.JPanel {
+public class BookSearcherPanel extends javax.swing.JPanel {
 
     static String sortBy = "LowToHigh";
     static Image starEmpty;
@@ -24,7 +23,7 @@ public class MainMenuPanel extends javax.swing.JPanel {
     /**
      * Creates new form MainMenuPanel
      */
-    public MainMenuPanel() {
+    public BookSearcherPanel() {
         initComponents();
 
         try {
@@ -69,8 +68,12 @@ public class MainMenuPanel extends javax.swing.JPanel {
         reviewTextArea.setText(temp);
         newReviewTextArea.setText("");
     }
-    
 
+    /**
+     * Updates star rating graphics
+     *
+     * @param rating rating for stars to display
+     */
     public void updateReviewStars(int rating) {
         if (rating != Integer.parseInt(Character.toString(currentSliderPosition.getText().charAt(0)))) { //Only updates if new star is selected
             starSelCanvas.getGraphics().clearRect(0, 0, starSelCanvas.getWidth(), starSelCanvas.getHeight());
@@ -163,11 +166,6 @@ public class MainMenuPanel extends javax.swing.JPanel {
         newReviewTextArea.setLineWrap(true);
         newReviewTextArea.setRows(5);
         newReviewTextArea.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        newReviewTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                newReviewTextAreaKeyTyped(evt);
-            }
-        });
         jScrollPane2.setViewportView(newReviewTextArea);
 
         reviewTextArea.setEditable(false);
@@ -338,6 +336,12 @@ public class MainMenuPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Searches for a book in the text file, if it doesn't yet exist the book is
+     * added to the text file
+     *
+     * @param evt button pushed
+     */
     private void SearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchButtonActionPerformed
         if (!ISBNField.getText().equals("") && BookSearcher.isISBN(ISBNField.getText())) {
             try {
@@ -351,43 +355,52 @@ public class MainMenuPanel extends javax.swing.JPanel {
                 publishedDateLabel.setText("Pusblished: " + info[5]);
                 descriptionEditorPane.setText(info[6] + "<br>MLA: " + info[7] + "<br>APA: " + info[8]);
                 bookRating = BookSearcher.getAverageRatings(ISBNField.getText());
-                ImageIcon icon = new ImageIcon(BookSearcher.getBookImage(ISBNField.getText()));
+                ImageIcon icon = new ImageIcon(BookSearcher.getBookImage(ISBNField.getText())); // Gets book image and makes it a Icon
+                // Set various dimensions for normal and max height
                 int height = icon.getIconHeight();
                 int width = icon.getIconWidth();
                 int maxHeight = bookImageLabel.getHeight();
                 int maxWidth = bookImageLabel.getWidth();
                 Dimension bookSize = new Dimension(width, height);
                 Dimension maxSize = new Dimension(maxWidth, maxHeight);
+                //Increases size of image, keeping ratio
                 for (Dimension i = bookSize; i.height * 1.1 < maxSize.height && i.width * 1.1 < maxSize.width; i.setSize(i.width, i.height)) {
                     i.height = (int) (i.height * 1.1);
                     i.width = (int) (i.width * 1.1);
                     bookSize.setSize(i.width, i.height);
                 }
+                // Svale and set image
                 Image scaleImage = icon.getImage().getScaledInstance(bookSize.width, bookSize.height, Image.SCALE_SMOOTH);
                 bookImageLabel.setIcon(new ImageIcon(scaleImage));
                 bookRating = BookSearcher.getAverageRatings(ISBNField.getText());
                 updateReviewStars(bookRating);
                 ISBNField.selectAll();
             } catch (IndexOutOfBoundsException e) {
-                JOptionPane.showMessageDialog(null, "Book not found in database!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Error 1 - Book not found in database!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "Error 4 - Please wait 30 seconds before performing any more searches!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
             }
-            catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Error 403  - Please wait 10 seconds before performing any more searches!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
-        }
             updateReviews();
         } else {
-            JOptionPane.showMessageDialog(null, "Please enter a valid ISBN!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error 2 - Please enter a valid ISBN!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
         }
         ISBNField.requestFocus();
         ISBNField.selectAll();
         newReviewTextArea.getDocument().putProperty("filterNewlines", Boolean.TRUE);
     }//GEN-LAST:event_SearchButtonActionPerformed
-
-
+    /**
+     * Calls update reviews
+     *
+     * @param evt
+     */
     private void reviewSortSelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reviewSortSelActionPerformed
         updateReviews();
     }//GEN-LAST:event_reviewSortSelActionPerformed
-
+    /**
+     * Shows stars when hovering over review
+     *
+     * @param evt
+     */
     private void starSelCanvasMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_starSelCanvasMouseMoved
         try {
             int starsSelected = (starSelCanvas.getMousePosition().x / (starSelCanvas.getSize().width / 5) + 1);
@@ -395,20 +408,37 @@ public class MainMenuPanel extends javax.swing.JPanel {
         } catch (NullPointerException e) {
         }
     }//GEN-LAST:event_starSelCanvasMouseMoved
-
+    /**
+     * reset stars when mouse leaves canvas
+     *
+     * @param evt
+     */
     private void starSelCanvasMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_starSelCanvasMouseExited
         updateReviewStars(bookRating);
     }//GEN-LAST:event_starSelCanvasMouseExited
-
+    /**
+     * sets users current review to that of the star clicked
+     *
+     * @param evt
+     */
     private void starSelCanvasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_starSelCanvasMouseClicked
         bookRating = (starSelCanvas.getMousePosition().x / (starSelCanvas.getSize().width / 5) + 1);
     }//GEN-LAST:event_starSelCanvasMouseClicked
-
+    /**
+     * sends user back to main panel
+     *
+     * @param evt
+     */
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        BookSearcherFrame.toScreen1();
-        Startup.jButton1.requestFocus();
+        Frame.toScreen1();
+        Startup.toBookSearcher.requestFocus();
     }//GEN-LAST:event_backButtonActionPerformed
 
+    /**
+     * adds a review to a book if it is appropriate and valid
+     *
+     * @param evt button for creating reviews pushed
+     */
     private void newReviewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newReviewButtonActionPerformed
         int isbnLoc = BookSearcher.searchISBN(ISBNField.getText());
         if (newReviewTextArea.getText().length() > 0 && isbnLoc >= 0 && bookRating > 0) {
@@ -418,11 +448,11 @@ public class MainMenuPanel extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(null, "Reviews cannot contain profanity!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
             }
         } else if (isbnLoc < 0) {
-            JOptionPane.showMessageDialog(null, "Please enter a valid ISBN!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error 2 - Please enter a valid ISBN!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
         } else if (newReviewTextArea.getText().length() <= 0) {
-            JOptionPane.showMessageDialog(null, "Please enter a review first!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error 3 - Please enter a review first!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
         } else if (bookRating == 0) {
-            JOptionPane.showMessageDialog(null, "Please enter a valid rating", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error 5 - Please enter a valid rating", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
         }
         bookRating = BookSearcher.getAverageRatings(ISBNField.getText());
         updateReviewStars(bookRating);
@@ -430,10 +460,6 @@ public class MainMenuPanel extends javax.swing.JPanel {
         ISBNField.selectAll();
         updateReviews();
     }//GEN-LAST:event_newReviewButtonActionPerformed
-
-    private void newReviewTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_newReviewTextAreaKeyTyped
-        // TODO add your handling code here:
-    }//GEN-LAST:event_newReviewTextAreaKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

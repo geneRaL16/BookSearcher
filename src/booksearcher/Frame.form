@@ -50,7 +50,7 @@
             </Constraint>
           </Constraints>
         </Component>
-        <Component class="booksearcher.MainMenuPanel" name="mainMenuPanel1">
+        <Component class="booksearcher.BookSearcherPanel" name="mainMenuPanel1">
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
           </AuxValues>

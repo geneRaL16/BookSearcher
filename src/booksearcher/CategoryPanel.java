@@ -1,21 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package booksearcher;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-import org.jsoup.HttpStatusException;
 
 /**
  *
@@ -102,7 +92,12 @@ public class CategoryPanel extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
-
+    /**
+     * searches all books in database that matches the chosen category and sorts
+     * by users reviews
+     *
+     * @param evt
+     */
     private void categorySearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categorySearchButtonActionPerformed
         try {
             String[] categories = BookSearcher.getCategory(catComboBox.getSelectedItem().toString());
@@ -112,33 +107,49 @@ public class CategoryPanel extends javax.swing.JPanel {
                 catInfo[i][1] = categories[i];
             }
             Arrays.sort(catInfo, new ColumnComparator(0));
+
             int booksPerLine = categoryEditorPanel.getWidth() / 400;
-            int lines = categoryEditorPanel.getHeight() / 100;
-            System.out.println(booksPerLine);
+            booksPerLine = 4;
             String temp = "";
             for (int x = 0; x < categories.length; x += booksPerLine) {
                 for (int i = x; i < categories.length && i < (x + booksPerLine); i++) {
                     temp += "<html> <img src= " + BookSearcher.getBookImageString(catInfo[i][1]) + "/>";
-                    for (int y = 0; y < booksPerLine * 4.5; y++) {
+                    for (int y = 0; y < booksPerLine * 4; y++) {
                         temp += " &nbsp; ";
                     }
                 }
                 temp += "<br>";
                 for (int i = x; i < categories.length && i < (x + booksPerLine); i++) {
-                    temp += "<a href=" + catInfo[i][1] + ">" + BookSearcher.getBookInfo(catInfo[i][1])[0] + " - " + catInfo[i][0] + "/5 </a>";
-                    for (int y = 0; y < booksPerLine * 4; y++) {
+                    String title = BookSearcher.getBookInfo(catInfo[i][1])[0];
+                    if (title.length() > 17) { // Shortens title to tidy up the graphics
+                        title = title.substring(0, 17);
+                        title += "...";
+                    }
+                    if (catInfo[i][0].equals("0")) { // Only show reviews that have user reviews
+                        temp += "<a href=" + catInfo[i][1] + ">" + title + " - N/R </a>";
+                    } else {
+                        temp += "<a href=" + catInfo[i][1] + ">" + title + " - " + catInfo[i][0] + "/5 </a>";
+                    }
+
+                    for (int y = 0; y < booksPerLine * 3.8; y++) {
                         temp += " &nbsp; ";
+                    }
+                    if (title.length() < 17) {
+                        for (int z = title.length(); z < 18; z++) {
+                            title += "&nbsp";
+                        }
                     }
                 }
                 temp += "<br>"; //Adds a space between books
             }
             categoryEditorPanel.setText(temp);
             categoryEditorPanel.addHyperlinkListener(new HyperlinkListener() {
+                @Override
                 public void hyperlinkUpdate(HyperlinkEvent e) {
                     if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
-                        BookSearcherFrame.toScreen2();
-                        MainMenuPanel.ISBNField.setText(e.getDescription());
-                        MainMenuPanel.SearchButton.doClick();
+                        Frame.toScreen2();
+                        BookSearcherPanel.ISBNField.setText(e.getDescription());
+                        BookSearcherPanel.SearchButton.doClick();
                     }
                 }
             });
@@ -147,10 +158,14 @@ public class CategoryPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_categorySearchButtonActionPerformed
 
-
+    /**
+     * Changes back to the menu panel
+     *
+     * @param evt
+     */
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        BookSearcherFrame.toScreen1();
-        Startup.jButton1.requestFocus();
+        Frame.toScreen1();
+        Startup.toBookSearcher.requestFocus();
     }//GEN-LAST:event_backButtonActionPerformed
 
 
@@ -172,6 +187,7 @@ class ColumnComparator implements Comparator {
         this.columnToSort = columnToSort;
     }
 
+    @Override
     public int compare(Object o1, Object o2) {
         String[] row1 = (String[]) o1;
         String[] row2 = (String[]) o2;

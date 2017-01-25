@@ -1,3 +1,8 @@
+/* test ISBNs:
+9780552152679
+9780375753770
+0735619670
+ */
 package booksearcher;
 
 import java.awt.image.BufferedImage;
@@ -15,7 +20,6 @@ import java.util.logging.Logger;
 import org.jsoup.Jsoup;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
-import org.jsoup.HttpStatusException;
 
 /**
  *
@@ -30,6 +34,7 @@ public class BookSearcher {
     static File bookDB2;
     static File categoriesDB;
     static File badWords;
+    static File f;
     static FileWriter fw;
     static FileWriter fwF;
     static FileWriter fw2;
@@ -37,82 +42,92 @@ public class BookSearcher {
     static PrintWriter pw2;
     static PrintWriter pwCategories;
     static Scanner s;
-    static Scanner s2;
-    static Scanner catScanner;
+    static Scanner s2; //
+    static Scanner s3; //Scanner used for reading reviews
+    static Scanner s4; //Scanner used for average ratings
+    static Scanner catScanner; //Scanner used for reading categories
     static Scanner badWordScanner; //Scanner used for bad words file
     static ArrayList<String> badWordTempList;
     static String[] badWordList; //List of bad words to be checked against
     static Scanner kb;
+    static String[] countryName = new String[249];
+    static String[] countryAbbr = new String[249];
 
     /**
-     * just a quick test, see if stuff runs
-     *
-     * @param args
+     * puts country abbreviations and corresponding iso alpha-2 codes in
+     * parallel arrays
      */
-    public static void main(String[] args) {
-
+    public static void countrySetup() {
+        String[] tempArray;
         try {
-            kb = new Scanner(System.in);
-            bookDB = new File("bookdb.txt");
-            bookDB2 = new File("bookdb2.txt");
-            s2 = new Scanner(bookDB2);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
+            s = new Scanner(f);
+            for (int i = 0; i < 249; i++) {
+                tempArray = s.nextLine().split(",");
+                countryAbbr[i] = tempArray[0];
+                countryName[i] = tempArray[1];
+            }
+            s.close();
+        } catch (FileNotFoundException e) {
         }
-
-        String isbn = "9780552152679";
-        //addBook(isbn);
-        //addBook("9780375753770");
-        //addBook("0735619670");
-        addReview("0735619670", 4, "Could have been better");
     }
 
+    /**
+     * Generates the URL to the Google page of book information
+     *
+     * @param ISBN ISBN of book to be searched
+     * @return URL of Google page of information of book
+     * @throws IOException 403 (forbidden) error from Google when website
+     * receives too many requests from one network location
+     */
     public static String getBookString(String ISBN) throws IOException {
         return Jsoup.connect("https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN).ignoreContentType(true).get().toString();
-        //return "";
     }
 
+    /**
+     * Gets the list of books in a given category
+     *
+     * @param categories Name of category
+     * @return Book ISBNs that are in the given category
+     */
     public static String[] getCategory(String categories) {
         try {
             catScanner = new Scanner(categoriesDB);
-            while (!catScanner.nextLine().equals(categories) && catScanner.hasNextLine()) {
+            while (!catScanner.nextLine().equals(categories) && catScanner.hasNextLine()) { //Reads through the category file until finds correct category
                 catScanner.nextLine();
             }
-            return catScanner.nextLine().split(Character.toString((char) 31));
+            return catScanner.nextLine().split(Character.toString((char) 31)); //Returns the list of books in given category
         } catch (FileNotFoundException ex) {
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
+        return null; //No category found
     }
 
     /**
      * Adds given book to category text file based on ISBN given
      *
      * @param ISBN String ISBN number of the given book
+     * @throws java.io.IOException 403 Google error
      */
     public static void addToCategory(String ISBN) throws IOException {
-        String[] categories = getCategories(ISBN, getBookString(ISBN));
+        String[] categories = getCategories(ISBN, getBookString(ISBN)); //Gets all the categories that a given book  applies too
         try {
             boolean catFound = false;
             s2 = new Scanner(bookDB2);
             catScanner = new Scanner(categoriesDB);
             pw2 = new PrintWriter(new FileOutputStream(bookDB2, false));
             String temp = "";
-            if (catScanner.hasNextLine()) {
+            if (catScanner.hasNextLine()) { //Moves Scanner to first category title
                 temp = catScanner.nextLine();
             }
-            while (!temp.equals(categories[0]) && catScanner.hasNextLine()) {
+            while (!temp.equals(categories[0]) && catScanner.hasNextLine()) { //Moves all content of category file to temp file, until correct category is found
                 pw2.println(temp);
-                System.out.println("Writing " + temp);
                 temp = catScanner.nextLine();
             }
-            if (temp.equals(categories[0])) {
+            if (temp.equals(categories[0])) { //Adds new book to correct category line
                 pw2.println(temp);
                 catFound = true;
-                System.out.println("Found category " + temp);
                 temp = catScanner.nextLine();
                 temp += ISBN + Character.toString((char) 31);
-                System.out.println("Adding " + temp);
                 pw2.println(temp);
             }
             while (catScanner.hasNextLine()) {
@@ -145,8 +160,15 @@ public class BookSearcher {
         bookDB2 = new File("bookdb2.txt");
         badWords = new File("badword.txt");
         categoriesDB = new File("categories.txt");
+        f = new File("countries.csv");
     }
 
+    /**
+     * Loads all the categories which contain books that have been scanned into
+     * program
+     *
+     * @return String[] Array of all the different categories with boooks
+     */
     public static String[] loadExistingCategories() {
         ArrayList<String> temp = null;
         try {
@@ -190,9 +212,9 @@ public class BookSearcher {
      */
     public static boolean checkBadWord(String phrase) {
         String[] temp = phrase.toLowerCase().split(" ");
-        for (int i = 0; i < temp.length; i++) {
-            for (int x = 0; x < badWordList.length; x++) {
-                if (temp[i].equals(badWordList[x])) {
+        for (String temp1 : temp) {
+            for (String badWordList1 : badWordList) {
+                if (temp1.equals(badWordList1)) {
                     return false;
                 }
             }
@@ -218,8 +240,7 @@ public class BookSearcher {
                 }
                 linecount++;
             }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException e) {
         }
         s.close();
         return -1;
@@ -231,9 +252,10 @@ public class BookSearcher {
      *
      * @param ISBN book ISBN to search by
      * @return array of Strings holding all of the relevant information
+     * @throws java.io.IOException
      */
     public static String[] getBookInfo(String ISBN) throws IndexOutOfBoundsException, IOException {
-        String bookString = "";
+        String bookString;
         bookString = getBookString(ISBN);
         String info = "";
         info += getTitle(ISBN, bookString) + Character.toString((char) 31); // add title to string info
@@ -293,6 +315,14 @@ public class BookSearcher {
         return bookString.split("\"publisher\": \"")[1].split("\"")[0];
     }
 
+    /**
+     * Finds the book's country of publication
+     *
+     * @param ISBN book ISBN
+     * @param bookString the online text that contains the country of
+     * publication
+     * @return country of publication
+     */
     private static String getCountry(String ISBN, String bookString) {
         return bookString.split("\"country\": \"")[1].split("\"")[0];
     }
@@ -401,6 +431,7 @@ public class BookSearcher {
      * [Publication Date] is "n.d." if no date is available.
      *
      * @param ISBN book ISBN
+     * @param bookString URL
      * @return String of book information in MLA format
      */
     public static String MLA(String ISBN, String bookString) {
@@ -410,11 +441,11 @@ public class BookSearcher {
         String[] authors = getAuthors(ISBN, bookString);
         if (authors.length > 0) {
             String[] firstAuthor = authors[0].split(" ");
-            MLAString += firstAuthor[firstAuthor.length - 1] + ", ";
+            MLAString += firstAuthor[firstAuthor.length - 1] + ", "; // first author's last name
             for (int i = 0; i < firstAuthor.length - 1; i++) {
-                MLAString += " " + firstAuthor[i];
+                MLAString += " " + firstAuthor[i]; // rest of first author's name
             }
-            if (authors.length > 1) {
+            if (authors.length > 1) { // rest of authors' names
                 authors[1] = "and " + authors[1];
                 for (int i = 1; i < authors.length; i++) {
                     MLAString += ", " + authors[i];
@@ -432,7 +463,7 @@ public class BookSearcher {
         // PUBLICATION DATE
         String date = getPublishDate(ISBN, bookString);
         if (date.equals("")) {
-            MLAString += "n.d.";
+            MLAString += "n.d."; // replace a missing date with n.d., the accepted notation
         } else {
             MLAString += date + ".";
         }
@@ -448,6 +479,7 @@ public class BookSearcher {
      * [Location of publication]: [Publisher].
      *
      * @param ISBN book ISBN
+     * @param bookString URL
      * @return String of book information in APA format
      */
     public static String APA(String ISBN, String bookString) {
@@ -457,11 +489,11 @@ public class BookSearcher {
         String[] authors = getAuthors(ISBN, bookString);
         if (authors.length > 0) {
             String[] firstAuthor = authors[0].split(" ");
-            APAString += firstAuthor[firstAuthor.length - 1] + ",";
+            APAString += firstAuthor[firstAuthor.length - 1] + ","; // first author's last name
             for (int i = 0; i < firstAuthor.length - 1; i++) {
-                APAString += " " + firstAuthor[i];
+                APAString += " " + firstAuthor[i]; // rest of first author's name
             }
-            if (authors.length > 1) {
+            if (authors.length > 1) { // rest of authors' names
                 authors[1] = ", & " + authors[1];
                 for (int i = 1; i < authors.length; i++) {
                     APAString += ", " + authors[i];
@@ -474,24 +506,39 @@ public class BookSearcher {
         temp = getPublishDate(ISBN, bookString);
         APAString += "(";
         if (temp.length() >= 4) {
-            APAString += temp.substring(temp.length() - 4, temp.length()); // THIS MAY NEED ADJUSTMENT BECAUSE OF STRING LENGTH AND ALL THAT FUN STUFF FEEL FREE TO PLAY WITH IT PLS LET'S NOT FORGET TO TEST
+            APAString += temp.substring(temp.length() - 4, temp.length());
         } else {
-            APAString += "n.d.";
+            APAString += "n.d."; // accepted notation for missing date
         }
         APAString += "). ";
 
         // TITLE
         temp = getTitle(ISBN, bookString);
-        tempArray = temp.split(":");
+        tempArray = temp.split(":"); // checks for subtitles
         APAString += "<i>";
         for (String tempArray1 : tempArray) { // subtitles also begin with a capital letter
             temp = "" + tempArray1.charAt(0);
-            APAString += temp + tempArray1.substring(1, tempArray1.length()); // THIS MAY NEED ADJUSTMENT BECAUSE OF STRING LENGTH AND ALL THAT FUN STUFF FEEL FREE TO PLAY WITH IT PLS LET'S NOT FORGET TO TEST
+            APAString += temp.toUpperCase() + tempArray1.substring(1, tempArray1.length());
         }
         APAString += "</i>. ";
 
-        // LOCATION FIND A WAY TO SEARCH THROUGH THE 2D ARRAY FOR THIS THINGY AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
-        APAString += "(country abbreviation)" + getCountry(ISBN, bookString) + "(end abbr.): ";
+        // LOCATION
+        String country = getCountry(ISBN, bookString);
+        int count = -1;
+        try { // finds location of country's actual name in its array by finding the ISO alpha 2 code
+            do {
+                count++;
+            } while (!((countryAbbr[count]).equalsIgnoreCase(country)));
+        } catch (Exception e) {
+            count = -1;
+        }
+        String place;
+        if (count >= 0) {
+            place = countryName[count];
+        } else {
+            place = country;
+        }
+        APAString += place + ": ";
 
         // PUBLISHER
         APAString += getPublisher(ISBN, bookString) + ".";
@@ -533,15 +580,14 @@ public class BookSearcher {
     public static int getAverageRatings(String ISBN) {
         double averageRating = 0;
         double count = 0;
-
         try {
-            Scanner s4 = new Scanner(bookDB);
-            if (searchISBN(ISBN) >= 0) {
-                for (int i = 0; i < searchISBN(ISBN); i++) {
+            s4 = new Scanner(bookDB);
+            if (searchISBN(ISBN) >= 0) { //Checks if book exists in database
+                for (int i = 0; i < searchISBN(ISBN); i++) { //Reads to line where desired book is located
                     s4.nextLine();
                 }
                 String line = s4.nextLine();
-                String[] temp = line.split(Character.toString((char) 31) + "| -");
+                String[] temp = line.split(Character.toString((char) 31) + "| -"); //
                 for (int i = 1; i < temp.length - 1; i += 2) {
                     averageRating += Integer.parseInt(temp[i]);
                     count++;
@@ -561,20 +607,22 @@ public class BookSearcher {
      *
      * @param ISBN String ISBN number of the book
      * @return Google thumbnail image
+     * @throws java.io.IOException Throws IOException only if 403 error from
+     * Google
      */
     public static BufferedImage getBookImage(String ISBN) throws IOException {
         String bookString = getBookString(ISBN);
-        BufferedImage stock = null;
+        BufferedImage stock = null; //Image to be returned by file
         try {
-            stock = ImageIO.read(new File("defaultBookImage.png"));
-            URL bookURL = new URL(bookString.split("\"thumbnail\": \"")[1].split("\"")[0].replaceAll("&amp;", "&"));
+            stock = ImageIO.read(new File("defaultBookImage.png")); //Assume default image file
+            URL bookURL = new URL(bookString.split("\"thumbnail\": \"")[1].split("\"")[0].replaceAll("&amp;", "&")); //Load book cover image from Google API
             return ImageIO.read(bookURL);
         } catch (ArrayIndexOutOfBoundsException e) { //No image available
             System.out.println("No thumbnail found for book " + ISBN);
-            return stock;
-        } catch (MalformedURLException ex) {
+            return stock; //Return "No Image Available" image
+        } catch (MalformedURLException ex) { //Catch for incorrect URL form
             Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
+        } catch (IOException ex) { //Cannot find default book image file
             System.out.println("No Image book file not found '/res/Images/defaultBookImage.png')");
             return stock;
         }
@@ -596,14 +644,14 @@ public class BookSearcher {
      * Adds book to text file if ISBN corresponds to real book
      *
      * @param ISBN String book ISBN
+     * @throws org.jsoup.HttpStatusException Thrown if Google returns 403 error
      */
     public static void addBook(String ISBN) throws org.jsoup.HttpStatusException {
-        if (searchISBN(ISBN) == -1) {
+        if (searchISBN(ISBN) == -1) { //Checks if the book already exists in the book database
             try {
-                addToCategory(ISBN);
+                addToCategory(ISBN); //Adds the book to the category database file
                 pw = new PrintWriter(new FileOutputStream(bookDB, true));
-                pw.println(ISBN + Character.toString((char) 31)); //Delimited by invisible character
-                pw.flush();
+                pw.println(ISBN + Character.toString((char) 31)); //Prints new book, delimited by ASCII character 31
                 pw.close();
             } catch (IOException ex) {
                 Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
@@ -619,58 +667,63 @@ public class BookSearcher {
      * @param review text typed as a review for the book
      */
     public static void addReview(String isbn, int rating, String review) {
-        if (searchISBN(isbn) >= 0) {
+        review = review.replaceAll("-", "~"); // In case a user submits a review with a dash
+        int position = searchISBN(isbn); //Location of the book which the review is attached to in the text file
+        if (position >= 0) {
             try {
-                pw2 = new PrintWriter(new FileOutputStream(bookDB2, false));
+                pw2 = new PrintWriter(new FileOutputStream(bookDB2, false)); //Print Writer for second file
                 String temp;
-                int position = searchISBN(isbn); //Location of book in text file for review to be added to
                 s = new Scanner(bookDB);
                 for (int i = 0; i < position; i++) { //Moves all content to second text file, and modifies line needed
                     pw2.println(s.nextLine());
                 }
                 temp = s.nextLine();
-                temp += rating + " - " + review + Character.toString((char) 31);
+                temp += rating + " - " + review + Character.toString((char) 31); //Adds new review to the line of current book
                 pw2.println(temp);
-                while (s.hasNextLine()) {
+                while (s.hasNextLine()) { //Prints remainder of file to second file
                     pw2.println(s.nextLine());
                 }
-                pw2.flush();
+                pw2.close();
                 s.close();
                 s2 = new Scanner(bookDB2);
                 pw = new PrintWriter(new FileOutputStream(bookDB, false));
                 while (s2.hasNextLine()) { //Moves all data back to first text file
                     pw.println(s2.nextLine());
                 }
-                pw.flush();
                 pw.close();
-                pw2.close();
                 s2.close();
-            } catch (FileNotFoundException ex) {
+            } catch (FileNotFoundException ex) { //Catch if cannot file bookDB or temp text file
                 Logger.getLogger(BookSearcher.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
 
+    /**
+     * Checks if a string is an ISBN
+     *
+     * @param s string to check
+     * @return true if valid ISBN
+     */
     public static boolean isISBN(String s) {
-
-        try { // check all but the last character
-            Long.parseLong(s.substring(0, s.length() - 1));
-        } catch (NumberFormatException e) {
-            return false;
-        } catch (NullPointerException e) {
-            return false;
-        }
-
-        // if last character not x
-        if (!("" + s.charAt(s.length() - 1)).equalsIgnoreCase("x")) {
-            try {
-                Integer.parseInt("" + s.charAt(s.length() - 1));
-            } catch (NumberFormatException e) {
-                return false;
-            } catch (NullPointerException e) {
+        int length = s.length();
+        if (length == 13 | length == 10) {
+            try { // check all but the last character
+                Long.parseLong(s.substring(0, length - 1));
+            } catch (NumberFormatException | NullPointerException e) {
                 return false;
             }
+
+            // if last character not x
+            if (!("" + s.charAt(s.length() - 1)).equalsIgnoreCase("x")) {
+                try {
+                    Integer.parseInt("" + s.charAt(length - 1));
+                } catch (NumberFormatException | NullPointerException e) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return false;
         }
-        return true;
     }
 }
