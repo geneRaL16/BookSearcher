@@ -343,7 +343,29 @@ public class BookSearcherPanel extends javax.swing.JPanel {
      * @param evt button pushed
      */
     private void SearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchButtonActionPerformed
+        if (ISBNField.getText().equals("Mr. RD")) {
+            newReviewButton.setEnabled(false);
+            ImageIcon icon = new ImageIcon("rd.jpg");
+            int height = icon.getIconHeight();
+            int width = icon.getIconWidth();
+            int maxHeight = bookImageLabel.getHeight();
+            int maxWidth = bookImageLabel.getWidth();
+            Dimension bookSize = new Dimension(width, height);
+            Dimension maxSize = new Dimension(maxWidth, maxHeight);
+            //Increases size of image, keeping ratio
+            for (Dimension i = bookSize; i.height * 1.1 < maxSize.height && i.width * 1.1 < maxSize.width; i.setSize(i.width, i.height)) {
+                i.height = (int) (i.height * 1.1);
+                i.width = (int) (i.width * 1.1);
+                bookSize.setSize(i.width, i.height);
+            }
+            Image scaleImage = icon.getImage().getScaledInstance(bookSize.width, bookSize.height, Image.SCALE_SMOOTH);
+            bookImageLabel.setIcon(new ImageIcon(scaleImage));
+            bookTitleLabel.setText("Title: Mr. RD");
+            categoryLabel.setText("Coolest teacher");
+            descriptionEditorPane.setText("A world famous computer science teacher at Newmarket High School");
+        }
         if (!ISBNField.getText().equals("") && BookSearcher.isISBN(ISBNField.getText())) {
+            newReviewButton.setEnabled(true);
             try {
                 BookSearcher.addBook(ISBNField.getText());
                 String[] info = BookSearcher.getBookInfo(ISBNField.getText());
