@@ -100,41 +100,40 @@ public class CategoryPanel extends javax.swing.JPanel {
      */
     private void categorySearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categorySearchButtonActionPerformed
         try {
-            String[] categories = BookSearcher.getCategory(catComboBox.getSelectedItem().toString());
-            String[][] catInfo = new String[categories.length][2];
-            for (int i = 0; i < categories.length; i++) {
+            String[] categories = BookSearcher.getCategory(catComboBox.getSelectedItem().toString()); //Gets all the books in the specific category
+            String[][] catInfo = new String[categories.length][2]; //Array of books and average ratings
+            for (int i = 0; i < categories.length; i++) { //Puts all data into the double array
                 catInfo[i][0] = Integer.toString(BookSearcher.getAverageRatings(categories[i]));
                 catInfo[i][1] = categories[i];
             }
-            Arrays.sort(catInfo, new ColumnComparator(0));
+            Arrays.sort(catInfo, new ColumnComparator(0)); //Sort books based on 
 
-            int booksPerLine = categoryEditorPanel.getWidth() / 400;
-            booksPerLine = 4;
+            int booksPerLine = categoryEditorPanel.getWidth() / 400; //books per line based on screen resolution
             String temp = "";
-            for (int x = 0; x < categories.length; x += booksPerLine) {
+            for (int x = 0; x < categories.length; x += booksPerLine) { //Prints all of the book covers on one line
                 for (int i = x; i < categories.length && i < (x + booksPerLine); i++) {
                     temp += "<html> <img src= " + BookSearcher.getBookImageString(catInfo[i][1]) + "/>";
                     for (int y = 0; y < booksPerLine * 4; y++) {
-                        temp += " &nbsp; ";
+                        temp += " &nbsp; "; //Spaces between books based on screen resolution
                     }
                 }
                 temp += "<br>";
-                for (int i = x; i < categories.length && i < (x + booksPerLine); i++) {
+                for (int i = x; i < categories.length && i < (x + booksPerLine); i++) { //Print all of the book names and hyperlinks to be able to click on books
                     String title = BookSearcher.getBookInfo(catInfo[i][1])[0];
                     if (title.length() > 17) { // Shortens title to tidy up the graphics
-                        title = title.substring(0, 17);
+                        title = title.substring(0, 17); //Ensures titles are not too long
                         title += "...";
                     }
                     if (catInfo[i][0].equals("0")) { // Only show reviews that have user reviews
-                        temp += "<a href=" + catInfo[i][1] + ">" + title + " - N/R </a>";
+                        temp += "<a href=" + catInfo[i][1] + ">" + title + " - N/R </a>"; //Shows N/R when no review
                     } else {
-                        temp += "<a href=" + catInfo[i][1] + ">" + title + " - " + catInfo[i][0] + "/5 </a>";
+                        temp += "<a href=" + catInfo[i][1] + ">" + title + " - " + catInfo[i][0] + "/5 </a>"; //Display review out of 5 stars
                     }
 
                     for (int y = 0; y < booksPerLine * 3.8; y++) {
                         temp += " &nbsp; ";
                     }
-                    if (title.length() < 17) {
+                    if (title.length() < 17) { //Adds to small title books to ensure 
                         for (int z = title.length(); z < 18; z++) {
                             title += "&nbsp";
                         }
@@ -143,10 +142,10 @@ public class CategoryPanel extends javax.swing.JPanel {
                 temp += "<br>"; //Adds a space between books
             }
             categoryEditorPanel.setText(temp);
-            categoryEditorPanel.addHyperlinkListener(new HyperlinkListener() {
+            categoryEditorPanel.addHyperlinkListener(new HyperlinkListener() { //Hyperlink so users can click and search for book information
                 @Override
                 public void hyperlinkUpdate(HyperlinkEvent e) {
-                    if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
+                    if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) { //Search ISBN of clicked book
                         Frame.toScreen2();
                         BookSearcherPanel.ISBNField.setText(e.getDescription());
                         BookSearcherPanel.SearchButton.doClick();
@@ -154,7 +153,7 @@ public class CategoryPanel extends javax.swing.JPanel {
                 }
             });
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Error 403  - Please wait 10 seconds before performing any more searches!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error 4  - Please wait 30 seconds before performing any more searches!", "Sorry!", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_categorySearchButtonActionPerformed
 
