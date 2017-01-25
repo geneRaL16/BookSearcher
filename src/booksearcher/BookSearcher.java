@@ -301,7 +301,7 @@ public class BookSearcher {
      * @return String title
      */
     private static String getTitle(String ISBN, String bookString) {
-        return bookString.split("\"title\": \"")[1].split("\"")[0];
+        return bookString.split("\"title\": \"")[1].split("\",")[0];
     }
 
     /**
@@ -312,7 +312,7 @@ public class BookSearcher {
      * @return String publisher
      */
     private static String getPublisher(String ISBN, String bookString) {
-        return bookString.split("\"publisher\": \"")[1].split("\"")[0];
+        return bookString.split("\"publisher\": \"")[1].split("\",")[0];
     }
 
     /**
@@ -324,7 +324,7 @@ public class BookSearcher {
      * @return country of publication
      */
     private static String getCountry(String ISBN, String bookString) {
-        return bookString.split("\"country\": \"")[1].split("\"")[0];
+        return bookString.split("\"country\": \"")[1].split("\",")[0];
     }
 
     /**
@@ -335,7 +335,7 @@ public class BookSearcher {
      * @return String date
      */
     private static String getPublishDate(String ISBN, String bookString) { // COULD RETURN DATE AS AN ARRAY INSTEAD OF A STRING??
-        String date = bookString.split("\"publishedDate\": \"")[1].split("\"")[0];
+        String date = bookString.split("\"publishedDate\": \"")[1].split("\",")[0];
         String d[] = date.split("-");
         if (d.length == 3) {
             switch (d[1]) {
@@ -394,7 +394,7 @@ public class BookSearcher {
      * @return String description
      */
     private static String getDescription(String ISBN, String bookString) {
-        return bookString.split("\"description\": \"")[1].split("\"")[0].replaceAll("&amp;", "&");
+        return bookString.split("\"description\": \"")[1].split("\",")[0].replaceAll("&amp;", "&");
     }
 
     /**
