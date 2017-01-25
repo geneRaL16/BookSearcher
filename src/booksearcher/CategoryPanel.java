@@ -107,7 +107,7 @@ public class CategoryPanel extends javax.swing.JPanel {
             Arrays.sort(catInfo, new ColumnComparator(0));
             
             int booksPerLine = categoryEditorPanel.getWidth() / 400;
-            int lines = categoryEditorPanel.getHeight() / 100;
+            booksPerLine = 4;
             String temp = "";
             for (int x = 0; x < categories.length; x += booksPerLine) {
                 for (int i = x; i < categories.length && i < (x + booksPerLine); i++) {
