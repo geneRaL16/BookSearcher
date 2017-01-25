@@ -25,9 +25,8 @@ public class Frame extends javax.swing.JFrame {
         this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
         this.getRootPane().setDefaultButton(BookSearcherPanel.SearchButton);
         BookSearcher.countrySetup();
-        //mainMenuPanel2.setFocusField();
 
-        //this.setDefaultCloseOperation(Frame.DO_NOTHING_ON_CLOSE);
+        this.setDefaultCloseOperation(Frame.DO_NOTHING_ON_CLOSE);
     }
     /**
      * toScreen2
