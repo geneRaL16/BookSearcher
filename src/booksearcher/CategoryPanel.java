@@ -93,8 +93,10 @@ public class CategoryPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
     /**
-     * searches all books in database that matches the chosen category and sorts by users reviews
-     * @param evt 
+     * searches all books in database that matches the chosen category and sorts
+     * by users reviews
+     *
+     * @param evt
      */
     private void categorySearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categorySearchButtonActionPerformed
         try {
@@ -105,14 +107,14 @@ public class CategoryPanel extends javax.swing.JPanel {
                 catInfo[i][1] = categories[i];
             }
             Arrays.sort(catInfo, new ColumnComparator(0));
-            
+
             int booksPerLine = categoryEditorPanel.getWidth() / 400;
             booksPerLine = 4;
             String temp = "";
             for (int x = 0; x < categories.length; x += booksPerLine) {
                 for (int i = x; i < categories.length && i < (x + booksPerLine); i++) {
                     temp += "<html> <img src= " + BookSearcher.getBookImageString(catInfo[i][1]) + "/>";
-                    for (int y = 0; y < booksPerLine * 4.5; y++) {
+                    for (int y = 0; y < booksPerLine * 4; y++) {
                         temp += " &nbsp; ";
                     }
                 }
@@ -131,6 +133,11 @@ public class CategoryPanel extends javax.swing.JPanel {
 
                     for (int y = 0; y < booksPerLine * 4; y++) {
                         temp += " &nbsp; ";
+                    }
+                    if (title.length() < 17) {
+                        for (int z = title.length(); z < 18; z++) {
+                            title += "&nbsp";
+                        }
                     }
                 }
                 temp += "<br>"; //Adds a space between books
@@ -151,10 +158,11 @@ public class CategoryPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_categorySearchButtonActionPerformed
 
-/**
- * Changes back to the menu panel
- * @param evt 
- */
+    /**
+     * Changes back to the menu panel
+     *
+     * @param evt
+     */
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         Frame.toScreen1();
         Startup.toBookSearcher.requestFocus();
